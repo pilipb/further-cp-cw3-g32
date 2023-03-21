@@ -167,3 +167,13 @@ def possible_values_combined(grid, n_rows, n_cols, row, column):
 		if i in possible_column_values and i in possible_square_values:
 			possible_values.append(i)
 	return possible_values
+
+test_grid = [
+		[0, 0, 6, 0, 0, 3],
+		[5, 0, 0, 0, 0, 0],
+		[0, 1, 3, 4, 0, 0],
+		[0, 0, 0, 0, 0, 6],
+		[0, 0, 1, 0, 0, 0],
+		[0, 5, 0, 0, 6, 4]]
+
+print(possible_values_combined(test_grid, 2, 3, row=0, column=4))
