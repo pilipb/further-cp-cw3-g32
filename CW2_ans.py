@@ -1,6 +1,7 @@
 import random
 import copy
 import time
+from possible_values import possible_values_combined
 
 #Grids 1-4 are 2x2
 grid1 = [
@@ -40,6 +41,7 @@ grid6 = [
 		[0, 0, 0, 0, 0, 6],
 		[0, 0, 1, 0, 0, 0],
 		[0, 5, 0, 0, 6, 4]]
+print("Possible Value Test (grid6): ",possible_values_combined(grid6, 2, 3, row=0, column=0))
 
 grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2)]
 '''
