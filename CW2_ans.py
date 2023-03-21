@@ -102,7 +102,7 @@ def check_solution(grid, n_rows, n_cols):
 	return True
 
 
-def find_empty(grid):
+def find_empty(grid,n_rows,n_cols):
 	'''
 	This function returns the index (i, j) to the first zero element in a sudoku grid
 	If no such element is found, it returns None
@@ -110,14 +110,20 @@ def find_empty(grid):
 	args: grid
 	return: A tuple (i,j) where i and j are both integers, or None
 	'''
-
+	min_avialable = len(grid)
 	for i in range(len(grid)):
 		row = grid[i]
 		for j in range(len(row)):
 			if grid[i][j] == 0:
-				return (i, j)
+				avaialble = len(possible_values_combined(grid, n_rows, n_cols, i, j))
+				if avaialble < min_avialable:
+					min_avialable = avaialble
+					min_index = (i,j)
+	if min_avialable == len(grid):
+		return None
+	return min_index
 
-	return None
+	
 
 
 def recursive_solve(grid, n_rows, n_cols):
@@ -132,7 +138,7 @@ def recursive_solve(grid, n_rows, n_cols):
 	#N is the maximum integer considered in this board
 	n = n_rows*n_cols
 	#Find an empty place in the grid
-	empty = find_empty(grid)
+	empty = find_empty(grid,n_rows,n_cols)
 
 	#If there's no empty places left, check if we've found a solution
 	if not empty:
@@ -146,7 +152,7 @@ def recursive_solve(grid, n_rows, n_cols):
 		row, col = empty 
 
 	#Loop through possible values
-	for i in range(1, n+1):
+	for i in possible_values_combined(grid, n_rows, n_cols, row, col):
 
 			#Place the value into the grid
 			grid[row][col] = i
