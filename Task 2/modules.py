@@ -4,6 +4,7 @@ and the functions required to solve a sudoku board using recursion and random so
 
 '''
 
+<<<<<<< HEAD
 # imports
 import random
 import copy
@@ -276,3 +277,6 @@ def solve(grid, n_rows, n_cols):
 	
 	#return random_solve(grid, n_rows, n_cols)
 	return recursive_solve(grid, n_rows, n_cols)
+=======
+print("Hello World")
+>>>>>>> be0bb1d043aa69eeb3b9a06ae1732b4dad26e926
