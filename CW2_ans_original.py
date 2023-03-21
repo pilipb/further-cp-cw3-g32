@@ -41,7 +41,7 @@ grid6 = [
 		[0, 0, 1, 0, 0, 0],
 		[0, 5, 0, 0, 6, 4]]
 
-grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2)]
+grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2),(grid6, 2, 3)]
 '''
 ===================================
 DO NOT CHANGE CODE ABOVE THIS LINE

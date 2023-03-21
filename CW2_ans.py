@@ -43,7 +43,7 @@ grid6 = [
 		[0, 5, 0, 0, 6, 4]]
 print("Possible Value Test (grid6): ",possible_values_combined(grid6, 2, 3, row=0, column=0))
 
-grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2)]
+grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 2, 3)]
 '''
 ===================================
 DO NOT CHANGE CODE ABOVE THIS LINE
@@ -110,16 +110,16 @@ def find_empty(grid,n_rows,n_cols):
 	args: grid
 	return: A tuple (i,j) where i and j are both integers, or None
 	'''
-	min_avialable = len(grid)
+	min_available = len(grid)
 	for i in range(len(grid)):
 		row = grid[i]
 		for j in range(len(row)):
 			if grid[i][j] == 0:
-				avaialble = len(possible_values_combined(grid, n_rows, n_cols, i, j))
-				if avaialble < min_avialable:
-					min_avialable = avaialble
+				available = len(possible_values_combined(grid, n_rows, n_cols, i, j))
+				if available < min_available:
+					min_available = available
 					min_index = (i,j)
-	if min_avialable == len(grid):
+	if min_available == len(grid):
 		return None
 	return min_index
 
