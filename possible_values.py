@@ -150,7 +150,7 @@ def possible_values_combined(grid, n_rows, n_cols, row, column):
         A list of the possible values for the cell at that row and column based off the values in that row, column and square.
 	"""
 	# If the cell is empty, find the possible values for the cell based off the values in the row, column and square of the cell
-	if grid[row][column] == 0:
+	if grid[row][column] != 0:
 		return None
 	possible_row_values = possible_values_row(grid,row,column)
 	if possible_row_values == None:
