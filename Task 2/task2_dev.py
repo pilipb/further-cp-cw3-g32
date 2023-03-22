@@ -3,9 +3,11 @@ import copy
 import time
 import sys
 
-from modules import *
+# import the modules
+from modules import * 
 from grids import grids
 from flag_identifier import input_checker, read_flags
+from hint import basic_hint
 
 
 '''
@@ -42,7 +44,7 @@ def main():
 		print("Solving grid: %d" % (i+1))
 
 		start_time = time.time()
-		solution = solve(grid, n_rows, n_cols)
+		solution, filled_in = solve(grid, n_rows, n_cols)
 		elapsed_time = time.time() - start_time
 
 		print("\nSolved in: %f seconds" % elapsed_time)
@@ -53,6 +55,14 @@ def main():
 			points = points + 10
 		else:
 			print("grid %d incorrect" % (i+1))
+
+		# check if hint is set to true
+		if flag_dict["-hint"] == True:
+			hint_n = flag_value["-hint"]
+			basic_hint(filled_in, hint_n)
+		
+
+
 
 	print("====================================")
 	print("\nTest script complete, Total points: %d" % points)

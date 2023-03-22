@@ -9,13 +9,30 @@ import random
 import copy
 import time
 from possible_values import possible_values_combined
+
 def quick_fill(grid, n_rows, n_cols):
 	'''
 	If there are squares with only one possible value, fill them in and return the grid
 	
-    args: grid, n_rows, n_cols, row, col
-    return: A grid with the squares filled in
+	Parameters:
+	--------------
+	grid: list
+		A list of lists representing a sudoku board
+	n_rows: int
+		The number of rows in each square
+	n_cols: int
+		The number of columns in each square
+
+	Returns:
+	--------------
+    grid: list
+	  	A grid with the (some) squares filled in
+	filled_in: list
+		A list of the squares that have been filled in and their locations [value, row, column]
+	
     '''
+    # initialise the list of squares that have been filled in
+	filled_in = []
 	
 	for row_index,row in enumerate(grid):
 		for col_index,col in enumerate(row):
@@ -23,7 +40,13 @@ def quick_fill(grid, n_rows, n_cols):
 				possible_values = list(possible_values_combined(grid, n_rows, n_cols, row_index, col_index))
 				if possible_values != None and len(possible_values) == 1:
 					grid[row_index][col_index] = possible_values[0]
-	return grid
+
+					# add the square that has been filled in to the list of filled in squares
+					filled_in.append(( possible_values[0], row_index, col_index))
+
+	return grid, filled_in
+
+
 def check_section(section, n):
 	'''
     This function is used to check whether a section of a sudoku board has been correctly solved
@@ -156,7 +179,7 @@ def find_empty(grid,n_rows,n_cols):
 
 
 
-def recursive_solve(grid, n_rows, n_cols):
+def recursive_solve(grid, n_rows, n_cols, filled_in):
 	'''
 	This function uses recursion to exhaustively search all possible solutions to a grid
 	until the solution is found
@@ -177,7 +200,6 @@ def recursive_solve(grid, n_rows, n_cols):
 	
 	'''
 
-	
 	#Find an empty place in the grid
 	empty = find_empty(grid,n_rows,n_cols)
 
@@ -201,7 +223,7 @@ def recursive_solve(grid, n_rows, n_cols):
 			ans = recursive_solve(grid, n_rows, n_cols)
 			#If we've found a solution, return it
 			if ans:
-				return ans 
+				return ans
 
 			#If we couldn't find a solution, that must mean this value is incorrect.
 			#Reset the grid for the next iteration of the loop
@@ -292,11 +314,13 @@ def solve(grid, n_rows, n_cols):
 	--------------
 	grid: list
         A solved grid (as a nested list)
+	filled_in: list
+		A list of the filled in values and their indices [value, row, column]
 	
 	'''
 	while True:
 		old_grid = grid 
-		grid = quick_fill(grid, n_rows, n_cols)
+		grid , filled_in = quick_fill(grid, n_rows, n_cols)
 		if grid == old_grid:
 			break
 
@@ -305,4 +329,15 @@ def solve(grid, n_rows, n_cols):
 		return grid
 	else:
 		print("Quick solution not found, recursive solver starting")
-		return recursive_solve(grid, n_rows, n_cols)
+		ans = recursive_solve(grid, n_rows, n_cols)
+		
+		if ans:
+			# find the values that were filled in by the recursive solver by comparison
+			for row in range(len(grid)):
+				for col in range(len(grid[0])):
+					if grid[row][col] != ans[row][col]:
+						filled_in.append([ans[row][col], row, col])
+			
+			print("Recursive solution found")
+			return ans, filled_in
+
