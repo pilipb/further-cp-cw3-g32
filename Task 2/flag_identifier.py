@@ -1,5 +1,25 @@
 # This script will read the input from the command line (flags and values) and pass them on to the appropriate function 
 import sys
+def input_checker(user_input:str):
+    """
+    This function performs a simple check 
+    """
+    legal_flags = ["-explain", "-file", "-hint", "-profile"]
+    # if -file is present remove the two values after it from the input
+    if "-file" in user_input:
+        user_input = user_input[:user_input.index("-file")] + user_input[user_input.index("-file")+3:] 
+    # if -hint is present remove the value after it from the input
+    if "-hint" in user_input:
+        user_input = user_input[:user_input.index("-hint")] + user_input[user_input.index("-hint")+2:]
+    # remove all the flags from the input
+    for flag in legal_flags:
+        if flag in user_input:
+            user_input.remove(flag)
+    # if there are any values left in the input, return False
+    if len(user_input) > 0:
+        return False
+    else:
+        return True
 
 def read_flags(user_input:str):
     """
@@ -24,10 +44,8 @@ def read_flags(user_input:str):
     for flag in flag_dict:
         if flag in user_input:
             flag_dict[flag] = True
-    # if file is in input, set flag value to a list of next two values
-    
-    
-    
+
+    # if file is in input, set flag value to a list of next two values (input and output)
     if "-file" in user_input:
         # Input and outputs should be the next two values after the flag respectively.
         input_file = user_input[user_input.index("-file")+1]
@@ -66,4 +84,5 @@ def read_flags(user_input:str):
 
 
 if __name__ == "__main__":
-	print(read_flags(sys.argv[1:]))
+    print(input_checker(sys.argv[1:]))
+    print(read_flags(sys.argv[1:]))
