@@ -1,8 +1,21 @@
 # This script will read the input from the command line (flags and values) and pass them on to the appropriate function 
 import sys
-def input_checker(user_input:str):
+def input_checker(user_input):
     """
-    This function performs a simple check 
+    This function performs a simple check, to see if the command line input consists of valid flags and values only
+    ----------
+    Parameters
+    ----------
+    input: str  
+        A string representing the input from the command line
+    ----------
+
+    Returns
+    ----------
+    bool
+        A boolean representing whether the input is valid or not
+
+
     """
     legal_flags = ["-explain", "-file", "-hint", "-profile"]
     # if -file is present remove the two values after it from the input
@@ -22,7 +35,7 @@ def input_checker(user_input:str):
     else:
         return True
 
-def read_flags(user_input:str):
+def read_flags(user_input):
     """
     This function takes a string and returns the flag if it is a valid flag, otherwise it returns None
     ----------

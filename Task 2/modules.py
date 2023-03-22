@@ -8,8 +8,22 @@ and the functions required to solve a sudoku board using recursion and random so
 import random
 import copy
 import time
-
-
+from possible_values import possible_values_combined
+def quick_fill(grid, n_rows, n_cols):
+	'''
+	If there are squares with only one possible value, fill them in and return the grid
+	
+    args: grid, n_rows, n_cols, row, col
+    return: A grid with the squares filled in
+    '''
+	
+	for row_index,row in enumerate(grid):
+		for col_index,col in enumerate(row):
+			if grid[row_index][col_index] == 0:
+				possible_values = list(possible_values_combined(grid, n_rows, n_cols, row_index, col_index))
+				if possible_values != None and len(possible_values) == 1:
+					grid[row_index][col_index] = possible_values[0]
+	return grid
 def check_section(section, n):
 	'''
     This function is used to check whether a section of a sudoku board has been correctly solved
@@ -108,7 +122,7 @@ def check_solution(grid, n_rows, n_cols):
 	return True
 
 
-def find_empty(grid):
+def find_empty(grid,n_rows,n_cols):
 	'''
 	This function returns the index (i, j) to the first zero element in a sudoku grid
 	If no such element is found, it returns None
@@ -124,14 +138,22 @@ def find_empty(grid):
         (i, j) or None
 
 	'''
-
+	# Initialize the minimum number of available values to the length of the grid - this is the maximum possible value for this variable
+	min_available = len(grid)
+	# Iterate through the grid, when a zero is found, check how many possible values it has
+    # If it has fewer than the current minimum, update the minimum and the index of the minimum
 	for i in range(len(grid)):
 		row = grid[i]
 		for j in range(len(row)):
 			if grid[i][j] == 0:
-				return (i, j)
+				available = len(possible_values_combined(grid, n_rows, n_cols, i, j))
+				if available < min_available:
+					min_available = available
+					min_index = (i,j)
+	if min_available == len(grid):
+		return None
+	return min_index
 
-	return None
 
 
 def recursive_solve(grid, n_rows, n_cols):
@@ -155,10 +177,9 @@ def recursive_solve(grid, n_rows, n_cols):
 	
 	'''
 
-	#N is the maximum integer considered in this board
-	n = n_rows*n_cols
+	
 	#Find an empty place in the grid
-	empty = find_empty(grid)
+	empty = find_empty(grid,n_rows,n_cols)
 
 	#If there's no empty places left, check if we've found a solution
 	if not empty:
@@ -172,7 +193,7 @@ def recursive_solve(grid, n_rows, n_cols):
 		row, col = empty 
 
 	#Loop through possible values
-	for i in range(1, n+1):
+	for i in possible_values_combined(grid, n_rows, n_cols, row, col):
 
 			#Place the value into the grid
 			grid[row][col] = i
@@ -273,6 +294,15 @@ def solve(grid, n_rows, n_cols):
         A solved grid (as a nested list)
 	
 	'''
-	
-	#return random_solve(grid, n_rows, n_cols)
-	return recursive_solve(grid, n_rows, n_cols)
+	while True:
+		old_grid = grid 
+		grid = quick_fill(grid, n_rows, n_cols)
+		if grid == old_grid:
+			break
+
+	if check_solution(grid, n_rows, n_cols):
+		print("Quick fill solution found")
+		return grid
+	else:
+		print("Quick solution not found, recursive solver starting")
+		return recursive_solve(grid, n_rows, n_cols)
