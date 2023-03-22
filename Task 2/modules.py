@@ -179,7 +179,7 @@ def find_empty(grid,n_rows,n_cols):
 
 
 
-def recursive_solve(grid, n_rows, n_cols, filled_in):
+def recursive_solve(grid, n_rows, n_cols):
 	'''
 	This function uses recursion to exhaustively search all possible solutions to a grid
 	until the solution is found
@@ -318,6 +318,9 @@ def solve(grid, n_rows, n_cols):
 		A list of the filled in values and their indices [value, row, column]
 	
 	'''
+	# intialise the list of filled in values
+	filled_in = []
+
 	while True:
 		old_grid = grid 
 		grid , filled_in = quick_fill(grid, n_rows, n_cols)
@@ -326,7 +329,7 @@ def solve(grid, n_rows, n_cols):
 
 	if check_solution(grid, n_rows, n_cols):
 		print("Quick fill solution found")
-		return grid
+		return grid, filled_in
 	else:
 		print("Quick solution not found, recursive solver starting")
 		ans = recursive_solve(grid, n_rows, n_cols)

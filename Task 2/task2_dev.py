@@ -7,7 +7,7 @@ import sys
 from modules import * 
 from grids import grids
 from flag_identifier import input_checker, read_flags
-from hint import basic_hint
+from hint import hint
 
 
 '''
@@ -43,12 +43,15 @@ def main():
 	for (i, (grid, n_rows, n_cols)) in enumerate(grids):
 		print("Solving grid: %d" % (i+1))
 
+		# make a copy of the grid for comparison
+		grid_copy = copy.deepcopy(grid)
+
 		start_time = time.time()
 		solution, filled_in = solve(grid, n_rows, n_cols)
 		elapsed_time = time.time() - start_time
 
 		print("\nSolved in: %f seconds" % elapsed_time)
-		print(solution)
+		print("\nSolution grid: " , solution)
 
 		if check_solution(solution, n_rows, n_cols):
 			print("grid %d correct" % (i+1))
@@ -59,7 +62,10 @@ def main():
 		# check if hint is set to true
 		if flag_dict["-hint"] == True:
 			hint_n = flag_value["-hint"]
-			basic_hint(filled_in, hint_n)
+
+			hint_grid = hint(grid_copy, filled_in, hint_n)
+			print("\nHint grid: ")
+			print(hint_grid)
 		
 
 
