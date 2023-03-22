@@ -60,9 +60,6 @@ def read_flags(user_input:str):
         else:
             flag_value["-hint"] = int(user_input[user_input.index("-hint")+1])
     
-    
-    
-    
     return flag_dict, flag_value
 
 
