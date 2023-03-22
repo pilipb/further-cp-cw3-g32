@@ -5,7 +5,7 @@ This function is used to provide a hint to the user, if the -flag hint is set to
 import copy
 
 # a basic hint function will provide the user with a list of random hints to help them solve the puzzle
-def hint(grid, filled_in, hint_number):
+def hint_(grid, filled_in, hint_number):
     
     '''
     This function is used to provide a hint to the user, if the -flag hint is set to True

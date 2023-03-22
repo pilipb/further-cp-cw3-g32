@@ -42,7 +42,7 @@ def quick_fill(grid, n_rows, n_cols):
 					grid[row_index][col_index] = possible_values[0]
 
 					# add the square that has been filled in to the list of filled in squares
-					filled_in.append(( possible_values[0], row_index, col_index))
+					filled_in.append(possible_values[0], row_index, col_index)
 
 	return grid, filled_in
 

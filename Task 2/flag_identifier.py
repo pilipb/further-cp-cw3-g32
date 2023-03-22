@@ -30,8 +30,7 @@ def input_checker(user_input):
             user_input.remove(flag)
     # if there are any values left in the input, return False
     if len(user_input) > 0:
-        print("Invalid flags inputted")
-        return False
+        raise ValueError("Invalid input")
     else:
         return True
 
@@ -68,15 +67,14 @@ def read_flags(user_input):
         # check if the input and output files are csv's
         for i in [input_file, output_file]:
             if i[-4:] != ".csv":
-                print("Input and output files must be a csv's")
-                return False
+                raise ValueError("Input and output files must be a csv's")
             
         # check if the input file exists
         try:
             open(input_file, "r")
         except FileNotFoundError:
             print("Grid input file not found")
-            return False
+            raise FileNotFoundError("Grid input file not found")
 
         #If these conditions are met, set the flag value to the next two values (input and output)     
         flag_value["-file"] = user_input[user_input.index("-file")+1:user_input.index("-file")+3]
@@ -94,9 +92,6 @@ def read_flags(user_input):
     
     return flag_dict, flag_value
 
-
-
-
-if __name__ == "__main__":
-    print(input_checker(sys.argv[1:]))
-    read_flags(sys.argv[1:])
+#if __name__ == "__main__":
+#    print(input_checker(sys.argv[1:]))
+#    print(read_flags(sys.argv[1:]))

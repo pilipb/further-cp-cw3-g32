@@ -1,13 +1,11 @@
-import random
+
 import copy
 import time
 import sys
-
-# import the modules
 from modules import * 
 from grids import grids
 from flag_identifier import input_checker, read_flags
-from hint import hint
+from hint import hint_
 
 
 '''
@@ -63,7 +61,7 @@ def main():
 		if flag_dict["-hint"] == True:
 			hint_n = flag_value["-hint"]
 
-			hint_grid = hint(grid_copy, filled_in, hint_n)
+			hint_grid = hint_(grid_copy, filled_in, hint_n)
 			print("\nHint grid: ")
 			print(hint_grid)
 		
