@@ -17,6 +17,7 @@ def input_checker(user_input:str):
             user_input.remove(flag)
     # if there are any values left in the input, return False
     if len(user_input) > 0:
+        print("Invalid flags inputted")
         return False
     else:
         return True
@@ -85,4 +86,4 @@ def read_flags(user_input:str):
 
 if __name__ == "__main__":
     print(input_checker(sys.argv[1:]))
-    print(read_flags(sys.argv[1:]))
+    read_flags(sys.argv[1:])
