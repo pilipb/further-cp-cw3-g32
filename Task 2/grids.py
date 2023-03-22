@@ -59,13 +59,10 @@ grid8 = [[0,0,0,0,0,0,0,0,0],
 
 grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 2, 3), (grid7,3,3), (grid8,3,3)]
 
-# Something to look into is plotting the performance of the solver against the 
-# number of zeros in the grid.  This is a good way to see how the solver performs
-# Its also a good was to see how different mods impact the performance of the solver
-# Currently, grid8 takes about 30 seconds to solve on my computer
+'''
+Something to look into is plotting the performance of the solver against the 
+number of zeros in the grid.  This is a good way to see how the solver performs
+Its also a good was to see how different mods impact the performance of the solver
+Currently, grid8 takes about 30 seconds to solve on my computer
+'''
 
-
-zero_count = 0
-for row in grid7:
-    zero_count += row.count(0)
-print(zero_count)

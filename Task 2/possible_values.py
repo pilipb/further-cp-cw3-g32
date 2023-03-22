@@ -175,5 +175,3 @@ test_grid = [
 		[0, 0, 0, 0, 0, 6],
 		[0, 0, 1, 0, 0, 0],
 		[0, 5, 0, 0, 6, 4]]
-
-print(possible_values_combined(test_grid, 2, 3, row=0, column=4))
