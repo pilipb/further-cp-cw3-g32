@@ -1,7 +1,7 @@
 # This script will read the input from the command line (flags and values) and pass them on to the appropriate function 
 import sys
 
-def read_flag(input:str):
+def read_flags(user_input:str):
     """
     This function takes a string and returns the flag if it is a valid flag, otherwise it returns None
     ----------
@@ -22,19 +22,51 @@ def read_flag(input:str):
     flag_value = {"-file": None, "-hint": None}
     # if flag is in input, set flag dict value to True
     for flag in flag_dict:
-        if flag in input:
+        if flag in user_input:
             flag_dict[flag] = True
     # if file is in input, set flag value to a list of next two values
-    if "-file" in input:
-        flag_value["-file"] = input[input.index("-file")+1:input.index("-file")+3]
-    # if hint is in input, set flag value to am integer of the next value
-    if "-hint" in input:
-        flag_value["-hint"] = int(input[input.index("-hint")+1])
+    
+    
+    
+    if "-file" in user_input:
+        # Input and outputs should be the next two values after the flag respectively.
+        input_file = user_input[user_input.index("-file")+1]
+        output_file = user_input[user_input.index("-file")+2]
 
+        # check if the input and output files are csv's
+        for i in [input_file, output_file]:
+            if i[-4:] != ".csv":
+                print("Input and output files must be a csv's")
+                return False
+            
+        # check if the input file exists
+        try:
+            open(input_file, "r")
+        except FileNotFoundError:
+            print("Grid input file not found")
+            return False
 
+        #If these conditions are met, set the flag value to the next two values (input and output)     
+        flag_value["-file"] = user_input[user_input.index("-file")+1:user_input.index("-file")+3]
 
-
-
+    # if hint is in input, set flag value to the integer after the flag
+    if "-hint" in user_input:
+        # check if the hint value is an integer
+        try:
+            int(user_input[user_input.index("-hint")+1])
+        except ValueError:
+            print("Hint value must be an integer")
+            return False
+        else:
+            flag_value["-hint"] = int(user_input[user_input.index("-hint")+1])
+    
+    
+    
+    
     return flag_dict, flag_value
+
+
+
+
 if __name__ == "__main__":
-	print(read_flag(sys.argv[1:]))
+	print(read_flags(sys.argv[1:]))
