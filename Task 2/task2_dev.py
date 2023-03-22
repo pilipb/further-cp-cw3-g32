@@ -2,59 +2,7 @@ import random
 import copy
 import time
 from modules import *
-
-
-'''
-Test Grids
-'''
-
-grid1 = [
-		[1, 0, 4, 2],
-		[4, 2, 1, 3],
-		[2, 1, 3, 4],
-		[3, 4, 2, 1]]
-
-grid2 = [
-		[1, 0, 4, 2],
-		[4, 2, 1, 3],
-		[2, 1, 0, 4],
-		[3, 4, 2, 1]]
-
-grid3 = [
-		[1, 0, 4, 2],
-		[4, 2, 1, 0],
-		[2, 1, 0, 4],
-		[0, 4, 2, 1]]
-
-grid4 = [
-		[1, 0, 4, 2],
-		[0, 2, 1, 0],
-		[2, 1, 0, 4],
-		[0, 4, 2, 1]]
-
-grid5 = [
-		[1, 0, 0, 2],
-		[0, 0, 1, 0],
-		[0, 1, 0, 4],
-		[0, 0, 0, 1]]
-
-grid6 = [
-		[0, 0, 6, 0, 0, 3],
-		[5, 0, 0, 0, 0, 0],
-		[0, 1, 3, 4, 0, 0],
-		[0, 0, 0, 0, 0, 6],
-		[0, 0, 1, 0, 0, 0],
-		[0, 5, 0, 0, 6, 4]]
-
-grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2)]
-
-
-'''
-
-Run the main function and tests the outputs of the solve function
-
-'''
-
+from grids import grids
 
 
 def main():
