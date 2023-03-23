@@ -1,11 +1,13 @@
 '''
-This function is used to provide a hint to the user, if the -flag hint is set to True
+These functions are used to provide a hint to the user, if the -flag hint is set to True,
+the number of hints the user has requested will be provided.
 
 '''
+# imports
 import copy
 
-# a basic hint function will provide the user with a list of random hints to help them solve the puzzle
-def hint_(grid, filled_in, hint_number):
+
+def make_hint(grid, filled_in, hint_number):
     
     '''
     This function is used to provide a hint to the user, if the -flag hint is set to True
@@ -32,8 +34,35 @@ def hint_(grid, filled_in, hint_number):
         
         grid[filled_in[n][1]][filled_in[n][2]] = filled_in[n][0]
 
-        
     return grid
+
+def find_filled(grid, ans):
+
+    '''
+    This function is used to find the squares that have been filled in and their locations by comparison
+    of the original board and the solved board.
+
+    Parameters
+    ----------
+    grid: list
+        A list of lists representing a sudoku board (original)
+    ans: list
+        A list of lists representing a sudoku board (solved)
+
+    Returns
+    ----------
+    filled_in: list
+        A list of the squares that have been filled in and their locations [value, row, column]
+
+    '''
+    filled_in = []
+        
+    for row in range(len(grid)):
+        for col in range(len(grid[0])):
+            if grid[row][col] != ans[row][col]:
+                filled_in.append([ans[row][col], row, col])
+
+    return filled_in
 
 
 

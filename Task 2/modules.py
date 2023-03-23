@@ -9,6 +9,7 @@ import random
 import copy
 import time
 from possible_values import possible_values_combined
+from hint import find_filled
 
 def quick_fill(grid, n_rows, n_cols):
 	'''
@@ -27,8 +28,6 @@ def quick_fill(grid, n_rows, n_cols):
 	--------------
     grid: list
 	  	A grid with the (some) squares filled in
-	filled_in: list
-		A list of the squares that have been filled in and their locations [value, row, column]
 	
     '''
     # initialise the list of squares that have been filled in
@@ -41,10 +40,8 @@ def quick_fill(grid, n_rows, n_cols):
 				if possible_values != None and len(possible_values) == 1:
 					grid[row_index][col_index] = possible_values[0]
 
-					# add the square that has been filled in to the list of filled in squares
-					filled_in.append(possible_values[0], row_index, col_index)
 
-	return grid, filled_in
+	return grid
 
 
 def check_section(section, n):
@@ -321,14 +318,21 @@ def solve(grid, n_rows, n_cols):
 	# intialise the list of filled in values
 	filled_in = []
 
+	# initialise a copy of the grid for comparison
+	original_grid = copy.deepcopy(grid)
+
 	while True:
 		old_grid = grid 
-		grid , filled_in = quick_fill(grid, n_rows, n_cols)
+		grid  = quick_fill(grid, n_rows, n_cols)
 		if grid == old_grid:
 			break
 
 	if check_solution(grid, n_rows, n_cols):
 		print("Quick fill solution found")
+
+		# find the values that were filled in by the quick fill by comparison
+		filled_in = find_filled(original_grid, grid)
+
 		return grid, filled_in
 	else:
 		print("Quick solution not found, recursive solver starting")
@@ -336,11 +340,8 @@ def solve(grid, n_rows, n_cols):
 		
 		if ans:
 			# find the values that were filled in by the recursive solver by comparison
-			for row in range(len(grid)):
-				for col in range(len(grid[0])):
-					if grid[row][col] != ans[row][col]:
-						filled_in.append([ans[row][col], row, col])
-			
+			filled_in = find_filled(original_grid, ans)
+
 			print("Recursive solution found")
 			return ans, filled_in
 

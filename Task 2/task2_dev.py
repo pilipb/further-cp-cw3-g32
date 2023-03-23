@@ -5,7 +5,7 @@ import sys
 from modules import * 
 from grids import grids
 from flag_identifier import input_checker, read_flags
-from hint import hint_
+from hint import *
 
 
 '''
@@ -49,7 +49,7 @@ def main():
 		elapsed_time = time.time() - start_time
 
 		print("\nSolved in: %f seconds" % elapsed_time)
-		print("\nSolution grid: " , solution)
+		print("Solution grid: " , solution)
 
 		if check_solution(solution, n_rows, n_cols):
 			print("grid %d correct" % (i+1))
@@ -61,7 +61,8 @@ def main():
 		if flag_dict["-hint"] == True:
 			hint_n = flag_value["-hint"]
 
-			hint_grid = hint_(grid_copy, filled_in, hint_n)
+			hint_grid = make_hint(grid_copy, filled_in, hint_n)
+
 			print("\nHint grid: ")
 			print(hint_grid)
 		
