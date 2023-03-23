@@ -16,6 +16,8 @@ def make_hint(grid, filled_in, hint_number):
     Parameters
     ----------
 
+    grid: list
+        A list of lists representing a sudoku board (original)
     filled_in: list
         A list of the squares that have been filled in and their locations [value, row, column]
     hint_number: int
@@ -34,6 +36,7 @@ def make_hint(grid, filled_in, hint_number):
         print("\nYou have requested more hints than there are squares filled in, so you will be given all the hints available:")
         hint_number = len(filled_in)
 
+    # fill in the appropriate number of squares with the corresponding values
     for n in range(hint_number):
         
         grid[filled_in[n][1]][filled_in[n][2]] = filled_in[n][0]
@@ -61,8 +64,11 @@ def find_filled(grid, ans):
     '''
     filled_in = []
         
+    # loop through the grid and compare the values to the solved grid
     for row in range(len(grid)):
         for col in range(len(grid[0])):
+            
+            # if the values are different, the square has been filled in
             if grid[row][col] != ans[row][col]:
                 filled_in.append([ans[row][col], row, col])
 
