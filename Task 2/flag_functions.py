@@ -10,5 +10,5 @@ def profile():
 def explain():
     pass
 
-def file(input, output):
+def file(input:str, output:str, explain:bool, n_row:int, n_col:int):
     pass
