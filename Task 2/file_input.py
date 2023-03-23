@@ -32,8 +32,6 @@ def file_input(input_file, output_file, explain, n_row, n_col):
                 file_contents[i][j] = int(file_contents[i][j])
             except ValueError:
                 print("Input file must only contain integers between 0 and 9")
-                return None
-    print(file_contents)
     try :
         file_input_check(file_contents, n_row, n_col)
     except ValueError as e:
@@ -52,10 +50,10 @@ def file_input(input_file, output_file, explain, n_row, n_col):
             for insertion in filled_in:
                 if insertion[0] == 8:
                     file.write("\n")
-                    file.write(f"Insert an {insertion[0]} in the cell in row {insertion[1]} and column {insertion[2]}")
+                    file.write(f"Insert an {insertion[0]} in the cell in row {insertion[1]+1} and column {insertion[2]+1}")
                 else:
                     file.write("\n")
-                    file.write(f"Insert a {insertion[0]} in the cell in row {insertion[1]} and column {insertion[2]}")
+                    file.write(f"Insert a {insertion[0]} in the cell in row {insertion[1]+1} and column {insertion[2]+1}")
 
         
 

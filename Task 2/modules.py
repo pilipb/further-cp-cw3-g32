@@ -330,18 +330,11 @@ def solve(grid, n_rows, n_cols):
 	if check_solution(grid, n_rows, n_cols):
 		print("Quick fill solution found")
 
-		# find the values that were filled in by the quick fill by comparison
-		filled_in = find_filled(original_grid, grid)
-
-		return grid, filled_in
 	else:
 		print("Quick solution not found, recursive solver starting")
-		ans = recursive_solve(grid, n_rows, n_cols)
+		grid = recursive_solve(grid, n_rows, n_cols)
 		
-		if ans:
-			# find the values that were filled in by the recursive solver by comparison
-			filled_in = find_filled(original_grid, ans)
+	filled_in = find_filled(original_grid, grid)
 
-			print("Recursive solution found")
-			return ans, filled_in
+	return grid, filled_in
 
