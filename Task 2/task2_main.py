@@ -4,7 +4,7 @@ import sys
 from modules import * 
 from grids import grids
 from flag_identifier import input_checker, read_flags
-from hint import hint_
+#rom hint import hint_
 from flag_functions import explain, profile, file, hint
 from file_input import file_input
 
@@ -36,7 +36,7 @@ def main():
         input_file = flag_value['-file'][0]
         output_file = flag_value['-file'][1]
         # Call the file function with the input and output file names and the -explain flag status. 
-        file_input(input_file, output_file, flag_dict['-explain'], 3,3)
+        file_input(input_file, output_file, flag_dict['-explain'],3 ,3)
         sys.exit()
         # This will simply solve the grid in the file and write the solution to the output file,
         # if the -explain flag is set to True, it will print the explanation of how the program solves the grid
