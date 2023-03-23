@@ -29,6 +29,10 @@ def make_hint(grid, filled_in, hint_number):
 
     '''
 
+    # check if the number of hints requested is greater than the number of squares filled in
+    if hint_number > len(filled_in):
+        print("\nYou have requested more hints than there are squares filled in, so you will be given all the hints available:")
+        hint_number = len(filled_in)
 
     for n in range(hint_number):
         

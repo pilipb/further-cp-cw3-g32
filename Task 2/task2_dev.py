@@ -39,7 +39,7 @@ def main():
 	print("====================================")
 	
 	for (i, (grid, n_rows, n_cols)) in enumerate(grids):
-		print("Solving grid: %d" % (i+1))
+		print("\nSolving grid: %d" % (i+1))
 
 		# make a copy of the grid for comparison
 		grid_copy = copy.deepcopy(grid)
