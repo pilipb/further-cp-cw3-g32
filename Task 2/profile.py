@@ -22,10 +22,8 @@ def profile(solved_dict):
             if solved_dict[key][0] == dimensions:
                 timings.append(solved_dict[key][1])
                 empty_cells.append(solved_dict[key][2])
-                iterations.append(solved_dict[key][3])
-        print(timings)
-        print(empty_cells)
-        print(iterations)
+                if dimensions == (3,3):
+                    iterations.append(solved_dict[key][3])
         # Plot the time against the number of empty cells for the 3x3 grids
         # Make it a scatter plot with the empty cells on the x-axis and the time on the y-axis
         plt.scatter(empty_cells, timings)
