@@ -37,7 +37,7 @@ def main():
         input_file = flag_value['-file'][0]
         output_file = flag_value['-file'][1]
         # Call the file function with the input and output file names and the -explain flag status. 
-        file_input(input_file, output_file, flag_dict['-explain'], flag_dict['-hint'], flag_value['-hint'], 3, 3)
+        file_input(input_file, output_file, flag_dict['-explain'], flag_dict['-hint'], flag_value['-hint'])
         sys.exit()
         # This will simply solve the grid in the file and write the solution to the output file,
         # if the -explain flag is set to True, it will print the explanation of how the program solves the grid

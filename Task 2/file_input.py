@@ -3,7 +3,7 @@ from modules import solve
 import numpy as np 
 import copy 
 from hint import make_hint
-def file_input(input_file, output_file, explain, hint, hint_number, n_row, n_col):
+def file_input(input_file, output_file, explain, hint, hint_number):
     """
     This function takes a string and returns the contents of the file as a string
     ----------
@@ -34,6 +34,12 @@ def file_input(input_file, output_file, explain, hint, hint_number, n_row, n_col
                 file_contents[i][j] = int(file_contents[i][j])
             except ValueError:
                 print("Input file must only contain integers between 0 and 9")
+    # Read in grid dimensions to get n_row and n_col
+    try:
+        n_row,n_col = grid_dimensions(file_contents)
+    except ValueError as e:
+        print(e)
+        return None
     try :
         file_input_check(file_contents, n_row, n_col)
     except ValueError as e:
@@ -98,5 +104,41 @@ def file_input_check(file_contents, n_row, n_col):
             raise ValueError("Input file must be a square")
     
 
+def grid_dimensions(file_contents):
+    """
+    This function reads in a soduku grid and returns the dimensions of the squares in the grid
+    ----------
+    Parameters
+    ----------
+    file_contents: list
+        A list of lists representing the contents of the file
+    ----------
+    Returns
+    ----------
+    n_row: int
+        The number of rows in each square
+    n_col: int
+        The number of columns in each square
+    """
+    # Read in grid dimensions to get n_row and n_col
+    side_length = len(file_contents)
+    if side_length == 4:
+        n_row = 2
+        n_col = 2
+    elif side_length == 9:
+        n_row = 3
+        n_col = 3
+    elif side_length == 16:
+        n_row = 4
+        n_col = 4
+    elif side_length == 6:
+        n_row = 3
+        n_col = 2
+    elif side_length == 12:
+        n_row = 4
+        n_col = 3
+    else:
+        raise ValueError("Input file must be a square with side length 4, 6, 9, 12 or 16")
+    return n_row, n_col
 
-
+    
