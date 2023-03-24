@@ -36,8 +36,11 @@ def main():
         # Extract the input and output file names from the flag_value dictionary
         input_file = flag_value['-file'][0]
         output_file = flag_value['-file'][1]
-        # Call the file function with the input and output file names and the -explain flag status. 
-        file_input(input_file, output_file, flag_dict['-explain'], flag_dict['-hint'], flag_value['-hint'])
+        # Call the file function with the input and output file names and the -explain flag status.
+        # This will solve the grid in the input file and write the solution to the output file with the explanation/hints if requested
+        # It can read grids of size 4x4, 6x6, 9x9, 12x12 & 16x16 
+        # (6x6 are assumed to be made up of 3x2 blocks and 12x12 are assumed to be made up of 4x3 blocks)
+        file_input(input_file, output_file, flag_dict['-explain'], flag_dict['-hint'], flag_value['-hint'], flag_dict['-profile'])
         sys.exit()
         # This will simply solve the grid in the file and write the solution to the output file,
         # if the -explain flag is set to True, it will print the explanation of how the program solves the grid

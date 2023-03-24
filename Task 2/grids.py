@@ -66,6 +66,7 @@ Its also a good was to see how different mods impact the performance of the solv
 Currently, grid8 takes about 30 seconds to solve on my computer
 '''
 # print the number of zeros in the each grid
+"""
 for grid in grids:
     zeros = sum([row.count(0) for row in grid[0]])
     print("Number of zeros in grid: ", zeros)
@@ -73,6 +74,8 @@ for grid in grids:
     print("Number of values in grid: ", grid_size)
     print(grid_size - zeros)
     
+"""
+
 
     
 

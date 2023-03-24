@@ -1,9 +1,10 @@
+import numpy as np 
+import copy
+import time 
+from hint import make_hint
 from possible_values import possible_values_combined
 from modules import solve
-import numpy as np 
-import copy 
-from hint import make_hint
-def file_input(input_file, output_file, explain, hint, hint_number):
+def file_input(input_file, output_file, explain, hint, hint_number, profile):
     """
     This function takes a string and returns the contents of the file as a string
     ----------
@@ -47,7 +48,9 @@ def file_input(input_file, output_file, explain, hint, hint_number):
         return None
     # Solve the sudoku grid
     original = copy.deepcopy(file_contents)
+    start = time.time()
     solved_grid, filled_in = solve(file_contents, n_row, n_col)
+    end = time.time()
     if hint:
         solved_grid, filled_in, hint_number = make_hint(original, filled_in, hint_number)
     # Convert solved_grid to a numpy array
@@ -58,6 +61,8 @@ def file_input(input_file, output_file, explain, hint, hint_number):
     if explain:
         # We cannot call explain() here as it is writing to a file instead of printing to the console
         with open(output_file, "a") as file:
+            if profile:
+                file.write(f"\n\nThis grid was solved in {end-start} seconds")
             if hint:
                 file.write("\n")
                 file.write(f"Instructions for the {hint_number} hints")
