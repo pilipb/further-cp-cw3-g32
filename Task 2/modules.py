@@ -333,7 +333,7 @@ def solve(grid, n_rows, n_cols):
 	else:
 		print("Quick solution not found, recursive solver starting")
 		grid = recursive_solve(grid, n_rows, n_cols)
-		
+	
 	filled_in = find_filled(original_grid, grid)
 
 	return grid, filled_in

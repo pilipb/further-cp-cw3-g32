@@ -1,7 +1,9 @@
 from possible_values import possible_values_combined
 from modules import solve
-import numpy as np  
-def file_input(input_file, output_file, explain, n_row, n_col):
+import numpy as np 
+import copy 
+from hint import make_hint
+def file_input(input_file, output_file, explain, hint, hint_number, n_row, n_col):
     """
     This function takes a string and returns the contents of the file as a string
     ----------
@@ -37,16 +39,22 @@ def file_input(input_file, output_file, explain, n_row, n_col):
     except ValueError as e:
         print(e)
         return None
-    # Solve the sudoku grid 
+    # Solve the sudoku grid
+    original = copy.deepcopy(file_contents)
     solved_grid, filled_in = solve(file_contents, n_row, n_col)
-    
+    if hint:
+        solved_grid, filled_in, hint_number = make_hint(original, filled_in, hint_number)
     # Convert solved_grid to a numpy array
     solved_grid = np.array(solved_grid)
     # Export the solved grid to a csv
     np.savetxt(output_file, solved_grid, delimiter=",", fmt="%d")
     # If explain is True, print the steps taken to solve the grid into the output file as a list to the side of the grid
     if explain:
+        # We cannot call explain() here as it is writing to a file instead of printing to the console
         with open(output_file, "a") as file:
+            if hint:
+                file.write("\n")
+                file.write(f"Instructions for the {hint_number} hints")
             for insertion in filled_in:
                 if insertion[0] == 8:
                     file.write("\n")

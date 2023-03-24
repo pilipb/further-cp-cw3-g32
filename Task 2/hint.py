@@ -5,6 +5,7 @@ the number of hints the user has requested will be provided.
 '''
 # imports
 import copy
+import random
 
 
 def make_hint(grid, filled_in, hint_number):
@@ -33,15 +34,18 @@ def make_hint(grid, filled_in, hint_number):
 
     # check if the number of hints requested is greater than the number of squares filled in
     if hint_number > len(filled_in):
-        print("\nYou have requested more hints than there are squares filled in, so you will be given all the hints available:")
         hint_number = len(filled_in)
-
+        print(f"\nYou have requested more hints than there are squares filled in, so you will be given all the hints available ({hint_number})")
+        
+    # Randomly arrange the list of filled in squares so hints don't fill in from left to right
+    random.shuffle(filled_in)
+    hints = []
     # fill in the appropriate number of squares with the corresponding values
     for n in range(hint_number):
         
         grid[filled_in[n][1]][filled_in[n][2]] = filled_in[n][0]
-
-    return grid
+        hints.append([filled_in[n][0], filled_in[n][1], filled_in[n][2]])
+    return grid, hints, hint_number
 
 def find_filled(grid, ans):
 
