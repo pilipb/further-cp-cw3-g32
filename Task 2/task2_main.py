@@ -43,15 +43,18 @@ def main():
         # This will ignore all other flags. 
     
     # If the -file flag is not set, we will solve the grids in the grids.py file
-    
-    for index,data in enumerate(grids):
+    # Initialise the dictionary that will store the solved grid as well as the steps taken to solve it
+    solved_dict = {}
+    for index,data in enumerate(grids[:-1]):
+        # Extract the grid, number of rows and number of columns from the grids.py file
         grid = data[0]
         n_rows = data[1]
         n_cols = data[2]
         solved_grid, filled_in = solve(grid, n_rows, n_cols)
+        # Add the solved grid and the steps taken to solve it to the solved_dict dictionary
+        solved_dict[f'Grid {index+1}'] = [solved_grid, filled_in]
         if flag_dict['-explain'] == True:
             explain((index+1),solved_grid,filled_in)
-        
 
 
     

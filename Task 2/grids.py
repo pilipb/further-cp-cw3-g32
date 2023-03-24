@@ -58,7 +58,6 @@ grid8 = [[0,0,0,0,0,0,0,0,0],
          [0,0,0,0,4,0,0,0,9]]
 
 grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 2, 3), (grid7,3,3), (grid8,3,3)]
-
 '''
 Something to look into is plotting the performance of the solver against the 
 number of zeros in the grid.  This is a good way to see how the solver performs
