@@ -57,6 +57,7 @@ grid8 = [[0,0,0,0,0,0,0,0,0],
          [0,0,2,0,1,0,0,0,0],
          [0,0,0,0,4,0,0,0,9]]
 
+
 grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 2, 3), (grid7,3,3), (grid8,3,3)]
 '''
 Something to look into is plotting the performance of the solver against the 
@@ -64,4 +65,15 @@ number of zeros in the grid.  This is a good way to see how the solver performs
 Its also a good was to see how different mods impact the performance of the solver
 Currently, grid8 takes about 30 seconds to solve on my computer
 '''
+# print the number of zeros in the each grid
+for grid in grids:
+    zeros = sum([row.count(0) for row in grid[0]])
+    print("Number of zeros in grid: ", zeros)
+    grid_size = len(grid[0])**2
+    print("Number of values in grid: ", grid_size)
+    print(grid_size - zeros)
+    
+
+    
+
 

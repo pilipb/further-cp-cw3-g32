@@ -75,7 +75,7 @@ def find_filled(grid, ans):
             # if the values are different, the square has been filled in
             if grid[row][col] != ans[row][col]:
                 filled_in.append([ans[row][col], row, col])
-
+    # This doesnt work for a sodoku board with no squares filled in
     return filled_in
 
 
