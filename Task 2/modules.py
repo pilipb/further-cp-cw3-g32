@@ -176,7 +176,7 @@ def find_empty(grid,n_rows,n_cols):
 
 
 
-def recursive_solve(grid, n_rows, n_cols):
+def recursive_solve(grid, n_rows, n_cols, iterations):
 	'''
 	This function uses recursion to exhaustively search all possible solutions to a grid
 	until the solution is found
@@ -204,10 +204,10 @@ def recursive_solve(grid, n_rows, n_cols):
 	if not empty:
 		#If the solution is correct, return it.
 		if check_solution(grid, n_rows, n_cols):
-			return grid 
+			return grid, iterations
 		else:
 			#If the solution is incorrect, return None
-			return None
+			return None, iterations
 	else:
 		row, col = empty 
 
@@ -217,17 +217,17 @@ def recursive_solve(grid, n_rows, n_cols):
 			#Place the value into the grid
 			grid[row][col] = i
 			#Recursively solve the grid
-			ans = recursive_solve(grid, n_rows, n_cols)
+			ans, iterations = recursive_solve(grid, n_rows, n_cols, iterations+1)
 			#If we've found a solution, return it
 			if ans:
-				return ans
+				return ans, iterations
 
 			#If we couldn't find a solution, that must mean this value is incorrect.
 			#Reset the grid for the next iteration of the loop
 			grid[row][col] = 0 
 
 	#If we get here, we've tried all possible values. Return none to indicate the previous value is incorrect.
-	return None
+	return None, iterations
 
 def random_solve(grid, n_rows, n_cols, max_tries=50000):
 	'''
@@ -315,7 +315,7 @@ def solve(grid, n_rows, n_cols):
 		A list of the filled in values and their indices [value, row, column]
 	
 	'''
-	iteration = 0
+	iterations = 1
 	# intialise the list of filled in values
 	filled_in = []
 
@@ -333,9 +333,11 @@ def solve(grid, n_rows, n_cols):
 
 	else:
 		print("Quick solution not found, recursive solver starting")
-		grid = recursive_solve(grid, n_rows, n_cols)
-	print("Number of iterations: ", iteration)
+		grid, iterations = recursive_solve(grid, n_rows, n_cols, iterations)
+
+	print(grid)
+	print("Number of iterations: ", iterations)
 	filled_in = find_filled(original_grid, grid)
 
-	return grid, filled_in
+	return grid, filled_in, iterations
 

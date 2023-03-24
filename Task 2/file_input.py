@@ -49,7 +49,7 @@ def file_input(input_file, output_file, explain, hint, hint_number, profile):
     # Solve the sudoku grid
     original = copy.deepcopy(file_contents)
     start = time.time()
-    solved_grid, filled_in = solve(file_contents, n_row, n_col)
+    solved_grid, filled_in, iterations = solve(file_contents, n_row, n_col)
     end = time.time()
     if hint:
         solved_grid, filled_in, hint_number = make_hint(original, filled_in, hint_number)
@@ -62,7 +62,7 @@ def file_input(input_file, output_file, explain, hint, hint_number, profile):
         # We cannot call explain() here as it is writing to a file instead of printing to the console
         with open(output_file, "a") as file:
             if profile:
-                file.write(f"\n\nThis grid was solved in {end-start} seconds")
+                file.write(f"\n\nThis grid was solved in {end-start} seconds, using {iterations} recursive iterations")
             if hint:
                 file.write("\n")
                 file.write(f"Instructions for the {hint_number} hints")

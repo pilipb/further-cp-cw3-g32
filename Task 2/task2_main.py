@@ -59,14 +59,14 @@ def main():
         n_cols = data[2]
         # create a time stamp
         start = time.time()
-        solved_grid, filled_in = solve(grid, n_rows, n_cols)
+        solved_grid, filled_in, iterations = solve(grid, n_rows, n_cols)
         end = time.time()
         # Print the time taken to solve the grid and the solved grid
-        print(f'Time taken to solve grid {index+1}: {end-start} seconds')
+        print(f'Time taken to solve grid {index+1}: {end-start} seconds, taking {iterations} recursive iterations')
         print(np.array(solved_grid))
         
         # Add the solved grid and the steps taken to solve it to the solved_dict dictionary
-        solve_metrics[f'Grid {index+1}'] = [(n_rows, n_cols), (end-start), zero_counter]
+        solve_metrics[f'Grid {index+1}'] = [(n_rows, n_cols), (end-start), zero_counter, iterations]
         if flag_dict['-hint'] == True:
             hint_grid, hint_instructions, hint_number = make_hint(original_grid, filled_in, flag_value['-hint'])
         # If the -explain flag is set to True, print the inserted hints
