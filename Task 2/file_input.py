@@ -64,8 +64,10 @@ def file_input(input_file, output_file, explain, hint, hint_number, profile):
             if profile:
                 file.write(f"\n\nThis grid was solved in {end-start} seconds, using {iterations} recursive iterations")
             if hint:
-                file.write("\n")
-                file.write(f"Instructions for the {hint_number} hints")
+                file.write(f"\nAbove is a partially completed grid (it contains {hint_number} hints).")
+                file.write(f"\nThe following is a list of where the hints were inserted.")
+            else:
+                file.write(f"\nThe following is a list of where the numbers were inserted to complete the grid.")
             for insertion in filled_in:
                 if insertion[0] == 8:
                     file.write("\n")

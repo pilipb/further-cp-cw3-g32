@@ -329,13 +329,11 @@ def solve(grid, n_rows, n_cols):
 			break
 
 	if check_solution(grid, n_rows, n_cols):
-		print("Quick fill solution found")
+		print("Quick fill solution exists")
 
 	else:
-		print("Quick solution not found, recursive solver starting")
+		print("Quick solution doesn't exist, recursive solver required...")
 		grid, iterations = recursive_solve(grid, n_rows, n_cols, iterations)
-
-	print(grid)
 
 	filled_in = find_filled(original_grid, grid)
 

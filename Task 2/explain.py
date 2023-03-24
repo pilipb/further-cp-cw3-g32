@@ -1,5 +1,5 @@
 import numpy as np
-def explain(grid_number,solved_grid,filled_in,hint):
+def explain(filled_in,hint):
     """
     This function takes in a solved grid and returns a series of strings explaining how the grid was solved.
     ----------
@@ -14,9 +14,8 @@ def explain(grid_number,solved_grid,filled_in,hint):
         A list of strings explaining how the grid was solved.
     """
     if hint:
-        print(f"Here is a hint for grid {grid_number}:")
+        print(f"This is where values were inserted:")
     else:
-        print(f"Solved grid {grid_number}: ",np.array(solved_grid))
         print("This can be done with the following steps:")
     for instruction in filled_in:
         if instruction[0] == 8:

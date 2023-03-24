@@ -68,14 +68,13 @@ def read_flags(user_input):
         for i in [input_file, output_file]:
             if i[-4:] != ".csv":
                 raise ValueError("Input and output files must be a csv's")
-            
-        # check if the input file exists
         try:
             open(input_file, "r")
         except FileNotFoundError:
             print("Grid input file not found")
             raise FileNotFoundError("Grid input file not found")
-
+        
+        # check if the input file exists
         #If these conditions are met, set the flag value to the next two values (input and output)     
         flag_value["-file"] = user_input[user_input.index("-file")+1:user_input.index("-file")+3]
 
@@ -85,8 +84,7 @@ def read_flags(user_input):
         try:
             int(user_input[user_input.index("-hint")+1])
         except ValueError:
-            print("Hint value must be an integer")
-            return False
+            raise ValueError("Hint value must be an integer")
         else:
             flag_value["-hint"] = int(user_input[user_input.index("-hint")+1])
     

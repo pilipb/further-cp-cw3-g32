@@ -25,7 +25,6 @@ def main():
         except ValueError or FileNotFoundError as e:
             print("Error: ",e)
             sys.exit()
-    print(flag_dict , flag_value)
             
     # The order of flags I'm thinking of is:
     # First look for the -file flag, if it is there, read the file and return the grid. This tells us what will be solved
@@ -63,20 +62,32 @@ def main():
         solved_grid, filled_in, iterations = solve(grid, n_rows, n_cols)
         end = time.time()
         # Print the time taken to solve the grid and the solved grid
-        print(f'Time taken to solve grid {index+1}: {end-start} seconds, taking {iterations} recursive iterations')
-        print(np.array(solved_grid))
+        if flag_dict['-hint'] == False:
+            if flag_dict['-profile'] == True:
+                print(f'Time taken to solve grid {index+1}: {end-start} seconds, taking {iterations} recursive iterations')
+            else:
+                print('Solved grid:')
+            print(np.array(solved_grid))
         
         # Add the solved grid and the steps taken to solve it to the solved_dict dictionary
         solve_metrics[f'Grid {index+1}'] = [(n_rows, n_cols), (end-start), zero_counter, iterations]
         if flag_dict['-hint'] == True:
+            if flag_dict['-profile'] == True:
+                print(f'Time taken to solve grid {index+1}: {end-start} seconds, taking {iterations} recursive iterations')
             hint_grid, hint_instructions, hint_number = make_hint(original_grid, filled_in, flag_value['-hint'])
+            if hint_number != flag_value['-hint']:
+                print('The number of hints requested is greater than the number of empty cells')
+                print('Returning the completed grid instead')
+            else:
+                print(f'Here is partially completed grid ({hint_number} hints inserted):')
+            print(np.array(hint_grid))
         # If the -explain flag is set to True, print the inserted hints
             if flag_dict['-explain'] == True:
-                explain((index+1),hint_grid,hint_instructions,flag_dict['-hint'])
+                explain(hint_instructions,flag_dict['-hint'])
         else:
         # If the -explain flag is set to True, print the steps taken to solve the grid
             if flag_dict['-explain'] == True:
-                explain((index+1),hint_grid,hint_instructions,flag_dict['-hint'])
+                explain(filled_in,flag_dict['-hint'])
     
     if flag_dict['-profile'] == True:
         # Print the profiling metrics
