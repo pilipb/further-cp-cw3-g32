@@ -8,6 +8,7 @@ from flag_identifier import input_checker, read_flags
 from hint import make_hint
 from explain import explain
 from file_input import file_input
+from profile import profile
 
 # This is the main function, it is used to run the program.
 def main():
@@ -76,12 +77,11 @@ def main():
         # If the -explain flag is set to True, print the steps taken to solve the grid
             if flag_dict['-explain'] == True:
                 explain((index+1),hint_grid,hint_instructions,flag_dict['-hint'])
-    print(solve_metrics)
     
-
-
-    
-    
+    if flag_dict['-profile'] == True:
+        # Print the profiling metrics
+        profile(solve_metrics)
+ 
 
 
 

@@ -315,7 +315,7 @@ def solve(grid, n_rows, n_cols):
 		A list of the filled in values and their indices [value, row, column]
 	
 	'''
-	iterations = 1
+	iterations = 0
 	# intialise the list of filled in values
 	filled_in = []
 
@@ -336,7 +336,7 @@ def solve(grid, n_rows, n_cols):
 		grid, iterations = recursive_solve(grid, n_rows, n_cols, iterations)
 
 	print(grid)
-	print("Number of iterations: ", iterations)
+
 	filled_in = find_filled(original_grid, grid)
 
 	return grid, filled_in, iterations

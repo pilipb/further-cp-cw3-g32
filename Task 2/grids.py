@@ -60,6 +60,11 @@ grid8 = [[0,0,0,0,0,0,0,0,0],
          [0,0,0,0,4,0,0,0,8]]
 # This is the very long one ^^^ if you make the bottom 
 # right hand corner 9, it will take a while to solve
+# This can be seen from its solution - the first row is [9,8,7,6,5,4,3,2,1] (The far end of the solution space)
+# With an 8 in the bottom right hand corner, it takes 167 recursive calls to solve
+# With a 9 in the bottom right hand corner, it takes 45267 recursive calls to solve
+# This shows that number of missing cells is of little importance to the time taken to solve
+# Rather the number of recursive calls is the most important factor which in turn is dependent on the position of the grid in the solution space
 grid9 = [[9,0,0,5,0,4,0,1,0],
          [4,0,0,0,0,9,6,0,3],
          [8,1,6,2,7,0,0,0,0],
