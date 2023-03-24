@@ -44,6 +44,10 @@ grid6 = [
 print("Possible Value Test (grid6): ",possible_values_combined(grid6, 2, 3, row=0, column=0))
 
 grids = [(grid1, 2, 2), (grid2, 2, 2), (grid3, 2, 2), (grid4, 2, 2), (grid5, 2, 2), (grid6, 2, 3)]
+
+#A list that will contain tuples (row,column) representing the positions of all the empty squares in the grid
+empty_squares_list = []
+
 '''
 ===================================
 DO NOT CHANGE CODE ABOVE THIS LINE
@@ -124,6 +128,19 @@ def find_empty(grid,n_rows,n_cols):
 	return min_index
 
 	
+def explain(grid, empty_squares_list):
+	'''
+	This function prints a set of instructions for solving the sudoku puzzle
+
+	args: grid, empty_squares_list
+	return: None	
+	'''
+	
+	for square in empty_squares_list:
+		row = square[0]
+		column = square[1]
+		print(f"Put {grid[row][column]} in location {square}")
+
 
 
 def recursive_solve(grid, n_rows, n_cols):
@@ -135,21 +152,28 @@ def recursive_solve(grid, n_rows, n_cols):
 	return: A solved grid (as a nested list), or None
 	'''
 
+	global empty_squares_list
+
 	#N is the maximum integer considered in this board
 	n = n_rows*n_cols
 	#Find an empty place in the grid
 	empty = find_empty(grid,n_rows,n_cols)
 
+
+
 	#If there's no empty places left, check if we've found a solution
 	if not empty:
 		#If the solution is correct, return it.
 		if check_solution(grid, n_rows, n_cols):
+			explain(grid, empty_squares_list)
+			empty_squares_list = []
 			return grid 
 		else:
 			#If the solution is incorrect, return None
 			return None
 	else:
 		row, col = empty 
+		empty_squares_list.append((row,col))
 
 	#Loop through possible values
 	for i in possible_values_combined(grid, n_rows, n_cols, row, col):
@@ -215,6 +239,7 @@ def solve(grid, n_rows, n_cols):
 	#return random_solve(grid, n_rows, n_cols)
 	return recursive_solve(grid, n_rows, n_cols)
 
+
 '''
 ===================================
 DO NOT CHANGE CODE BELOW THIS LINE
@@ -236,6 +261,7 @@ def main():
 		print(solution)
 		if check_solution(solution, n_rows, n_cols):
 			print("grid %d correct" % (i+1))
+			print("\n")
 			points = points + 10
 		else:
 			print("grid %d incorrect" % (i+1))
