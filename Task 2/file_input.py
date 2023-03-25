@@ -94,7 +94,10 @@ def file_input_check(file_contents, n_row, n_col):
     ----------
     None (raises an error if the file is not a valid sudoku grid)
     """
-
+    # Check if grid is a square        
+    for row in file_contents:
+        if len(row) != len(file_contents):
+            raise ValueError("Input file must be a square")
     # Check all the values in the list are integers, between 0 and 9, 
     # and that the grid is a valid sudoku grid (All empty cells have at least one possible value)
     for row_index,row in enumerate(file_contents):
@@ -105,10 +108,7 @@ def file_input_check(file_contents, n_row, n_col):
                 possibilites = possible_values_combined(file_contents, n_row, n_col, row_index, column_index)
                 if len(possibilites) == 0:
                     raise ValueError(f"Input file must be a valid sudoku grid. Cell at row {row_index+1} and column {column_index+1} has no possible values")
-    # Check if grid is a square        
-    for row in file_contents:
-        if len(row) != len(file_contents):
-            raise ValueError("Input file must be a square")
+
     
 
 def grid_dimensions(file_contents):

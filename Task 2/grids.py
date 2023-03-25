@@ -59,7 +59,7 @@ grid8 = [[0,0,0,0,0,0,0,0,0],
          [0,0,2,0,1,0,0,0,0],
          [0,0,0,0,4,0,0,0,8]]
 # This is the very long one ^^^ if you make the bottom 
-# right hand corner 9, it will take a while to solve
+# right hand corner 9, it will take a while to solve (about 30 seconds on my machine)
 # This can be seen from its solution - the first row is [9,8,7,6,5,4,3,2,1] (The far end of the solution space)
 # With an 8 in the bottom right hand corner, it takes 167 recursive calls to solve
 # With a 9 in the bottom right hand corner, it takes 45267 recursive calls to solve
