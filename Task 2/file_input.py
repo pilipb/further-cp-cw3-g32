@@ -57,12 +57,12 @@ def file_input(input_file, output_file, explain, hint, hint_number, profile):
     solved_grid = np.array(solved_grid)
     # Export the solved grid to a csv
     np.savetxt(output_file, solved_grid, delimiter=",", fmt="%d")
-    # If explain is True, print the steps taken to solve the grid into the output file as a list to the side of the grid
-    if explain:
-        # We cannot call explain() here as it is writing to a file instead of printing to the console
-        with open(output_file, "a") as file:
-            if profile:
-                file.write(f"\n\nThis grid was solved in {end-start} seconds, using {iterations} recursive iterations")
+    with open(output_file, "a") as file:
+        if profile:
+            file.write(f"\n\nThis grid was solved in {end-start} seconds, using {iterations} recursive iterations")
+        # If explain is True, print the steps taken to solve the grid into the output file as a list to the side of the grid
+        if explain:
+            # We cannot call explain() here as it is writing to a file instead of printing to the console
             if hint:
                 file.write(f"\nAbove is a partially completed grid (it contains {hint_number} hints).")
                 file.write(f"\nThe following is a list of where the hints were inserted.")
