@@ -49,7 +49,7 @@ class propagationClass:
         '''
         This will look for lists of length 1 in the solution grid and replace the zero in the input grid with the
         value in the list. It will then apply the rules of sudoku to the solution grid and remove numbers that are not
-        possible from the list at each index. hi 
+        possible from the list at each index. 
 
         Parameters
         ----------
