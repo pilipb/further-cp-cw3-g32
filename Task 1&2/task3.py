@@ -15,10 +15,10 @@ def possible_values_grid(grid, n_rows, n_cols, row, column):
 	column: int
 		The column index of the cell to be filled
 	"""
-	grid_copy = grid
+	grid_copy = grid 
 	n = n_rows * n_cols
 
-	for i in range(n): #Having an issue here with indentation, not sure why what we have written is wrong
+	for i in range(n): 
 		for j in range(n):
 			if grid_copy[i][j] == 0:
 				possible_values = list(possible_values_combined(grid_copy, n_rows, n_cols, i, j))
