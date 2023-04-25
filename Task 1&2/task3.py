@@ -19,8 +19,17 @@ def possible_values_grid(grid, n_rows, n_cols, row, column):
 	n = n_rows * n_cols
 
     for i in range(n):
-        for j in range(n):
+		for j in range(n):
             if grid[i][j] == 0:
                 possible_values = list(possible_values_combined(grid, n_rows, n_cols, i, j))
                 grid[i][j] = possible_values
-	
+
+test_grid = [
+		[0, 0, 6, 0, 0, 3],
+		[5, 0, 0, 0, 0, 0],
+		[0, 1, 3, 4, 0, 0],
+		[0, 0, 0, 0, 0, 6],
+		[0, 0, 1, 0, 0, 0],
+		[0, 5, 0, 0, 6, 4]]
+
+possible_values_grid(test_grid, 2, 3, 0, 0)
