@@ -339,5 +339,6 @@ def solve(grid, n_rows, n_cols):
 
 	return grid, filled_in, iterations
 
-def wavefront():
+def wavefront(grid, n_rows, n_cols, row, column):
+	
 	pass
