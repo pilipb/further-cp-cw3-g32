@@ -354,4 +354,7 @@ def wavefront(grid, n_rows, n_cols, row, column):
 	column: int
 		The column index of the cell to be filled
 	"""
+	grid_copy = grid
+	n = n_rows * n_cols
+
 	pass
