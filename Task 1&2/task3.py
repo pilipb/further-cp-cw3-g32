@@ -23,6 +23,7 @@ def possible_values_grid(grid, n_rows, n_cols, row, column):
 			if grid_copy[i][j] == 0:
 				possible_values = list(possible_values_combined(grid_copy, n_rows, n_cols, i, j))
 				grid_copy[i][j] = possible_values
+	return grid_copy
 
 test_grid = [
 		[0, 0, 6, 0, 0, 3],
@@ -32,4 +33,4 @@ test_grid = [
 		[0, 0, 1, 0, 0, 0],
 		[0, 5, 0, 0, 6, 4]]
 
-possible_values_grid(test_grid, 2, 3, 0, 0)
+print(possible_values_grid(test_grid, 2, 3, 0, 0))
