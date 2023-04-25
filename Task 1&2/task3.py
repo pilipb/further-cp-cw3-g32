@@ -20,9 +20,9 @@ def possible_values_grid(grid, n_rows, n_cols, row, column):
 
 	for i in range(n): #Having an issue here with indentation, not sure why what we have written is wrong
 		for j in range(n):
-    		if grid_copy[i][j] == 0:
-            	possible_values = list(possible_values_combined(grid_copy, n_rows, n_cols, i, j))
-            	grid_copy[i][j] = possible_values
+			if grid_copy[i][j] == 0:
+				possible_values = list(possible_values_combined(grid_copy, n_rows, n_cols, i, j))
+				grid_copy[i][j] = possible_values
 
 test_grid = [
 		[0, 0, 6, 0, 0, 3],
