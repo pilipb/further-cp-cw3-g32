@@ -18,4 +18,9 @@ def possible_values_grid(grid, n_rows, n_cols, row, column):
 	grid_copy = grid
 	n = n_rows * n_cols
 
-	pass
+    for i in range(n):
+        for j in range(n):
+            if grid[i][j] == 0:
+                possible_values = list(possible_values_combined(grid, n_rows, n_cols, i, j))
+                grid[i][j] = possible_values
+	
