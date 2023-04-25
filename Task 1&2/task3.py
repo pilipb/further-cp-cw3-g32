@@ -1,6 +1,6 @@
 from possible_values import possible_values_combined
 
-def wavefront(grid, n_rows, n_cols, row, column):
+def possible_values_grid(grid, n_rows, n_cols, row, column):
 	"""
 	Parameters:
 	--------------
