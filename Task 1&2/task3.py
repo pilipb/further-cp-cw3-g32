@@ -76,3 +76,36 @@ def empty_squares_dict(grid_copy, n_rows, n_cols):
 
 #print(grid_copy)
 print(empty_squares_dict(grid_copy, 2, 3))
+
+def wavefront_propogation(grid_copy, empty_squares_dict):
+	
+	
+	
+	
+	
+	# """
+	# Parameters:
+	# --------------
+	# grid_copy: list
+	# 	A list of lists representing a sudoku board
+	# empty_squares_dict: dict
+	# 	A dictionary of the empty squares in the sudoku board and the possible values for each square
+
+	# Returns:
+	# --------------
+	# grid_copy: list
+	# 	A list of lists representing a sudoku board
+	# """
+	# for key in empty_squares_dict:
+	# 	row = key[0]
+	# 	column = key[1]
+	# 	possible_values = empty_squares_dict[key]
+	# 	for value in possible_values:
+	# 		if value in grid_copy[row]:
+	# 			grid_copy[row].remove(value)
+	# 		for i in range(len(grid_copy)):
+	# 			if value in grid_copy[i][column]:
+	# 				grid_copy[i][column].remove(value)
+	# return grid_copy
+	
+	
