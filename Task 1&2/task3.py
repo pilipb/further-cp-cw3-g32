@@ -77,9 +77,13 @@ def empty_squares_dict(grid_copy, n_rows, n_cols):
 #print(grid_copy)
 print(empty_squares_dict(grid_copy, 2, 3))
 
-def wavefront_propogation(grid_copy, empty_squares_dict):
+def wavefront_propogation(grid_copy, empty_squares_dict, n_rows, n_cols):
 	
-	pass
+	n = n_rows * n_cols
+
+	for num_missing_values in range(2,n+1):
+		pass	
+
 	
 	
 	
