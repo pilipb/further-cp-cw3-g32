@@ -79,7 +79,7 @@ print(empty_squares_dict(grid_copy, 2, 3))
 
 def wavefront_propogation(grid_copy, empty_squares_dict):
 	
-	
+	pass
 	
 	
 	
