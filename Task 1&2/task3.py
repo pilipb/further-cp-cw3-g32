@@ -35,4 +35,13 @@ test_grid = [
 		[0, 0, 1, 0, 0, 0],
 		[0, 5, 0, 0, 6, 4]]
 
-print(possible_values_grid(test_grid, 2, 3, 0, 0))
+#print(possible_values_grid(test_grid, 2, 3, 0, 0))
+
+test_grid2 = [
+		[1,2,3,4],
+		[3,4,1,2],
+		[2,3,4,1],
+		[4,1,2,0]
+]
+
+print(possible_values_grid(test_grid2, 2, 2, 0, 0))
