@@ -47,7 +47,23 @@ test_grid2 = [
 #print(possible_values_grid(test_grid2, 2, 2, 0, 0))
 
 def empty_squares_dict(grid_copy, n_rows, n_cols):
+	"""
 	
+	Parameters:
+	--------------
+	grid_copy: list
+		A list of lists representing a sudoku board
+	n_rows: int
+		The number of rows in each square
+	n_cols: int
+		The number of columns in each square
+
+	Returns:
+	--------------
+	empty_squares: dict
+		A dictionary of the empty squares in the sudoku board and the possible values for each square
+
+	"""
 	n = n_rows * n_cols
 	empty_squares = {}
 
