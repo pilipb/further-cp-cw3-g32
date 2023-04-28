@@ -35,7 +35,7 @@ test_grid = [
 		[0, 0, 1, 0, 0, 0],
 		[0, 5, 0, 0, 6, 4]]
 
-print(possible_values_grid(test_grid, 2, 3, 0, 0))
+grid_copy = possible_values_grid(test_grid, 2, 3, 0, 0)
 
 test_grid2 = [
 		[1,2,3,4],
@@ -45,3 +45,18 @@ test_grid2 = [
 ]
 
 #print(possible_values_grid(test_grid2, 2, 2, 0, 0))
+
+def empty_squares_dict(grid_copy, n_rows, n_cols):
+	
+	n = n_rows * n_cols
+	empty_squares = {}
+
+	for i in range(n):
+		for j in range(n):
+			if type(grid_copy[i][j]) == list:
+				empty_squares[(i,j)] = grid_copy[i][j]
+
+	return empty_squares
+
+#print(grid_copy)
+print(empty_squares_dict(grid_copy, 2, 3))
