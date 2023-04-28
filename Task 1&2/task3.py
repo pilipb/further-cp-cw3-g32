@@ -77,6 +77,13 @@ def empty_squares_dict(grid_copy, n_rows, n_cols):
 #print(grid_copy)
 print(empty_squares_dict(grid_copy, 2, 3))
 
+#function that will be called if there is only one possible value for a square
+def single_possible_value(grid_copy, empty_squares_dict, row, column):
+	grid_copy[row][column] = empty_squares_dict[(row,column)][0]
+	del empty_squares_dict[(row,column)]
+	return grid_copy, empty_squares_dict
+
+
 def wavefront_propogation(grid_copy, empty_squares_dict, n_rows, n_cols):
 	
 	n = n_rows * n_cols
