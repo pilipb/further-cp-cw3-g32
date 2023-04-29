@@ -1,5 +1,5 @@
 import numpy as np
-def explain(filled_in,hint):
+def explain(filled_in,hint,profile,time_taken, method, iterations):
     """
     This function takes in a solved grid and returns a series of strings explaining how the grid was solved.
     ----------
@@ -13,8 +13,16 @@ def explain(filled_in,hint):
     explanation: list of strings
         A list of strings explaining how the grid was solved.
     """
+    print("--------------------")
+    if profile:
+        print(f"Time taken to solve: {time_taken:.8f} seconds")
+        print(f"Method used: {method}")
+        if method == "Recursion":
+            print(f"Recursive iterations: {iterations}")
+        print("--------------------")
     if hint:
-        print(f"This is where values were inserted:")
+        print("Partial solution above is the result of the hints you requested.")
+        print("This is where values were inserted:")
     else:
         print("This can be done with the following steps:")
     for instruction in filled_in:

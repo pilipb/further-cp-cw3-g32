@@ -31,8 +31,6 @@ def quick_fill(grid, n_rows, n_cols):
 	
     '''
     # initialise the list of squares that have been filled in
-	filled_in = []
-	
 	for row_index,row in enumerate(grid):
 		for col_index,col in enumerate(row):
 			if grid[row_index][col_index] == 0:

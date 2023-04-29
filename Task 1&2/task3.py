@@ -1,6 +1,6 @@
 from possible_values import possible_values_combined
 
-def possible_values_grid(grid, n_rows, n_cols, row, column):
+def possible_values_grid(grid, n_rows, n_cols):
 	"""
 	Parameters:
 	--------------
@@ -22,7 +22,7 @@ def possible_values_grid(grid, n_rows, n_cols, row, column):
 	for i in range(n): 
 		for j in range(n):
 			if grid_copy[i][j] == 0:
-				possible_values = list(possible_values_combined(grid_copy, n_rows, n_cols, i, j))
+				possible_values = possible_values_combined(grid_copy, n_rows, n_cols, i, j)
 				grid_copy[i][j] = possible_values
 	return grid_copy
 

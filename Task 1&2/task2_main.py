@@ -83,7 +83,7 @@ def main():
             print(np.array(hint_grid))
         # If the -explain flag is set to True, print the inserted hints
             if flag_dict['-explain'] == True:
-                explain(hint_instructions,flag_dict['-hint'])
+                explain(hint_instructions,flag_dict['-hint'], profile=flag_dict['-profile'], time_taken=end-start,method = 'Unknown', iterations=iterations)
         else:
         # If the -explain flag is set to True, print the steps taken to solve the grid
             if flag_dict['-explain'] == True:

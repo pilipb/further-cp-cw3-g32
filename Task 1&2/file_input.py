@@ -4,6 +4,7 @@ import time
 from hint import make_hint
 from possible_values import possible_values_combined
 from modules import solve
+from Sudoku import Sudoku
 def file_input(input_file, output_file, explain, hint, hint_number, profile):
     """
     This function takes a string and returns the contents of the file as a string
@@ -149,3 +150,97 @@ def grid_dimensions(file_contents):
     return n_row, n_col
 
     
+def file_input_extraction(input_file):
+    """
+    This function takes a string and returns the contents of the file as a string
+    ----------
+    Parameters
+    ----------
+    input: str
+        A string representing the input from the command line
+    ----------
+    Returns
+    ----------
+    file_contents: str
+        A string representing the contents of the file
+    """
+    # open the file
+    # read the file
+    # return the file contents
+    with open(input_file, "r", encoding='utf-8-sig') as file:
+        file_contents = file.read()
+    # Convert the file to a list of lists of integers, where each list is a row in the csv
+    file_contents = file_contents.split("\n")
+    # remove the last element in the list, as it is an empty string
+    file_contents = file_contents[:-1]
+    file_contents = [i.split(",") for i in file_contents]
+    # Convert the list of lists to a list of lists of integers
+    for i in range(len(file_contents)):
+        for j in range(len(file_contents[i])):
+            try:
+                file_contents[i][j] = int(file_contents[i][j])
+            except ValueError:
+                print("Input file must only contain integers between 0 and 9")
+    # Read in grid dimensions to get n_row and n_col
+    try:
+        n_row,n_col = grid_dimensions(file_contents)
+    except ValueError as e:
+        print(e)
+        return None
+    try :
+        file_input_check(file_contents, n_row, n_col)
+    except ValueError as e:
+        print(e)
+        return None
+    # Solve the sudoku grid
+    grid = copy.deepcopy(file_contents)
+    return grid, n_row, n_col
+
+def file_input_main(input_file, output_file, hint_flag, hint_value, explain_flag, profile_flag):
+    input_grid, n_row, n_col =  file_input_extraction(input_file)
+    grid_instance = Sudoku(grid=input_grid, 
+                           n_rows = n_row, 
+                           n_cols = n_col, 
+                           hint_flag = hint_flag, 
+                           hint_number =hint_value, 
+                           profile_flag = profile_flag, 
+                           explain_flag = explain_flag)
+    grid_instance.solve()
+    if hint_flag:
+        grid_instance.hint_class()
+        output_grid = grid_instance.hint_grid
+    else:
+        output_grid = grid_instance.grid
+    
+    np.savetxt(output_file, output_grid, delimiter=",", fmt="%d")
+    with open(output_file, "a") as file:
+        if profile_flag:
+            if grid_instance.solve_method == "Recursion":
+                file.write(f"\n\nThis grid was solved in {grid_instance.time_taken} seconds, using {grid_instance.iterations} recursive iterations")
+            else:
+                file.write(f"\n\nThis grid was solved in {grid_instance.time_taken} seconds")
+        # If explain is True, print the steps taken to solve the grid into the output file as a list to the side of the grid
+        if explain_flag:
+            # We cannot call explain() here as it is writing to a file instead of printing to the console
+            if hint_flag:
+                file.write(f"\nAbove is a partially completed grid (it contains {hint_value} hints).")
+                file.write(f"\nThe following is a list of where the hints were inserted.")
+                for insertion in grid_instance.hints:
+                    if insertion[0] == 8:
+                        file.write("\n")
+                        file.write(f"Insert an {insertion[0]} in the cell in row {insertion[1]+1} and column {insertion[2]+1}")
+                    else:
+                        file.write("\n")
+                        file.write(f"Insert a {insertion[0]} in the cell in row {insertion[1]+1} and column {insertion[2]+1}")
+            else:
+                file.write(f"\nThe following is a list of where the numbers were inserted to complete the grid.")
+                for insertion in grid_instance.filled_in:
+                    if insertion[0] == 8:
+                        file.write("\n")
+                        file.write(f"Insert an {insertion[0]} in the cell in row {insertion[1]+1} and column {insertion[2]+1}")
+                    else:
+                        file.write("\n")
+                        file.write(f"Insert a {insertion[0]} in the cell in row {insertion[1]+1} and column {insertion[2]+1}")
+
+
+

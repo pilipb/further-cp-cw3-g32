@@ -1,9 +1,19 @@
-0,1,5,7,6,3,0,9,4
-7,3,0,0,0,0,6,1,0
-6,9,2,4,1,5,0,8,3
+0,0,5,0,0,3,0,9,4
+7,3,0,0,0,0,6,0,0
+0,9,2,4,1,5,0,8,3
 0,5,0,6,0,2,0,4,0
-0,6,9,8,3,0,5,7,2
+0,6,0,0,3,0,0,7,2
 0,8,0,5,0,9,0,0,0
-9,0,6,1,5,0,3,2,0
+9,0,6,1,5,0,3,0,0
 1,0,8,0,9,0,4,0,0
-5,0,0,2,0,4,0,6,1
+5,0,0,2,0,4,0,6,0
+
+
+This grid was solved in 0.003990650177001953 seconds, using 18 recursive iterations
+Above is a partially completed grid (it contains 5 hints).
+The following is a list of where the hints were inserted.
+Insert a 0 in the cell in row 9 and column 2
+Insert a 0 in the cell in row 6 and column 3
+Insert a 0 in the cell in row 5 and column 6
+Insert a 0 in the cell in row 1 and column 7
+Insert a 0 in the cell in row 5 and column 7
