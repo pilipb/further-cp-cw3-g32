@@ -50,8 +50,8 @@ def main():
                                                    n_cols = grid[2], 
                                                    hint_flag = flag_dict['-hint'], 
                                                    hint_number = flag_value['-hint'], 
-                                                   profile_flag=flag_dict['-profile'],
-                                                   explain_flag=flag_dict['-explain'])
+                                                   profile_flag= flag_dict['-profile'],
+                                                   explain_flag= flag_dict['-explain'])
     # Iterate through the grid storage dictionary and:
     for instance in grid_storage:
         # Solve the grid

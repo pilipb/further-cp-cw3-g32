@@ -61,10 +61,16 @@ class Sudoku():
         self.quick_solve()
         if self.solved:
             self.solve_method = "Quick Solve"
+            self.filled_in = find_filled(self.original_grid, self.grid)
         # If the grid is not solved, attempt to solve it using the recursion method
         else:
             self.recursion()
             self.solve_method = "Recursion"
+            if self.solved:
+                # If the grid is solved, get the filled in grid instructions
+                self.filled_in = find_filled(self.original_grid, self.grid)
+            else:
+                raise Exception("No solution exists for this grid: " + str(np.array(self.grid)))
         # At this point, the grid should be solved so we can stop the timer 
         # If it isnt solved, a solution does not exist
         end = time.time()
@@ -75,9 +81,6 @@ class Sudoku():
         This method should only be run after a solve attempt has been made anyway, so this should be fine.
         It will only be run anyways if the -explain flag is set to True 
         """
-        # Get the filled in grid instructions if it has not already been made
-        if self.solved and self.filled_in == None:
-            self.filled_in = find_filled(self.original_grid, self.grid)
         # Get the hints if they have not already been made (So the explain function knows what instructions to use)
         if self.hint_flag:
             if self.hints == None:
@@ -92,9 +95,6 @@ class Sudoku():
         This method should only be run after a solve attempt has been made anyway, so this should be fine.
         It will only be run anyways if the -hint flag is set to True
         """
-        # Get the filled in grid instructions if it has not already been made
-        if self.solved and self.filled_in == None:
-            self.filled_in = find_filled(self.original_grid, self.grid)
         # Call the hint function from hint.py to create the hint grid and hit instructions
         self.hint_grid, self.hints, self.hint_number = make_hint(self.hint_grid, self.filled_in, self.hint_number)
 
