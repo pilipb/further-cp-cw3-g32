@@ -94,7 +94,7 @@ class SudokuSolver():
 		Parameters:
 		--------------
 		grid: list
-			A list of lists representing a sudoku board
+			A list of lists representing a sudoku board (empty squares are represented as 0)
 		n_rows: int
 			The number of rows in each square
 		n_cols: int
@@ -117,8 +117,9 @@ class SudokuSolver():
 				if grid[row][col] == 0:
 					possible_values = possible_values_combined(grid, self.n_rows, self.n_cols, row, col)
 
-					# if there is only one possible value for a square, replace with empty list
+					# if there is only one possible value for a square, replace with the value in the original grid
 					if len(possible_values) == 1:
+						self.original_grid[row][col] = possible_values[0]
 						grid[row][col] = possible_values[0]
 					else:
 						grid[row][col] = possible_values
@@ -151,15 +152,19 @@ class SudokuSolver():
 		# in grid_copy, find the lists with the smallest number of possible values and pick one at random 
 		r_idx, c_idx = self.find_shortest_list(self.working_grid)
 
-		# pick a random value from the list
+		# pick a random value from the possible values at that index
 		possible_values = self.working_grid[r_idx][c_idx]
 		random_value = random.choice(possible_values)
 
 		# update the grid with the random value
 		self.working_grid[r_idx][c_idx] = random_value
 
-		# run the update_grid function to update the grid with the new possible values
-		self.working_grid = self.update_grid(copy.deepcopy(self.working_grid))
+		# update the grid with the new possible values
+		self.working_grid = self.update_grid(self.working_grid)
+
+
+
+		
 
 
 
@@ -248,13 +253,11 @@ if __name__ == '__main__':
 	
 
 	example_class = SudokuSolver(test_grid_1, 2, 3)
-
-	example_class.pprint(example_class.working_grid)
+	example_class.pprint(example_class.original_grid)
 
 	example_class.wavefront_update()
 
 	example_class.pprint(example_class.working_grid)
-
 
 
 
