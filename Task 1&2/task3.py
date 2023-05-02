@@ -64,14 +64,15 @@ def single_possible_value(grid_copy, empty_squares_dict, row, column):
 
 class SudokuGrid():
 	# instances of grid at a certain point in the solution tree
-	def __init__(self, grid, n_rows, n_cols, chosen_move):
+	def __init__(self, grid, n_rows, n_cols, chosen_move = None):
 
 		self.original_grid = grid
 		self.work_grid = copy.deepcopy(grid)
 		self.n_rows = n_rows
 		self.n_cols = n_cols
 		self.n = n_rows * n_cols
-		self.chosen_move = chosen_move
+		self.chosen_move = chosen_move # input chosen
+		self.solved = False
 
 
 
@@ -97,11 +98,12 @@ class SudokuGrid():
 		updates working grid
 
 		"""
-		(r,c) = self.chosen_move[0]
-		value = self.chosen_move[1]
-
-		# insert chosen move
-		self.work_grid[r][c] = value
+		if self.chosen_move:
+			(r,c) = self.chosen_move[0]
+			value = self.chosen_move[1]
+			# insert chosen move
+			self.work_grid[r][c] = value
+			
 		
 		#creating a list of lists of lists for the possible values in each square
 		for row in range(self.n): 
@@ -115,6 +117,7 @@ class SudokuGrid():
 					# if there is only one possible value for a square, replace with the value in the working grid
 					if len(possible_values) == 1:
 						self.work_grid[row][col] = possible_values[0]
+						self.original_grid[row][col] = possible_values[0]
 					else:
 						self.work_grid[row][col] = possible_values
 
@@ -138,9 +141,9 @@ class SudokuGrid():
 			self.solved = True
 
 		# if not None and it isnt the solution, we choose the next step
-		self.next_step = self.find_shortest_list()
+		self.next_move = self.find_shortest_list()
 		
-		return self.next_step
+		return self.next_move
 	
 	
 		
@@ -174,7 +177,26 @@ class SudokuGrid():
 
 		# return the indeces and the choice as a tuple
 		return (list_lengths[0][0], random_value)
+	
 
+	def remove_move(self, move):
+		'''
+		Remove move takes a certain move and removes it from the working grid (so it cant be considered again)
+
+		Parameters:
+		-------------
+		move: tuple
+			Tuple in form ((row,col),val) for the last move taken by the propagation algorithm
+
+		Returns:
+		-------------
+		None:
+			Updates the work_grid
+		
+		'''
+		(r,c) = move[0]
+		value = move[1]
+		self.work_grid[r][c].remove(value)
 
 
 
@@ -212,7 +234,7 @@ class SudokuGrid():
 
 class SudokuSolver():
 	# manage instances from the SudokuGrid class and solve the sudoku puzzle
-	def __init__(self, sudoku_obj):
+	def __init__(self, grid, n_rows, n_cols):
 		'''
 		1. make the possible values grid
 		2. replace any lists of len 1 with the value in the list
@@ -231,61 +253,83 @@ class SudokuSolver():
 
 
 		'''
-		self.original_grid = sudoku_obj.grid 
-		self.n_rows = sudoku_obj.n_rows
-		self.n_cols = sudoku_obj.n_cols
-		self.n = sudoku_obj.n
-		self.solved = False
 
-		self.working_grid = self.update_grid(copy.deepcopy(self.original_grid))
-
-	
-	
+		self.grid = grid
+		self.n_rows = n_rows
+		self.n_cols = n_cols
+		self.init_instance = SudokuGrid(grid, n_rows, n_cols)
+		self.init_instance.update_grid()
+		self.first_move = self.init_instance.next_step()
+		
+		self.frontier = [self.init_instance] # will store each grid object at each stage of the solution
+		self.solved = self.init_instance.solved
 		
 
+	'''
+	Methods are:
 
-	def wavefront_update(self):
+	1. on initialisation, we define the initial grid, and a frontier containing the intial instance of the SudokuGrid class
+	2. The solver method, this is basically a while loop that is continually adding and removing instances from the frontier until one of the instances reports self.solved = True
+
+
+	
+	'''
+	def wavefront_solve(self):
 		'''
-		Pick a random list in the grid (with the smallest number of possible values) and randomly fill in one 
-		of the possible values then update with the new possible values
+		After initialisation, loop through the creating next step, and testing step until either solved or None at which point refer back to frontier
 		
-		Parameters:
-		--------------
-		grid: list
-			A list of lists representing a sudoku board
-		n_rows: int
-			The number of rows in each square
-		n_cols: int
-			The number of columns in each square
-
-		Returns:
-		--------------
-		None
-			Updates the grid in place
 		
 		'''
-		# in grid_copy, find the lists with the smallest number of possible values and pick one at random 
-		r_idx, c_idx = self.find_shortest_list(self.working_grid)
+		move = self.first_move
+	
+		working_obj = SudokuGrid(self.init_instance.original_grid, self.n_rows, self.n_cols, chosen_move = move)
 
-		# pick a random value from the possible values at that index
-		possible_values = self.working_grid[r_idx][c_idx]
-		random_value = random.choice(possible_values)
+		while not working_obj.solved:
+				
+			
+			# update the grid and extract a next step
+			working_obj.update_grid()
+			next_move = working_obj.next_step()
+			
+			if next_move == None:
+				working_obj.remove_move(move)
+				continue
+			elif working_obj.solved:
+				self.solved = True
+				break
+			else:
+				move = next_move
+				self.frontier.append(working_obj)
+	
+			# redefine the working object
+			working_obj = SudokuGrid(working_obj.original_grid, self.n_rows, self.n_cols, chosen_move=move)
 
-		# update the grid with the random value
-		self.working_grid[r_idx][c_idx] = random_value
+			
 
-		# update the grid with the new possible values
-		self.working_grid = self.update_grid(self.working_grid)
+			
 
-
-
-		
-
+				
+			
 
 
 
 
 	
+"""
+def wavefront_solve(grid, n_rows, n_cols)
+	frontier = []
+	solved = False
+	initial_instance = SudokuGrid(grid = grid, n_rows = n_rows, n_cols = n_cols, chosen_move = None)
+	initial_instance.update_grid()
+	initial_instance.next_step()
+	frontier.append(initial_instance)
+	while not solved:
+		# take the original grid and next_step attributes from the last instance in the frontier and initi
+
+		
+
+
+"""
 
 
 
@@ -311,12 +355,18 @@ if __name__ == '__main__':
 		[0, 5, 0, 0, 6, 4]]
 	
 
-	example = SudokuGrid(test_grid_1, 2, 3, ((0,0),1))
-	example.update_grid()
-	print('Next step: ', example.next_step())
-	#example.pprint()
-	print('Original grid: ', example.original_grid)
-	example.pprint()
+
+	# firstly make a grid
+	#grid_ex = SudokuGrid(test_grid_1, 2, 3)
+
+	# import it into the solver class
+	solver = SudokuSolver(test_grid_1, 2, 3)
+
+	# solve using wavefront propagation
+	solver.wavefront_solve()
+
+
+
 	
 
 
