@@ -80,6 +80,7 @@ class SudokuSolver():
 		self.original_grid = grid 
 		self.n_rows = n_rows
 		self.n_cols = n_cols
+		self.n = n_rows * n_cols
 		self.solved = False
 
 		self.working_grid = self.update_grid()
@@ -107,11 +108,10 @@ class SudokuSolver():
 
 		"""
 		grid_copy = copy.deepcopy(self.original_grid)
-		n = self.n_rows * self.n_cols
 	
 		#creating a list of lists of lists for the possible values in each square
-		for row in range(n): 
-			for col in range(n):
+		for row in range(self.n): 
+			for col in range(self.n):
 				if grid_copy[row][col] == 0:
 					possible_values = possible_values_combined(grid_copy, self.n_rows, self.n_cols, row, col)
 
@@ -144,22 +144,58 @@ class SudokuSolver():
 		
 		
 		'''
-
-		# make a copy of the grid - the grid will only contain ints or lists (len > 1) of possible values
-		n = self.n_rows * self.n_cols
-
 		# in grid_copy, find the lists with the smallest number of possible values and pick one at random 
-		idxs = self.find_shortest_list(self.working_grid)
+		self.find_shortest_list()
 
-		print(idxs)
-
-
-
-
-
-	def find_shortest_list(self, grid):
 		
-		pass
+
+
+
+
+
+	def find_shortest_list(self):
+		# find the indeces of the shortest lists in the grid (with len > 1) and pick one at random
+		print('\nWorking grid: ', self.working_grid)
+		# create a tuple containing the indices and length of all lists in the grid
+		list_lengths = []
+		for row in range(self.n_rows):
+			for col in range(self.n_cols):
+
+				value = self.working_grid[row][col]
+				if isinstance(value, list):
+
+					list_lengths.append(((row,col), len(self.working_grid[row][col])))
+
+		# sort the list of tuples by the length of the list
+		list_lengths.sort(key=lambda x: x[1])
+		print('\nList lengths: ', list_lengths)
+
+		# find the index of the shortest list
+		shortest_list_idx = list_lengths[0][0]
+
+		print('\nShortest list index: ', shortest_list_idx)
+
+	def pprint(self):
+		'''
+		Prints the working grid as a sudoku board
+
+		'''
+
+		print('\nWorking grid:')
+		print('\n')
+		for row in range(self.n):
+			if row % self.n_rows == 0 and row != 0:
+				print('---------------------------------')
+			for col in range(self.n):
+				if col % self.n_cols == 0 and col != 0:
+					print('| ', end='')
+				print(self.working_grid[row][col], end=' ')
+			print('\n')
+
+
+
+
+		
 
 
 
@@ -179,9 +215,11 @@ if __name__ == '__main__':
 	example_class = SudokuSolver(test_grid_1, 2, 3)
 
 
-	print(example_class.update_grid())
+	example_class.update_grid()
 	
-	# example_class.wavefront_update()
+	example_class.wavefront_update()
+
+	example_class.pprint()
 
 
 
