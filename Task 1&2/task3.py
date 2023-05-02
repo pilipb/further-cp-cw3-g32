@@ -2,80 +2,6 @@ from possible_values import possible_values_combined
 import copy
 import numpy as np
 
-def possible_values_grid(grid, n_rows, n_cols):
-	"""
-	Parameters:
-	--------------
-	grid: list
-		A list of lists representing a sudoku board
-	n_rows: int
-		The number of rows in each square
-	n_cols: int
-		The number of columns in each square
-	row: int
-		The row index of the cell to be filled
-	column: int
-		The column index of the cell to be filled
-
-	Returns:
-	--------------
-	grid_copy: list
-		A list of lists representing a sudoku board with the empty squares filled with a list of possible values
-
-	"""
-	grid_copy = grid 
-	n = n_rows * n_cols
- 
- 	#creating a list of lists of lists for the possible values in each square
-	for i in range(n): 
-		for j in range(n):
-			if grid_copy[i][j] == 0:
-				possible_values = possible_values_combined(grid_copy, n_rows, n_cols, i, j)
-
-				# if there is only one possible value for a square, fill it in
-				if len(possible_values) == 1:
-					grid_copy[i][j] = possible_values[0]
-				else:
-					grid_copy[i][j] = possible_values
-
-
-	return grid_copy
-
-
-def wavefront_update(grid,  n_rows, n_cols):
-	'''
-	Pick a random list in the grid (with the smallest number of possible values) and randomly fill in one 
-	of the possible values then update with the new possible values
-	
-	Parameters:
-	--------------
-	grid: list
-		A list of lists representing a sudoku board
-	n_rows: int
-		The number of rows in each square
-	n_cols: int
-		The number of columns in each square
-
-	Returns:
-	--------------
-	grid_copy: list
-		A list of lists representing a sudoku board with the empty squares filled with a list of possible values
-	
-	
-	'''
-
-	# make a copy of the grid - the grid will only contain ints or lists (len > 1) of possible values
-	grid_copy = copy.deepcopy(grid)
-	n = n_rows * n_cols
-
-	# find the indeces of the lists with len 2
-	# if there are no lists with len 2, find the indeces of the lists with len 3 etc.
-	
-
-	return grid_copy
-
-
-
 
 
 def empty_squares_dict(grid_copy, n_rows, n_cols):
@@ -140,17 +66,23 @@ def wavefront_propagation(grid_copy, empty_squares_dict, n_rows, n_cols):
 	
 
 
-
-
-
-
 class SudokuSolver():
 
 	def __init__(self, grid, n_rows, n_cols):
-		self.grid = grid
+		'''
+		1. make the possible values grid
+		2. replace any lists of len 1 with the value in the list
+		3. check if its solved and check if any cells have no possible values
+
+
+
+		'''
+		self.original_grid = grid 
 		self.n_rows = n_rows
 		self.n_cols = n_cols
 		self.solved = False
+
+		self.working_grid = self.update_grid()
 
 	
 	def update_grid(self):
@@ -174,22 +106,21 @@ class SudokuSolver():
 			A list of lists representing a sudoku board with the empty squares filled with a list of possible values
 
 		"""
-		grid_copy = copy.deepcopy(self.grid)
+		grid_copy = copy.deepcopy(self.original_grid)
 		n = self.n_rows * self.n_cols
 	
 		#creating a list of lists of lists for the possible values in each square
-		for i in range(n): 
-			for j in range(n):
-				if grid_copy[i][j] == 0:
-					possible_values = possible_values_combined(grid_copy, self.n_rows, self.n_cols, i, j)
+		for row in range(n): 
+			for col in range(n):
+				if grid_copy[row][col] == 0:
+					possible_values = possible_values_combined(grid_copy, self.n_rows, self.n_cols, row, col)
 
-					# if there is only one possible value for a square, fill it in
+					# if there is only one possible value for a square, replace with empty list
 					if len(possible_values) == 1:
-						grid_copy[i][j] = []
+						grid_copy[row][col] = possible_values[0]
 					else:
-						grid_copy[i][j] = possible_values
+						grid_copy[row][col] = possible_values
 
-		self.grid = grid_copy
 		return grid_copy
 
 	def wavefront_update(self):
@@ -208,97 +139,26 @@ class SudokuSolver():
 
 		Returns:
 		--------------
-		grid_copy: list
+		test_grid: list
 			A list of lists representing a sudoku board with the empty squares filled with a list of possible values
 		
 		
 		'''
 
 		# make a copy of the grid - the grid will only contain ints or lists (len > 1) of possible values
-		grid_copy = copy.deepcopy(self.grid)
 		n = self.n_rows * self.n_cols
 
 		# in grid_copy, find the lists with the smallest number of possible values and pick one at random 
-		idxs = self.find_shortest_list(grid_copy)
+		idxs = self.find_shortest_list(self.working_grid)
 
 		print(idxs)
 
 
+
+
+
 	def find_shortest_list(self, grid):
-
-		shortest_lists = []
-		for i in grid:
-			for j in i:
-				try:
-					shortest_lists.append(len(j))
-				except:
-					shortest_lists.append(100)
-
-		# reshape the list into a grid
-		idxs = np.argmin(shortest_lists)
-
-		return idxs
-
-
-
-
-class WavefrontInstance():
-	def __init__(self, grid, previous_step):
-		self.original_grid = grid
-		self.new_grid = copy.deepcopy(grid)
-		self.previous_step = previous_step
-		self.next_step = None
-		self.feasible = True
-		self.solved = False
-	
-	def update_grid(self):
-		'''
-		The update grid should take a grid and create the the list of lists of possible values, removing any lists of len one and
-		making them part of the grid. If there are no lists the grid is solved, if there are only lists of len greater than
-		one, then this step is complete
-
-
-		Parameters:
-		--------------
-		grid: list
-			A list of lists representing a sudoku board
-
-		Returns:
-		--------------
-		grid: list
-			A list of lists representing a sudoku board
-
-
-		Method:
-
-		1. make the possible values grid
-		2. replace any lists of len 1 with the value in the list
-		4. check if its solved and check if any cells have no possible values
-
-
-		'''
-		# make the possible values grid
-
-		pass
-
-	def wavefront_update(self):
-		pass
-
-	def determine_feasability(self):
-		# Determine if the new grid is feasible (if any cell has no possible values, then it is not feasible (self.feasible = False))
-		pass
-
-	def determine_next_step(self):
-		# if self.feasible is false, next step is to undo the previous step (self.next_step = 'revert')
-		# if self.feasible is true, next step is to look at the next cell with the smallest number of possible values (greater than 1) and repeat the process.
-		# This will ne in the exact same format as self.previous_step so it can be passed into the next instance of the class
-		pass
-
-	def revert(self):
-		# This method is only called if the previoius step was not feasible, it takes the current self.next_step, takes it out the self.new_grid.
-		# Then determine_next_step() is called again, and the process repeats.
-		# This means that if the revserion process has exhausted all possible steps at this level, it will revert to the previous instance of the class and undo that step.
-		# This means it is also a depth first seach like recursive process, but it is iterative and the depth should be much lower than a recursive process.
+		
 		pass
 
 
@@ -366,3 +226,70 @@ if __name__ == '__main__':
 	# return grid_copy
 	
 	
+	'''
+	
+
+
+class WavefrontInstance():
+	def __init__(self, grid, previous_step):
+		self.original_grid = grid
+		self.new_grid = copy.deepcopy(grid)
+		self.previous_step = previous_step
+		self.next_step = None
+		self.feasible = True
+		self.solved = False
+	
+	def update_grid(self):
+		
+		The update grid should take a grid and create the the list of lists of possible values, removing any lists of len one and
+		making them part of the grid. If there are no lists the grid is solved, if there are only lists of len greater than
+		one, then this step is complete
+
+
+		Parameters:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+
+		Returns:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+
+
+		Method:
+
+		1. make the possible values grid
+		2. replace any lists of len 1 with the value in the list
+		4. check if its solved and check if any cells have no possible values
+
+
+		
+		# make the possible values grid
+
+		pass
+
+	def wavefront_update(self):
+		pass
+
+	def determine_feasability(self):
+		# Determine if the new grid is feasible (if any cell has no possible values, then it is not feasible (self.feasible = False))
+		pass
+
+	def determine_next_step(self):
+		# if self.feasible is false, next step is to undo the previous step (self.next_step = 'revert')
+		# if self.feasible is true, next step is to look at the next cell with the smallest number of possible values (greater than 1) and repeat the process.
+		# This will ne in the exact same format as self.previous_step so it can be passed into the next instance of the class
+		pass
+
+	def revert(self):
+		# This method is only called if the previoius step was not feasible, it takes the current self.next_step, takes it out the self.new_grid.
+		# Then determine_next_step() is called again, and the process repeats.
+		# This means that if the revserion process has exhausted all possible steps at this level, it will revert to the previous instance of the class and undo that step.
+		# This means it is also a depth first seach like recursive process, but it is iterative and the depth should be much lower than a recursive process.
+		pass
+
+
+	
+	
+	'''
