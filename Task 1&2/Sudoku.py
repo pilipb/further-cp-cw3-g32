@@ -6,7 +6,7 @@ import copy
 import time
 import numpy as np
 class Sudoku():
-    def __init__(self, grid, n_rows, n_cols, hint_flag, hint_number,profile_flag,explain_flag):
+    def __init__(self, grid, n_rows, n_cols, hint_flag, hint_number, profile_flag, explain_flag, solve_method = None):
         self.grid = grid
         self.n_rows = n_rows
         self.n_cols = n_cols
@@ -20,10 +20,10 @@ class Sudoku():
         self.hint_number = hint_number
         self.profile_flag = profile_flag
         self.explain_flag = explain_flag
+        self.solve_method = solve_method
         self.solved = False
         self.filled_in = None
         self.time_taken = None
-        self.solve_method = None
         self.iterations = 0
         self.hints = None
         self.zero_counter = sum([row.count(0) for row in self.grid])

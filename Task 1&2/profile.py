@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import cProfile
+import pstats
 
 def profile(solved_dict):
     """

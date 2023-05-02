@@ -6,7 +6,7 @@ import sys
 import numpy as np
 from profile import profile
 """
-grid_stroage = {}
+grid_storage = {}
 for index, grid in enumerate(grids):
     grid_stroage[f'Grid {index + 1}'] = Sudoku(grid[0], grid[1], grid[2], hint_flag = True, hint_number = 3)
 
@@ -15,6 +15,7 @@ for instance in grid_stroage:
     grid_stroage[instance].hint_class()
     print('Grid',grid_stroage[instance].grid)
     print('Hint Grid',grid_stroage[instance].hint_grid)
+
 """
 
 
@@ -82,6 +83,8 @@ def main():
     if flag_dict['-profile'] == True:
         # Print the profiling metrics
         profile(solve_metrics)   
+
+
 
 if __name__ == "__main__":
     main()
