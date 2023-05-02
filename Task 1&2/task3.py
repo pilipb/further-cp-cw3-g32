@@ -325,20 +325,9 @@ class SudokuSolver():
 			#print('move', move)
 			working_obj = self.frontier[-1]
 			
-			# update the grid and extract a next step
-			print('\nInput grid', self.frontier .work_grid)
 			working_obj.update_grid()
-			print('\nInput move', working_obj.chosen_move)
-			print('\nUpdated grid', working_obj.work_grid)
-			#print('working_obj', working_obj.work_grid)
 
 			next_move = working_obj.next_step()
-			print('next_move', next_move)
-			# print('Output move', self.frontier[-2].next_move)
-			# print('Input move', self.frontier[-1].chosen_move)
-			# print('next move', next_move)
-			
-			# print('next_move', next_move)
 			if next_move == 'solved':
 				self.solved = True
 				print('solved')
@@ -368,41 +357,6 @@ class SudokuSolver():
 		
 			
 			
-			
-
-			
-
-				
-			
-
-
-
-
-	
-"""
-def wavefront_solve(grid, n_rows, n_cols)
-	frontier = []
-	solved = False
-	initial_instance = SudokuGrid(grid = grid, n_rows = n_rows, n_cols = n_cols, chosen_move = None)
-	initial_instance.update_grid()
-	initial_instance.next_step()
-	frontier.append(initial_instance)
-	while not solved:
-		# take the original grid and next_step attributes from the last instance in the frontier and initi
-
-		
-
-
-"""
-
-
-
-
-
-
-		
-
-
 
 
 ######## TESTING ########
@@ -425,6 +379,7 @@ if __name__ == '__main__':
 		  [6,9,0,0,0,8,0,0,0],
 		  [0,0,0,0,0,0,8,0,0],
 		  [0,0,7,0,0,0,0,5,0]]
+	
 	grid6 = [
 		[0, 0, 6, 0, 0, 3],
 		[5, 0, 0, 0, 0, 0],
