@@ -97,7 +97,7 @@ class SudokuSolver():
 		self.n_cols = n_cols
 		self.n = n_rows * n_cols
 		self.solved = False
-		self.empty_vals = self.find_empty_vals(grid)
+		self.empty_vals = self.find_empty_vals(grid) # the number of empty squares in the grid
 
 		self.working_grid = self.update_grid(copy.deepcopy(self.original_grid))
 
@@ -232,6 +232,7 @@ class SudokuSolver():
 		empty_vals = 0
 		for row in range(self.n):
 			for col in range(self.n):
+				# count the number of empty values in the grid (either 0 or a list of possible values)
 				if grid[row][col] == 0 or isinstance(grid[row][col], list):
 					empty_vals += 1
 
