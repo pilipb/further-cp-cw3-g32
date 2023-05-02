@@ -1,5 +1,6 @@
 from possible_values import possible_values_combined
 import copy
+import numpy as np
 
 def possible_values_grid(grid, n_rows, n_cols):
 	"""
@@ -15,39 +16,68 @@ def possible_values_grid(grid, n_rows, n_cols):
 		The row index of the cell to be filled
 	column: int
 		The column index of the cell to be filled
+
+	Returns:
+	--------------
+	grid_copy: list
+		A list of lists representing a sudoku board with the empty squares filled with a list of possible values
+
 	"""
 	grid_copy = grid 
 	n = n_rows * n_cols
  
- #creating a list of lists of lists for the possible values in each square
+ 	#creating a list of lists of lists for the possible values in each square
 	for i in range(n): 
 		for j in range(n):
 			if grid_copy[i][j] == 0:
 				possible_values = possible_values_combined(grid_copy, n_rows, n_cols, i, j)
-				grid_copy[i][j] = possible_values
+
+				# if there is only one possible value for a square, fill it in
+				if len(possible_values) == 1:
+					grid_copy[i][j] = possible_values[0]
+				else:
+					grid_copy[i][j] = possible_values
+
+
 	return grid_copy
 
 
-test_grid_1 = [
-		[0, 0, 6, 0, 0, 3],
-		[5, 0, 0, 0, 0, 0],
-		[0, 1, 3, 4, 0, 0],
-		[0, 0, 0, 0, 0, 6],
-		[0, 0, 1, 0, 0, 0],
-		[0, 5, 0, 0, 6, 4]]
-test_grid_2 = [
-		[1, 0, 0, 2],
-		[0, 0, 1, 0],
-		[0, 1, 0, 4],
-		[0, 0, 0, 1]]
+def wavefront_update(grid,  n_rows, n_cols):
+	'''
+	Pick a random list in the grid (with the smallest number of possible values) and randomly fill in one 
+	of the possible values then update with the new possible values
+	
+	Parameters:
+	--------------
+	grid: list
+		A list of lists representing a sudoku board
+	n_rows: int
+		The number of rows in each square
+	n_cols: int
+		The number of columns in each square
 
-test_grid_3 = [
-		[1,2,3,4],
-		[3,4,1,2],
-		[2,3,4,1],
-		[4,1,2,0]]
+	Returns:
+	--------------
+	grid_copy: list
+		A list of lists representing a sudoku board with the empty squares filled with a list of possible values
+	
+	
+	'''
 
-print('possible values grid, grid 1', possible_values_grid(test_grid_1, 2, 3))
+	# make a copy of the grid - the grid will only contain ints or lists (len > 1) of possible values
+	grid_copy = copy.deepcopy(grid)
+	n = n_rows * n_cols
+
+	# find the indeces of the lists with len 2
+	# if there are no lists with len 2, find the indeces of the lists with len 3 etc.
+	
+
+	return grid_copy
+
+
+
+
+
 def empty_squares_dict(grid_copy, n_rows, n_cols):
 	"""
 	
@@ -75,12 +105,16 @@ def empty_squares_dict(grid_copy, n_rows, n_cols):
 				empty_squares[(i,j)] = grid_copy[i][j]
 
 	return empty_squares
-print('empty squares dict, grid 1',empty_squares_dict(test_grid_1, 2, 3))
 
 
-#function that will be called if there is only one possible value for a square
+
+
+
+# function that will be called if there is only one possible value for a square
 def single_possible_value(grid_copy, empty_squares_dict, row, column):
+
 	grid_copy[row][column] = empty_squares_dict[(row,column)][0]
+
 	del empty_squares_dict[(row,column)]
 	return grid_copy, empty_squares_dict
 
@@ -105,6 +139,109 @@ def wavefront_propagation(grid_copy, empty_squares_dict, n_rows, n_cols):
 	# 5. If the wavefront is valid, then the next step is to look at the next cell with the smallest number of possible values (greater than 1) and repeat the process.
 	
 
+
+
+
+
+
+class SudokuSolver():
+
+	def __init__(self, grid, n_rows, n_cols):
+		self.grid = grid
+		self.n_rows = n_rows
+		self.n_cols = n_cols
+		self.solved = False
+
+	
+	def update_grid(self):
+		"""
+		Parameters:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+		n_rows: int
+			The number of rows in each square
+		n_cols: int
+			The number of columns in each square
+		row: int
+			The row index of the cell to be filled
+		column: int
+			The column index of the cell to be filled
+
+		Returns:
+		--------------
+		grid_copy: list
+			A list of lists representing a sudoku board with the empty squares filled with a list of possible values
+
+		"""
+		grid_copy = copy.deepcopy(self.grid)
+		n = self.n_rows * self.n_cols
+	
+		#creating a list of lists of lists for the possible values in each square
+		for i in range(n): 
+			for j in range(n):
+				if grid_copy[i][j] == 0:
+					possible_values = possible_values_combined(grid_copy, self.n_rows, self.n_cols, i, j)
+
+					# if there is only one possible value for a square, fill it in
+					if len(possible_values) == 1:
+						grid_copy[i][j] = []
+					else:
+						grid_copy[i][j] = possible_values
+
+		self.grid = grid_copy
+		return grid_copy
+
+	def wavefront_update(self):
+		'''
+		Pick a random list in the grid (with the smallest number of possible values) and randomly fill in one 
+		of the possible values then update with the new possible values
+		
+		Parameters:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+		n_rows: int
+			The number of rows in each square
+		n_cols: int
+			The number of columns in each square
+
+		Returns:
+		--------------
+		grid_copy: list
+			A list of lists representing a sudoku board with the empty squares filled with a list of possible values
+		
+		
+		'''
+
+		# make a copy of the grid - the grid will only contain ints or lists (len > 1) of possible values
+		grid_copy = copy.deepcopy(self.grid)
+		n = self.n_rows * self.n_cols
+
+		# in grid_copy, find the lists with the smallest number of possible values and pick one at random 
+		idxs = self.find_shortest_list(grid_copy)
+
+		print(idxs)
+
+
+	def find_shortest_list(self, grid):
+
+		shortest_lists = []
+		for i in grid:
+			for j in i:
+				try:
+					shortest_lists.append(len(j))
+				except:
+					shortest_lists.append(100)
+
+		# reshape the list into a grid
+		idxs = np.argmin(shortest_lists)
+
+		return idxs
+
+
+
+
 class WavefrontInstance():
 	def __init__(self, grid, previous_step):
 		self.original_grid = grid
@@ -115,8 +252,36 @@ class WavefrontInstance():
 		self.solved = False
 	
 	def update_grid(self):
-		# Based off the original grid and the previous step, update the new grid, also check if the new grid is solved, if so then self.solved = True and the ideal path 
-		# can be found by tracing the previous steps back to the original grid.
+		'''
+		The update grid should take a grid and create the the list of lists of possible values, removing any lists of len one and
+		making them part of the grid. If there are no lists the grid is solved, if there are only lists of len greater than
+		one, then this step is complete
+
+
+		Parameters:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+
+		Returns:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+
+
+		Method:
+
+		1. make the possible values grid
+		2. replace any lists of len 1 with the value in the list
+		4. check if its solved and check if any cells have no possible values
+
+
+		'''
+		# make the possible values grid
+
+		pass
+
+	def wavefront_update(self):
 		pass
 
 	def determine_feasability(self):
@@ -135,6 +300,30 @@ class WavefrontInstance():
 		# This means that if the revserion process has exhausted all possible steps at this level, it will revert to the previous instance of the class and undo that step.
 		# This means it is also a depth first seach like recursive process, but it is iterative and the depth should be much lower than a recursive process.
 		pass
+
+
+
+
+if __name__ == '__main__':
+
+
+	test_grid_1 = [
+		[0, 0, 6, 0, 0, 3],
+		[5, 0, 0, 0, 0, 0],
+		[0, 1, 3, 4, 0, 0],
+		[0, 0, 0, 0, 0, 6],
+		[0, 0, 1, 0, 0, 0],
+		[0, 5, 0, 0, 6, 4]]
+	
+
+	example_class = SudokuSolver(test_grid_1, 2, 3)
+
+
+	print(example_class.update_grid())
+	
+	# example_class.wavefront_update()
+
+
 
 
 # Outside of this class we'll have a list of instances of this class, and we'll update the list as we go along.
