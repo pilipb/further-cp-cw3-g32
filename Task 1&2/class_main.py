@@ -4,7 +4,7 @@ from flag_identifier import input_checker, read_flags
 from file_input import file_input_main
 import sys
 import numpy as np
-from profile import profile
+from profile import profile_grids
 """
 grid_storage = {}
 for index, grid in enumerate(grids):
@@ -82,7 +82,7 @@ def main():
     # If the profile flag is enabled, print the profiling metrics
     if flag_dict['-profile'] == True:
         # Print the profiling metrics
-        profile(solve_metrics)   
+        profile_grids(solve_metrics)   
 
 
 

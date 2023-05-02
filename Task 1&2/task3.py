@@ -2,6 +2,7 @@ from possible_values import possible_values_combined
 import copy
 import numpy as np
 import random
+from modules import check_solution#(grid, n_rows, n_cols)
 
 #### CURRENTLY UNUSED FUNCTIONS ####
 
@@ -33,10 +34,6 @@ def empty_squares_dict(grid_copy, n_rows, n_cols):
 
 	return empty_squares
 
-
-
-
-
 # function that will be called if there is only one possible value for a square
 def single_possible_value(grid_copy, empty_squares_dict, row, column):
 
@@ -44,8 +41,6 @@ def single_possible_value(grid_copy, empty_squares_dict, row, column):
 
 	del empty_squares_dict[(row,column)]
 	return grid_copy, empty_squares_dict
-
-
 
 
 
@@ -67,42 +62,20 @@ def single_possible_value(grid_copy, empty_squares_dict, row, column):
 
 ###### CLASS CONTAINS ALL FUNCTIONS ######
 
-class SudokuSolver():
+class SudokuGrid():
+	# instances of grid at a certain point in the solution tree
+	def __init__(self, grid, n_rows, n_cols, chosen_move):
 
-	def __init__(self, grid, n_rows, n_cols):
-		'''
-		1. make the possible values grid
-		2. replace any lists of len 1 with the value in the list
-		3. check if its solved and check if any cells have no possible values
-		4. if not solved, pick a random cell with the smallest number of possible values and randomly fill in one of the possible values
-		5. update the possible values grid with the new possible values
-		6. repeat from step 3
-
-		Steps 1-3 are done in the __init__ method, the rest are done in the wavefront_update method:
-		eventually should implement a while loop that will stop when the grid is solved or when there are no more possible values for a cell
-
-		Parameters:
-		--------------
-		grid: list
-			A list of lists representing a sudoku board
-		n_rows: int
-			The number of rows in each square
-		n_cols: int
-			The number of columns in each square
-
-
-		'''
-		self.original_grid = grid 
+		self.original_grid = grid
+		self.work_grid = copy.deepcopy(grid)
 		self.n_rows = n_rows
 		self.n_cols = n_cols
 		self.n = n_rows * n_cols
-		self.solved = False
-		self.empty_vals = self.find_empty_vals(grid) # the number of empty squares in the grid
+		self.chosen_move = chosen_move
 
-		self.working_grid = self.update_grid(copy.deepcopy(self.original_grid))
 
-	
-	def update_grid(self, grid):
+
+	def update_grid(self):
 		"""
 		Parameters:
 		--------------
@@ -116,28 +89,158 @@ class SudokuSolver():
 			The row index of the cell to be filled
 		column: int
 			The column index of the cell to be filled
+		chosen_move: tuple
+			Location and value of move in form: ((i,j), val)
 
 		Returns:
 		--------------
-		grid_copy: list
-			A list of lists representing a sudoku board with the empty squares filled with a list of possible values
+		updates working grid
 
 		"""
+		(r,c) = self.chosen_move[0]
+		value = self.chosen_move[1]
+
+		# insert chosen move
+		self.work_grid[r][c] = value
 		
 		#creating a list of lists of lists for the possible values in each square
 		for row in range(self.n): 
 			for col in range(self.n):
-				if grid[row][col] == 0:
-					possible_values = possible_values_combined(grid, self.n_rows, self.n_cols, row, col)
+				# find an empty spot (0)
+				if self.work_grid[row][col] == 0:
 
-					# if there is only one possible value for a square, replace with the value in the original grid
+					# find the possible values
+					possible_values = possible_values_combined(self.work_grid, self.n_rows, self.n_cols, row, col)
+
+					# if there is only one possible value for a square, replace with the value in the working grid
 					if len(possible_values) == 1:
-						self.original_grid[row][col] = possible_values[0]
-						grid[row][col] = possible_values[0]
+						self.work_grid[row][col] = possible_values[0]
 					else:
-						grid[row][col] = possible_values
+						self.work_grid[row][col] = possible_values
 
-		return grid
+
+	
+	def next_step(self):
+		'''
+		This function will check the grid after the update for:
+		1) any empty squares with no possible values (return 'None')
+		2) if the sudoku is solved (set self.solved to True)
+		3) If neither of these, we move down the solution tree and return the next step
+
+		'''
+		for row in range(self.n):
+			for col in range(self.n):
+				# if any lists in grid have length 0 return None
+				if isinstance(self.work_grid[row][col], list) and len(self.work_grid[row][col]) == 0:
+					return None
+					
+		if check_solution(self.original_grid, self.n_rows, self.n_cols):
+			self.solved = True
+
+		# if not None and it isnt the solution, we choose the next step
+		self.next_step = self.find_shortest_list()
+		
+		return self.next_step
+	
+	
+		
+	def find_shortest_list(self):
+		'''
+		Find the shortest list in the grid and return the index of the list and the length of the list
+		Parameters:
+		--------------
+		
+		Returns:
+		--------------
+		index: tuple
+			The index of the shortest list in the grid
+		'''
+
+		# create a tuple containing the indices and length of all lists in the grid
+		list_lengths = []
+		for row in range(self.n):
+			for col in range(self.n):
+				value = self.work_grid[row][col]
+
+				if isinstance(value, list):
+					list_lengths.append(((row,col), value))
+
+		# sort the list of tuples by the length of the list
+		list_lengths.sort(key=lambda x: x[1])
+
+		# find the index of the shortest list with a random choice from the list
+		possible_values = list_lengths[0][1]
+		random_value = random.choice(possible_values)
+
+		# return the indeces and the choice as a tuple
+		return (list_lengths[0][0], random_value)
+
+
+
+
+
+	def pprint(self):
+		'''
+		Prints the working grid as a sudoku board
+
+		Parameters:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+
+		Returns:
+		--------------
+		None
+			Prints the grid as a sudoku board
+
+
+		'''
+		print('\nPretty Print:\n')
+		for row in range(self.n):
+			if row % self.n_rows == 0 and row != 0:
+				print('---------------------------------')
+			for col in range(self.n):
+				if col % self.n_cols == 0 and col != 0:
+					print('| ', end='')
+				print(self.work_grid[row][col], end=' ')
+			print('\n')
+	
+
+
+
+
+
+class SudokuSolver():
+	# manage instances from the SudokuGrid class and solve the sudoku puzzle
+	def __init__(self, sudoku_obj):
+		'''
+		1. make the possible values grid
+		2. replace any lists of len 1 with the value in the list
+		3. check if its solved and check if any cells have no possible values
+		4. if not solved, pick a random cell with the smallest number of possible values and randomly fill in one of the possible values
+		5. update the possible values grid with the new possible values
+		6. repeat from step 3
+
+		Steps 1-3 are done in the __init__ method, the rest are done in the wavefront_update method:
+		eventually should implement a while loop that will stop when the grid is solved or when there are no more possible values for a cell
+
+		Parameters:
+		--------------
+		sudoku_obj: class
+			An instance of the SudokuGrid class containing the sudoku board and the possible values for each cell
+
+
+		'''
+		self.original_grid = sudoku_obj.grid 
+		self.n_rows = sudoku_obj.n_rows
+		self.n_cols = sudoku_obj.n_cols
+		self.n = sudoku_obj.n
+		self.solved = False
+
+		self.working_grid = self.update_grid(copy.deepcopy(self.original_grid))
+
+	
+	
 		
 
 
@@ -181,90 +284,10 @@ class SudokuSolver():
 
 
 
-	def find_shortest_list(self, grid):
-		'''
-		Find the shortest list in the grid and return the index of the list and the length of the list
 
-		Parameters:
-		--------------
-		
-		Returns:
-		--------------
-		index: tuple
-			The index of the shortest list in the grid
-
-
-		'''
-
-		# create a tuple containing the indices and length of all lists in the grid
-		list_lengths = []
-		for row in range(self.n):
-			for col in range(self.n):
-
-				value = grid[row][col]
-				if isinstance(value, list):
-
-					list_lengths.append(((row,col), len(grid[row][col])))
-
-		# sort the list of tuples by the length of the list
-		list_lengths.sort(key=lambda x: x[1])
-
-		# find the index of the shortest list
-		return list_lengths[0][0]
 	
 
-	def find_empty_vals(self, grid):
-		'''
-		Count the number of empty values in the grid
-		Either 0 or a list of possible values
 
-		Parameters:
-		--------------
-		grid: list
-			A list of lists representing a sudoku board
-
-		Returns:
-		--------------
-		empty_vals: int
-			The number of empty values in the grid
-		
-		'''
-		empty_vals = 0
-		for row in range(self.n):
-			for col in range(self.n):
-				# count the number of empty values in the grid (either 0 or a list of possible values)
-				if grid[row][col] == 0 or isinstance(grid[row][col], list):
-					empty_vals += 1
-
-		return empty_vals
-
-
-
-	def pprint(self, grid):
-		'''
-		Prints the working grid as a sudoku board
-
-		Parameters:
-		--------------
-		grid: list
-			A list of lists representing a sudoku board
-
-		Returns:
-		--------------
-		None
-			Prints the grid as a sudoku board
-
-
-		'''
-		print('\n')
-		for row in range(self.n):
-			if row % self.n_rows == 0 and row != 0:
-				print('---------------------------------')
-			for col in range(self.n):
-				if col % self.n_cols == 0 and col != 0:
-					print('| ', end='')
-				print(grid[row][col], end=' ')
-			print('\n')
 
 
 
@@ -288,14 +311,13 @@ if __name__ == '__main__':
 		[0, 5, 0, 0, 6, 4]]
 	
 
-	example_class = SudokuSolver(test_grid_1, 2, 3)
-	example_class.pprint(example_class.original_grid)
-
-	example_class.wavefront_update()
-
-	example_class.pprint(example_class.working_grid)
-
-
+	example = SudokuGrid(test_grid_1, 2, 3, ((0,0),1))
+	example.update_grid()
+	print('Next step: ', example.next_step())
+	#example.pprint()
+	print('Original grid: ', example.original_grid)
+	example.pprint()
+	
 
 
 

@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
-import cProfile
+#import cProfile
 import pstats
 
-def profile(solved_dict):
+def profile_grids(solved_dict):
     """
     This function takes a dictionary of solved grids metrics and plots them. 
     [INSERT MORE PLOTTING DETAIL HERE]
