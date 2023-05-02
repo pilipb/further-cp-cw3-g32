@@ -84,6 +84,7 @@ class SudokuSolver():
 		self.n_cols = n_cols
 		self.n = n_rows * n_cols
 		self.solved = False
+		self.empty_vals = self.find_empty_vals(grid)
 
 		self.working_grid = self.update_grid(copy.deepcopy(self.original_grid))
 
@@ -193,8 +194,21 @@ class SudokuSolver():
 
 		# find the index of the shortest list
 		return list_lengths[0][0]
+	
 
+	def find_empty_vals(self, grid):
+		'''
+		Find the number of empty values in the grid
+		Either 0 or a list of possible values
 		
+		'''
+		empty_vals = 0
+		for row in range(self.n):
+			for col in range(self.n):
+				if grid[row][col] == 0 or isinstance(grid[row][col], list):
+					empty_vals += 1
+
+		return empty_vals
 
 
 
