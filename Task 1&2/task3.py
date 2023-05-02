@@ -1,6 +1,7 @@
 from possible_values import possible_values_combined
 import copy
 import numpy as np
+import random
 
 
 
@@ -83,7 +84,7 @@ class SudokuSolver():
 		self.n = n_rows * n_cols
 		self.solved = False
 
-		self.working_grid = self.update_grid()
+		self.working_grid = copy.deepcopy(self.original_grid)
 
 	
 	def update_grid(self):
@@ -107,21 +108,24 @@ class SudokuSolver():
 			A list of lists representing a sudoku board with the empty squares filled with a list of possible values
 
 		"""
-		grid_copy = copy.deepcopy(self.original_grid)
-	
+
+		grid = self.working_grid
+		
 		#creating a list of lists of lists for the possible values in each square
 		for row in range(self.n): 
 			for col in range(self.n):
-				if grid_copy[row][col] == 0:
-					possible_values = possible_values_combined(grid_copy, self.n_rows, self.n_cols, row, col)
+				if grid[row][col] == 0:
+					possible_values = possible_values_combined(grid, self.n_rows, self.n_cols, row, col)
 
 					# if there is only one possible value for a square, replace with empty list
 					if len(possible_values) == 1:
-						grid_copy[row][col] = possible_values[0]
+						grid[row][col] = possible_values[0]
 					else:
-						grid_copy[row][col] = possible_values
+						grid[row][col] = possible_values
 
-		return grid_copy
+		self.working_grid = grid
+		
+
 
 	def wavefront_update(self):
 		'''
@@ -145,21 +149,41 @@ class SudokuSolver():
 		
 		'''
 		# in grid_copy, find the lists with the smallest number of possible values and pick one at random 
-		self.find_shortest_list()
+		r_idx, c_idx = self.find_shortest_list()
 
-		
+		# pick a random value from the list
+		possible_values = self.working_grid[r_idx][c_idx]
 
+		random_value = random.choice(possible_values)
+
+		# update the grid with the random value
+		self.working_grid[r_idx][c_idx] = random_value
+
+		# run the update_grid function to update the grid with the new possible values
+		# self.update_grid()
 
 
 
 
 	def find_shortest_list(self):
-		# find the indeces of the shortest lists in the grid (with len > 1) and pick one at random
-		print('\nWorking grid: ', self.working_grid)
+		'''
+		Find the shortest list in the grid and return the index of the list and the length of the list
+
+		Parameters:
+		--------------
+		
+		Returns:
+		--------------
+		shortest_list: tuple
+			A tuple containing the index of the shortest list and the length of the list - (row, col), len(list)
+
+
+		'''
+
 		# create a tuple containing the indices and length of all lists in the grid
 		list_lengths = []
-		for row in range(self.n_rows):
-			for col in range(self.n_cols):
+		for row in range(self.n):
+			for col in range(self.n):
 
 				value = self.working_grid[row][col]
 				if isinstance(value, list):
@@ -168,20 +192,19 @@ class SudokuSolver():
 
 		# sort the list of tuples by the length of the list
 		list_lengths.sort(key=lambda x: x[1])
-		print('\nList lengths: ', list_lengths)
 
 		# find the index of the shortest list
-		shortest_list_idx = list_lengths[0][0]
+		return list_lengths[0][0]
 
-		print('\nShortest list index: ', shortest_list_idx)
+		
 
-	def pprint(self):
+
+
+	def pprint(self, grid):
 		'''
 		Prints the working grid as a sudoku board
 
 		'''
-
-		print('\nWorking grid:')
 		print('\n')
 		for row in range(self.n):
 			if row % self.n_rows == 0 and row != 0:
@@ -189,7 +212,7 @@ class SudokuSolver():
 			for col in range(self.n):
 				if col % self.n_cols == 0 and col != 0:
 					print('| ', end='')
-				print(self.working_grid[row][col], end=' ')
+				print(grid[row][col], end=' ')
 			print('\n')
 
 
@@ -213,13 +236,17 @@ if __name__ == '__main__':
 	
 
 	example_class = SudokuSolver(test_grid_1, 2, 3)
-
-
 	example_class.update_grid()
-	
-	example_class.wavefront_update()
+	# example_class.pprint(example_class.original_grid)
+	example_class.pprint(example_class.working_grid)
 
-	example_class.pprint()
+
+	example_class.wavefront_update()
+	example_class.update_grid()
+	# example_class.pprint(example_class.original_grid)
+	example_class.pprint(example_class.working_grid)
+
+
 
 
 
