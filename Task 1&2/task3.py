@@ -3,7 +3,7 @@ import copy
 import numpy as np
 import random
 
-
+#### CURRENTLY UNUSED FUNCTIONS ####
 
 def empty_squares_dict(grid_copy, n_rows, n_cols):
 	"""
@@ -46,26 +46,26 @@ def single_possible_value(grid_copy, empty_squares_dict, row, column):
 	return grid_copy, empty_squares_dict
 
 
-def wavefront_propagation(grid_copy, empty_squares_dict, n_rows, n_cols):
-	
-	n = n_rows * n_cols
-	for num_missing_values in range(2,n+1):
-		pass	
-	
-	# PLAN:
-	# possible_values_grid() is a very useful function, it will be the start point for this process and will dynamically be explored
-	# Each instance of the wavefront will be an instance of a class (seen below)
-	# Create a list that tracks class instances of the wavefront, this list is growing and shrinking constantly
-	# The list will be called wavefront_list
-	# This is an iterative process
-	# Each iteration consists of (current thoughts):
-	# 1. Look at the current grid (where empties are represented as a list of possibles), determine which cell has the smallest number of possible values (greater than 1)
-	# 2. Create a new instance of the wavefront class, with the current grid, the latest step to get to this point, update the current grid to reflect the latest step (what values are now possible)
-	# 3. Update the wavefront dictionary with the new instance. If the new instance has a cell with only one possible value, then fill in that value and remove the cell from the dictionary.
-	# 4. If a cell has no possible values, then the wavefront is invalid and the previous step must be undone, and the step that led to that step must be removed from previous instance as we have deemed it invalid.
-	# 5. If the wavefront is valid, then the next step is to look at the next cell with the smallest number of possible values (greater than 1) and repeat the process.
+
+
+
+
+# PLAN:
+# possible_values_grid() is a very useful function, it will be the start point for this process and will dynamically be explored
+# Each instance of the wavefront will be an instance of a class (seen below)
+# Create a list that tracks class instances of the wavefront, this list is growing and shrinking constantly
+# The list will be called wavefront_list
+# This is an iterative process
+# Each iteration consists of (current thoughts):
+# 1. Look at the current grid (where empties are represented as a list of possibles), determine which cell has the smallest number of possible values (greater than 1)
+# 2. Create a new instance of the wavefront class, with the current grid, the latest step to get to this point, update the current grid to reflect the latest step (what values are now possible)
+# 3. Update the wavefront dictionary with the new instance. If the new instance has a cell with only one possible value, then fill in that value and remove the cell from the dictionary.
+# 4. If a cell has no possible values, then the wavefront is invalid and the previous step must be undone, and the step that led to that step must be removed from previous instance as we have deemed it invalid.
+# 5. If the wavefront is valid, then the next step is to look at the next cell with the smallest number of possible values (greater than 1) and repeat the process.
 	
 
+
+###### CLASS CONTAINS ALL FUNCTIONS ######
 
 class SudokuSolver():
 
@@ -77,6 +77,19 @@ class SudokuSolver():
 		4. if not solved, pick a random cell with the smallest number of possible values and randomly fill in one of the possible values
 		5. update the possible values grid with the new possible values
 		6. repeat from step 3
+
+		Steps 1-3 are done in the __init__ method, the rest are done in the wavefront_update method:
+		eventually should implement a while loop that will stop when the grid is solved or when there are no more possible values for a cell
+
+		Parameters:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+		n_rows: int
+			The number of rows in each square
+		n_cols: int
+			The number of columns in each square
+
 
 		'''
 		self.original_grid = grid 
@@ -144,9 +157,8 @@ class SudokuSolver():
 
 		Returns:
 		--------------
-		test_grid: list
-			A list of lists representing a sudoku board with the empty squares filled with a list of possible values
-		
+		None
+			Updates the grid in place
 		
 		'''
 		# in grid_copy, find the lists with the smallest number of possible values and pick one at random 
@@ -178,8 +190,8 @@ class SudokuSolver():
 		
 		Returns:
 		--------------
-		shortest_list: tuple
-			A tuple containing the index of the shortest list and the length of the list - (row, col), len(list)
+		index: tuple
+			The index of the shortest list in the grid
 
 
 		'''
@@ -203,8 +215,18 @@ class SudokuSolver():
 
 	def find_empty_vals(self, grid):
 		'''
-		Find the number of empty values in the grid
+		Count the number of empty values in the grid
 		Either 0 or a list of possible values
+
+		Parameters:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+
+		Returns:
+		--------------
+		empty_vals: int
+			The number of empty values in the grid
 		
 		'''
 		empty_vals = 0
@@ -220,6 +242,17 @@ class SudokuSolver():
 	def pprint(self, grid):
 		'''
 		Prints the working grid as a sudoku board
+
+		Parameters:
+		--------------
+		grid: list
+			A list of lists representing a sudoku board
+
+		Returns:
+		--------------
+		None
+			Prints the grid as a sudoku board
+
 
 		'''
 		print('\n')
@@ -239,6 +272,8 @@ class SudokuSolver():
 
 
 
+
+######## TESTING ########
 
 if __name__ == '__main__':
 
