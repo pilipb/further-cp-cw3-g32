@@ -27,6 +27,7 @@ class Sudoku():
         self.iterations = 0
         self.hints = None
         self.zero_counter = sum([row.count(0) for row in self.grid])
+
     def quick_solve(self):
         """
         This methtod runs the quick_solve function from modules.py
@@ -42,6 +43,7 @@ class Sudoku():
         # Check if the grid is solved, if it is, set the solved flag to True
         if check_solution(self.grid, self.n_rows, self.n_cols):
             self.solved = True
+
     def recursion(self):
         """
         This method runs the recursive_solve function from modules.py
@@ -51,6 +53,7 @@ class Sudoku():
         self.grid, self.iterations = recursive_solve(self.grid, self.n_rows, self.n_cols, self.iterations)
         # Check if the grid is solved, if it is, set the solved flag to True
         self.solved = check_solution(self.grid, self.n_rows, self.n_cols)
+
     def solve(self):
         """
         This method combines the quick_solve and recursion methods to form the solve method
@@ -75,6 +78,7 @@ class Sudoku():
         # If it isnt solved, a solution does not exist
         end = time.time()
         self.time_taken = end - start
+
     def explain_class(self):
         """
         This runs the explain function from explain.py, but only if the grid has been solved.
@@ -89,6 +93,7 @@ class Sudoku():
         else:
             # If the hints are not being used, just use the filled in grid
             explain(self.filled_in, self.hint_flag, self.profile_flag, self.time_taken, self.solve_method, self.iterations)
+            
     def hint_class(self):
         """
         This runs the hint function from hint.py, but only if the grid has been solved.

@@ -85,7 +85,7 @@ def single_possible_value(grid_copy, empty_squares_dict, row, column):
 	return grid_copy, empty_squares_dict
 
 
-def wavefront_propogation(grid_copy, empty_squares_dict, n_rows, n_cols):
+def wavefront_propagation(grid_copy, empty_squares_dict, n_rows, n_cols):
 	
 	n = n_rows * n_cols
 	for num_missing_values in range(2,n+1):
@@ -119,7 +119,7 @@ class WavefrontInstance():
 		# can be found by tracing the previous steps back to the original grid.
 		pass
 
-	def determine_feasiability(self):
+	def determine_feasability(self):
 		# Determine if the new grid is feasible (if any cell has no possible values, then it is not feasible (self.feasible = False))
 		pass
 
