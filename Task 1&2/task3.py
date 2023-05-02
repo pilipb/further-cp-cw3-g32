@@ -74,8 +74,9 @@ class SudokuSolver():
 		1. make the possible values grid
 		2. replace any lists of len 1 with the value in the list
 		3. check if its solved and check if any cells have no possible values
-
-
+		4. if not solved, pick a random cell with the smallest number of possible values and randomly fill in one of the possible values
+		5. update the possible values grid with the new possible values
+		6. repeat from step 3
 
 		'''
 		self.original_grid = grid 
@@ -84,10 +85,10 @@ class SudokuSolver():
 		self.n = n_rows * n_cols
 		self.solved = False
 
-		self.working_grid = copy.deepcopy(self.original_grid)
+		self.working_grid = self.update_grid(copy.deepcopy(self.original_grid))
 
 	
-	def update_grid(self):
+	def update_grid(self, grid):
 		"""
 		Parameters:
 		--------------
@@ -108,8 +109,6 @@ class SudokuSolver():
 			A list of lists representing a sudoku board with the empty squares filled with a list of possible values
 
 		"""
-
-		grid = self.working_grid
 		
 		#creating a list of lists of lists for the possible values in each square
 		for row in range(self.n): 
@@ -123,7 +122,7 @@ class SudokuSolver():
 					else:
 						grid[row][col] = possible_values
 
-		self.working_grid = grid
+		return grid
 		
 
 
@@ -149,23 +148,22 @@ class SudokuSolver():
 		
 		'''
 		# in grid_copy, find the lists with the smallest number of possible values and pick one at random 
-		r_idx, c_idx = self.find_shortest_list()
+		r_idx, c_idx = self.find_shortest_list(self.working_grid)
 
 		# pick a random value from the list
 		possible_values = self.working_grid[r_idx][c_idx]
-
 		random_value = random.choice(possible_values)
 
 		# update the grid with the random value
 		self.working_grid[r_idx][c_idx] = random_value
 
 		# run the update_grid function to update the grid with the new possible values
-		# self.update_grid()
+		self.working_grid = self.update_grid(copy.deepcopy(self.working_grid))
 
 
 
 
-	def find_shortest_list(self):
+	def find_shortest_list(self, grid):
 		'''
 		Find the shortest list in the grid and return the index of the list and the length of the list
 
@@ -185,10 +183,10 @@ class SudokuSolver():
 		for row in range(self.n):
 			for col in range(self.n):
 
-				value = self.working_grid[row][col]
+				value = grid[row][col]
 				if isinstance(value, list):
 
-					list_lengths.append(((row,col), len(self.working_grid[row][col])))
+					list_lengths.append(((row,col), len(grid[row][col])))
 
 		# sort the list of tuples by the length of the list
 		list_lengths.sort(key=lambda x: x[1])
@@ -236,14 +234,11 @@ if __name__ == '__main__':
 	
 
 	example_class = SudokuSolver(test_grid_1, 2, 3)
-	example_class.update_grid()
-	# example_class.pprint(example_class.original_grid)
+
 	example_class.pprint(example_class.working_grid)
 
-
 	example_class.wavefront_update()
-	example_class.update_grid()
-	# example_class.pprint(example_class.original_grid)
+
 	example_class.pprint(example_class.working_grid)
 
 
