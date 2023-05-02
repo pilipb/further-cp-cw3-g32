@@ -2,7 +2,7 @@ from possible_values import possible_values_combined
 import copy
 import numpy as np
 import random
-from modules import check_solution#(grid, n_rows, n_cols)
+
 
 #### CURRENTLY UNUSED FUNCTIONS ####
 
@@ -65,6 +65,31 @@ def single_possible_value(grid_copy, empty_squares_dict, row, column):
 class SudokuGrid():
 	# instances of grid at a certain point in the solution tree
 	def __init__(self, grid, n_rows, n_cols, chosen_move = None):
+		'''
+		The SudokuGrid Class will store the problem / solution to the grid at each step of the solving process. The object will store an original
+		grid which is the grid from the previous step. The work_grid working grid will be the grid AFTER the chosen move has been implemented. 
+		If the grid is solved then that attribute will be set to true.
+
+		Parameters:
+		-------------
+		grid: list of lists
+			the input grid from the previous iteration
+		n_rows: int
+			number of rows
+		n_cols: int
+			number of columns
+		chosen_move: tuple (default None)
+			the chosen move should be given as a tuple of form ((row_idx, col_idx), value)
+
+		Methods:
+		-------------
+
+
+
+		
+
+		
+		'''
 
 		self.original_grid = grid
 		self.work_grid = copy.deepcopy(grid)
@@ -108,16 +133,17 @@ class SudokuGrid():
 		#creating a list of lists of lists for the possible values in each square
 		for row in range(self.n): 
 			for col in range(self.n):
+
 				# find an empty spot (0)
 				if self.work_grid[row][col] == 0:
-
+					
 					# find the possible values
 					possible_values = possible_values_combined(self.work_grid, self.n_rows, self.n_cols, row, col)
 
 					# if there is only one possible value for a square, replace with the value in the working grid
 					if len(possible_values) == 1:
-						self.work_grid[row][col] = possible_values[0]
-						self.original_grid[row][col] = possible_values[0]
+						self.work_grid[row][col] = int(possible_values[0])
+						self.original_grid[row][col] = int(possible_values[0])
 					else:
 						self.work_grid[row][col] = possible_values
 
@@ -131,15 +157,18 @@ class SudokuGrid():
 		3) If neither of these, we move down the solution tree and return the next step
 
 		'''
+		lists = False
 		for row in range(self.n):
 			for col in range(self.n):
 				# if any lists in grid have length 0 return None
 				if isinstance(self.work_grid[row][col], list) and len(self.work_grid[row][col]) == 0:
 					return None
-					
-		if check_solution(self.original_grid, self.n_rows, self.n_cols):
-			self.solved = True
+				if isinstance(self.work_grid[row][col], list):
+					lists = True
 
+		if not lists:
+			self.solved = True
+			return 'solved'
 		# if not None and it isnt the solution, we choose the next step
 		self.next_move = self.find_shortest_list()
 		
@@ -165,14 +194,15 @@ class SudokuGrid():
 			for col in range(self.n):
 				value = self.work_grid[row][col]
 
+				# if theres a list at that position, store the list 
 				if isinstance(value, list):
 					list_lengths.append(((row,col), value))
 
 		# sort the list of tuples by the length of the list
-		list_lengths.sort(key=lambda x: x[1])
+		list_lengths.sort(key=lambda x: len(x[1]))
 
 		# find the index of the shortest list with a random choice from the list
-		possible_values = list_lengths[0][1]
+		possible_values = list_lengths[0][1] 
 		random_value = random.choice(possible_values)
 
 		# return the indeces and the choice as a tuple
@@ -197,6 +227,9 @@ class SudokuGrid():
 		(r,c) = move[0]
 		value = move[1]
 		self.work_grid[r][c].remove(value)
+
+		# if len(self.work_grid[r][c]) == 1:
+		# 	self.work_grid[r][c] = int(self.work_grid[r][c][0])
 
 
 
@@ -259,10 +292,11 @@ class SudokuSolver():
 		self.n_cols = n_cols
 		self.init_instance = SudokuGrid(grid, n_rows, n_cols)
 		self.init_instance.update_grid()
+		
 		self.first_move = self.init_instance.next_step()
 		
 		self.frontier = [self.init_instance] # will store each grid object at each stage of the solution
-		self.solved = self.init_instance.solved
+		self.solved = False
 		
 
 	'''
@@ -281,29 +315,59 @@ class SudokuSolver():
 		
 		'''
 		move = self.first_move
-	
-		working_obj = SudokuGrid(self.init_instance.original_grid, self.n_rows, self.n_cols, chosen_move = move)
+		
+		self.frontier.append(SudokuGrid(self.init_instance.original_grid, self.n_rows, self.n_cols, chosen_move = move))
 
-		while not working_obj.solved:
+
+		# while the last grid is not solved
+		while not self.solved:
 				
+			#print('move', move)
+			working_obj = self.frontier[-1]
 			
 			# update the grid and extract a next step
+			print('\nInput grid', self.frontier .work_grid)
 			working_obj.update_grid()
-			next_move = working_obj.next_step()
-			
-			if next_move == None:
-				working_obj.remove_move(move)
-				continue
-			elif working_obj.solved:
-				self.solved = True
-				break
-			else:
-				move = next_move
-				self.frontier.append(working_obj)
-	
-			# redefine the working object
-			working_obj = SudokuGrid(working_obj.original_grid, self.n_rows, self.n_cols, chosen_move=move)
+			print('\nInput move', working_obj.chosen_move)
+			print('\nUpdated grid', working_obj.work_grid)
+			#print('working_obj', working_obj.work_grid)
 
+			next_move = working_obj.next_step()
+			print('next_move', next_move)
+			# print('Output move', self.frontier[-2].next_move)
+			# print('Input move', self.frontier[-1].chosen_move)
+			# print('next move', next_move)
+			
+			# print('next_move', next_move)
+			if next_move == 'solved':
+				self.solved = True
+				print('solved')
+				return working_obj
+
+			# catch when there is empty lists
+			elif next_move == None:
+				print('in none')
+	
+				self.frontier[-2].remove_move(self.frontier[-2].next_move)
+				
+				# remove last element from frontier
+				print('pre pop', self.frontier)
+				self.frontier.pop()
+				print('post pop', self.frontier)
+				
+
+				working_obj = SudokuGrid(self.frontier[-1].original_grid, self.n_rows, self.n_cols, chosen_move = self.frontier[-1].next_step())
+				self.frontier.append(working_obj)
+				continue
+
+			# as normal: update the working object with the next move
+			else:
+				
+				working_obj = SudokuGrid(working_obj.original_grid, self.n_rows, self.n_cols, chosen_move=next_move)
+				self.frontier.append(working_obj)
+		
+			
+			
 			
 
 			
@@ -347,23 +411,39 @@ if __name__ == '__main__':
 
 
 	test_grid_1 = [
+		[1, 0, 0, 2],
+		[0, 0, 1, 0],
+		[0, 1, 0, 4],
+		[0, 0, 0, 1]]
+	
+	grid8 = [[0,0,0,0,0,0,0,0,1],
+		  [5,0,0,0,9,0,0,0,6],
+		  [0,0,0,4,0,0,3,8,0],
+		  [0,0,5,0,0,0,0,0,0],
+		  [0,1,0,0,2,0,7,0,0],
+		  [2,0,0,0,3,0,0,0,5],
+		  [6,9,0,0,0,8,0,0,0],
+		  [0,0,0,0,0,0,8,0,0],
+		  [0,0,7,0,0,0,0,5,0]]
+	grid6 = [
 		[0, 0, 6, 0, 0, 3],
 		[5, 0, 0, 0, 0, 0],
 		[0, 1, 3, 4, 0, 0],
 		[0, 0, 0, 0, 0, 6],
 		[0, 0, 1, 0, 0, 0],
 		[0, 5, 0, 0, 6, 4]]
-	
-
 
 	# firstly make a grid
 	#grid_ex = SudokuGrid(test_grid_1, 2, 3)
 
 	# import it into the solver class
-	solver = SudokuSolver(test_grid_1, 2, 3)
+	solver = SudokuSolver(grid6, 2, 3)
 
 	# solve using wavefront propagation
-	solver.wavefront_solve()
+	solved_obj = solver.wavefront_solve()
+
+	# print the solved grid
+	solved_obj.pprint()
 
 
 

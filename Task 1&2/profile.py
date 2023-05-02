@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-#import cProfile
+import cProfile
 import pstats
 
 def profile_grids(solved_dict):
