@@ -33,6 +33,8 @@ class Sudoku():
         self.filled_in = None
         self.time_taken_recursion = None
         self.time_taken_wavefront = None
+        self.time_taken_quick = None
+        self.time_taken_overall = None
         self.iterations = 0
         self.hints = None
         self.zero_counter = sum([row.count(0) for row in self.grid])
@@ -44,6 +46,7 @@ class Sudoku():
         Current grid and solved boolean are returned, but this may change
         """
         # Keep filling in the grid until it stops changing
+        timein = time.time()
         while True:
             self.old_grid = self.grid
             self.grid = quick_fill(self.grid, self.n_rows, self.n_cols)
@@ -52,6 +55,8 @@ class Sudoku():
         # Check if the grid is solved, if it is, set the solved flag to True
         if check_solution(self.grid, self.n_rows, self.n_cols):
             self.solved = True
+
+            self.time_taken_quick = time.time() - timein
 
     def recursion_solve(self):
         """
@@ -72,6 +77,7 @@ class Sudoku():
 
         """
         # Attempt to solve the grid using the quick_solve method
+        timein = time.time()
         self.quick_solve()
         if self.solved:
             self.solve_method = "Quick Solve"
@@ -85,6 +91,8 @@ class Sudoku():
                 self.filled_in = find_filled(self.original_grid, self.grid)
             else:
                 raise Exception("No solution exists for this grid: " + str(np.array(self.grid)))
+            
+        self.time_taken_overall = time.time() - timein
         # At this point, the grid should be solved so we can stop the timer 
         # If it isnt solved, a solution does not exist
 
@@ -201,6 +209,30 @@ class Sudoku():
                 break
         end = time.time()
         self.time_taken_wavefront = end - start
+
+
+        def profile(self):
+            ''' 
+            This method is used to profile the code. It will run the solve method 100 times and then print the average time taken to solve the grid.
+            This method is only called if the -profile flag is set to True
+
+            Parameters
+            -------------
+            self : object
+                The object that the method is being called from
+
+
+            Returns
+            -------------
+            None
+
+            Updates document
+
+            '''
+            # Create a list to store the times taken
+            times = []
+
+            
 
 
 

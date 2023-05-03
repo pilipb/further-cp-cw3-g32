@@ -42,7 +42,8 @@ def main():
 
     # Iterate through the grids and initialise the Sudoku class for each grid, storing the instance in the grid storage dictionary
     for index, grid in enumerate(grids):
-        grid_storage[f'Grid {index + 1}'] = Sudoku(grid = grid[0], 
+        idx = int(index) + 1
+        grid_storage[ f'Grid {idx}'] = Sudoku(grid = grid[0], 
                                                    n_rows = grid[1], 
                                                    n_cols = grid[2], 
                                                    hint_flag = flag_dict['-hint'], 
