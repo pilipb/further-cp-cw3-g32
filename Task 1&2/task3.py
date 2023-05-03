@@ -373,8 +373,6 @@ class SudokuSolver():
 		# while the last grid is not solved
 		while not self.solved:
 
-			working_obj = self.frontier[-1]
-			next_move = working_obj.next_step()
 
 			# if the next move is solved, then we are done
 			if next_move == 'solved':
@@ -399,6 +397,9 @@ class SudokuSolver():
 
 					if local_next_move == 'dead end':
 						self.frontier.pop()
+						self.frontier[-1].remove_move(self.frontier[-1].next_step())
+						self.frontier[-1].update_grid()
+						
 						print('length of frontier', len(self.frontier))
 						print('in the dead end if statement')
 
