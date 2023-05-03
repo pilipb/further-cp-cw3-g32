@@ -1,10 +1,10 @@
-from task3 import SudokuSolver, SudokuGrid
+from Sudoku import Sudoku, GridClass
 import matplotlib.pyplot as plt
 import cProfile as cp
 import pstats
 from pstats import SortKey
 
-pr = cProfile.Profile()
+
 
 def profile_methods(grids, plot = True):
 
@@ -42,6 +42,8 @@ def profile_methods(grids, plot = True):
     propagation_times = []
     grid_sizes = []
 
+    pr = cp.Profile()
+
     # loop through the grids and profile each method
     for grid in grids:
         # extract the grid and the dimensions from the object
@@ -55,11 +57,9 @@ def profile_methods(grids, plot = True):
 
 
         # re-initialise the solver
-        solver = SudokuSolver(grid, n_rows, n_cols, hint_flag = False, hint_number = 0, profile_flag = False, explain_flag = False)
+        solver = Sudoku(grid, n_rows, n_cols, hint_flag = False, hint_number = 0, profile_flag = False, explain_flag = False)
 
         # profile the quick_solve method
-        quick_solve_stats = cp.runctx('solver.quick_solve()', globals(), locals(), 'quick_solve_stats')
-        
         pr.enable()
         solver.quick_solve()
         pr.disable()
@@ -67,35 +67,23 @@ def profile_methods(grids, plot = True):
         quick_time = stats_quick.total_tt
 
         # profile the recursion method
-        recursion_stats = cp.runctx('solver.recursion()', globals(), locals(), 'recursion_stats')
-
         pr.enable()
         solver.recursion_solve()
         pr.disable()
         stats_rec = pr.getstats()
         rec_time = stats_rec.total_tt
 
-
-
         # profile the propagation method
-        propagation_stats = cp.runctx('solver.propagation()', globals(), locals(), 'propagation_stats')
-
         pr.enable()
-        solver.propagation_solve()
+        solver.wavefront_solve()
         pr.disable()
         stats_prop = pr.getstats()
         prop_time = stats_prop.total_tt
-    
-
-        # extract the time taken for each method
-        quick_solve_time = quick_solve_stats.total_tt   
-        recursion_time = recursion_stats.total_tt
-        propagation_time = propagation_stats.total_tt
 
         # append the times to the lists
-        quick_solve_times.append(quick_solve_time)
-        recursion_times.append(recursion_time)
-        propagation_times.append(propagation_time)
+        quick_solve_times.append(quick_time)
+        recursion_times.append(rec_time)
+        propagation_times.append(prop_time)
 
     # add the lists to the stats dictionary
     stats['quick_solve'] = quick_solve_times
@@ -165,7 +153,3 @@ def profile_grids(solved_dict):
             plt.show()
 
 
-
-
-
- 
