@@ -1,5 +1,6 @@
 # This script will read the input from the command line (flags and values) and pass them on to the appropriate function 
 import sys
+import copy
 def input_checker(user_input):
     """
     This function performs a simple check, to see if the command line input consists of valid flags and values only
@@ -14,22 +15,22 @@ def input_checker(user_input):
     ----------
     bool
         A boolean representing whether the input is valid or not
-
-
     """
+   #Create a copy of the input to work with
+    dupe_input = copy.deepcopy(user_input)
     legal_flags = ["-explain", "-file", "-hint", "-profile"]
     # if -file is present remove the two values after it from the input
-    if "-file" in user_input:
-        user_input = user_input[:user_input.index("-file")] + user_input[user_input.index("-file")+3:] 
+    if "-file" in dupe_input:
+       dupe_input = dupe_input[:dupe_input.index("-file")] + dupe_input[dupe_input.index("-file")+3:] 
     # if -hint is present remove the value after it from the input
-    if "-hint" in user_input:
-        user_input = user_input[:user_input.index("-hint")] + user_input[user_input.index("-hint")+2:]
+    if "-hint" in dupe_input:
+        dupe_input = dupe_input[:dupe_input.index("-hint")] + dupe_input[dupe_input.index("-hint")+2:]
     # remove all the flags from the input
     for flag in legal_flags:
-        if flag in user_input:
-            user_input.remove(flag)
+        if flag in dupe_input:
+            dupe_input.remove(flag)
     # if there are any values left in the input, return False
-    if len(user_input) > 0:
+    if len(dupe_input) > 0:
         raise ValueError("Invalid input")
     else:
         return True
@@ -50,7 +51,7 @@ def read_flags(user_input):
     """
     # create a list of valid flags
     # if there is an input not in the list of valid flags, return None
-
+    print(user_input)
     flag_dict = {"-explain": False, "-file": False, "-hint": False, "-profile": False}
     flag_value = {"-file": None, "-hint": None}
     # if flag is in input, set flag dict value to True
@@ -95,6 +96,7 @@ def read_flags(user_input):
 #    print(read_flags(sys.argv[1:]))
 
 def input_collection(input):
+    
     try:
         input_checker(input)
     except ValueError as e:

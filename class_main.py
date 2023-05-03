@@ -6,6 +6,7 @@ import sys
 import numpy as np
 from profile_docs import profile_grids
 
+
 """
 grid_storage = {}
 for index, grid in enumerate(grids):
@@ -22,13 +23,13 @@ for instance in grid_stroage:
 
 
 def main():
+
     # Check if the input is valid - only contains valid flags and arguments
     try:
         flag_dict, flag_value = input_collection(sys.argv[1:])
     except ValueError as e:
         print("Error: ",e)
         sys.exit()
-    print(flag_dict, flag_value)
     if flag_dict['-file'] == True:
         # Run seperate file input function and exit
         file_input_main(flag_value['-file'][0], flag_value['-file'][1],  flag_dict['-hint'], flag_value['-hint'],flag_dict['-explain'], flag_dict['-profile'])
@@ -52,6 +53,7 @@ def main():
     for instance in grid_storage:
         # Solve the grid
         grid_storage[instance].wavefront_solve()
+        grid_storage[instance].recursion_solve()
         output_grid = grid_storage[instance].grid
         # If the hint flag is enabled, generate the hint grid and return it
         if flag_dict['-hint'] == True:
@@ -71,9 +73,10 @@ def main():
         # If the profile flag is enabled, store the profiling metrics in the solve metrics dictionary
         if flag_dict['-profile'] == True:
             solve_metrics[instance] = [(grid_storage[instance].n_rows, grid_storage[instance].n_cols), 
-                                       (grid_storage[instance].time_taken), 
+                                       (grid_storage[instance].time_taken_recursion, grid_storage[instance].time_taken_wavefront), 
                                        grid_storage[instance].zero_counter, 
-                                       grid_storage[instance].iterations]
+                                       grid_storage[instance].iterations,
+                                       ]
     # If the profile flag is enabled, print the profiling metrics
     if flag_dict['-profile'] == True:
         # Print the profiling metrics

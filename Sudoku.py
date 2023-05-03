@@ -21,7 +21,8 @@ class Sudoku():
         # Just assigning it to grid will make it a reference to the original grid
         # This means that if we change the grid, we will also change the original_grid
         self.original_grid = copy.deepcopy(grid)
-        self.work_grid = copy.deepcopy(grid)
+        self.recursive_grid = copy.deepcopy(grid)
+        self.wavefront_grid = copy.deepcopy(grid)
         self.hint_grid = copy.deepcopy(grid)
         self.hint_flag = hint_flag
         self.hint_number = hint_number
@@ -30,7 +31,8 @@ class Sudoku():
         self.solve_method = solve_method
         self.solved = False
         self.filled_in = None
-        self.time_taken = None
+        self.time_taken_recursion = None
+        self.time_taken_wavefront = None
         self.iterations = 0
         self.hints = None
         self.zero_counter = sum([row.count(0) for row in self.grid])
@@ -57,9 +59,11 @@ class Sudoku():
         If it manages to solve the grid, it sets the solved flag to True
         """ 
         # Call the recursive_solve function from modules.py to solve the grid
-        self.grid, self.iterations = recursive_solve(self.grid, self.n_rows, self.n_cols, self.iterations)
+        timein = time.time()
+        self.recursive_grid, self.iterations = recursive_solve(self.recursive_grid, self.n_rows, self.n_cols, self.iterations)
+        self.time_taken_recursion = time.time() - timein
         # Check if the grid is solved, if it is, set the solved flag to True
-        self.solved = check_solution(self.grid, self.n_rows, self.n_cols)
+        self.solved = check_solution(self.recursive_grid, self.n_rows, self.n_cols)
 
 
     def overall_solve(self):
@@ -109,9 +113,6 @@ class Sudoku():
         It will only be run anyways if the -hint flag is set to True
         """
         # Call the hint function from hint.py to create the hint grid and hit instructions
-        print(self.hint_grid)
-        print(self.filled_in)
-        print(self.hint_number)
         self.hint_grid, self.hints, self.hint_number = make_hint(self.hint_grid, self.filled_in, self.hint_number)
 
 
@@ -139,7 +140,7 @@ class Sudoku():
         
         '''
         start = time.time()
-        work_grid = self.work_grid
+        work_grid = self.wavefront_grid
         frontier = []
     
         while not self.solved:
@@ -199,7 +200,7 @@ class Sudoku():
                 self.filled_in = find_filled(self.original_grid, self.grid)
                 break
         end = time.time()
-        self.time_taken = end - start
+        self.time_taken_wavefront = end - start
 
 
 
