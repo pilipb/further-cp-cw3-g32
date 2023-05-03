@@ -16,6 +16,7 @@ class Sudoku():
         # Just assigning it to grid will make it a reference to the original grid
         # This means that if we change the grid, we will also change the original_grid
         self.original_grid = copy.deepcopy(grid)
+        self.work_grid = copy.deepcopy(grid)
         self.hint_grid = copy.deepcopy(grid)
         self.hint_flag = hint_flag
         self.hint_number = hint_number
@@ -105,40 +106,108 @@ class Sudoku():
         self.hint_grid, self.hints, self.hint_number = make_hint(self.hint_grid, self.filled_in, self.hint_number)
 
 
-    def profile_methods(self, grids, plot = True):
-
+    def wavefront_solver(self):
         '''
-        This method will profile the quick_solve, recursion and propagation methods on a set of input grids and visualise the results
+        The wavefront solver is a method of solving sudoku puzzles that is based on the wavefront algorithm.
 
-        Parameters:
-        ---------------
-        grids: list
-            A list of grids to be profiled (each grid can be a sudoku object that stores the n_rows and n_cols attributes as well as the grid itself)
-
-        Returns:
-        ---------------
-        stats: dict
-            A dictionary containing the statistics for each method
-
-        ** if plot is set to true, the method will also plot the results of the profiling **
-
-        '''
-
-        # import the necessary modules
-        import matplotlib.pyplot as plt
-        import cProfile as cp
-        import pstats
+        When called the wavefront solver will attempt to solve the sudoku puzzle by filling in the cells that have only one possible value.
+        If the wavefront solver cannot solve the puzzle by filling in the cells with only one possible value, it will then attempt to 
+        fill in the cells with the least possible values.
 
         
+        
+        
+        
+        '''
+
+        work_grid = self.work_grid
+        visited = []
+    
+        while not self.solved:
+
+            lists = []
+
+            # loop through the grid and find the cells with only one possible value
+            for row in range(self.n):
+                for col in range(self.n):
+                    possible_vals = possible_values_combined(work_grid, self.n_rows, self.n_cols, row, col)
+                    if isinstance(possible_vals , list):
+                        lists.append([row,col,possible_vals])
+                    
+            # sort the list of cells with only one possible value by the number of possible values
+            lists.sort(key=lambda x: len(x[2]))
+
+            # if the possible values list is > 0, put in the first value and add it to the visited list
+            if len(lists[0][2]) > 0:
+                row = lists[0][0]
+                col = lists[0][1]
+                work_grid[row][col] = lists[0][2][0]
+                visited.append(lists[0])
+
+            # if the possible values list is 0, backtrack
+            else: 
+                while len(visited[-1][2]) == 1:
+                    row = visited[-1][0]
+                    col = visited[-1][1]
+                    work_grid[row][col] = 0
+                    del visited[-1]
+
+                del visited[-1][2][0]
+                row = visited[-1][0]
+                col = visited[-1][1]
+                work_grid[row][col] = visited[-1][2][0]
+
+
+
+            if check_solution(work_grid, self.n_rows, self.n_cols):
+                # set self.grid to the solved grid
+                self.grid = work_grid
+                self.solved = True
+                break
 
 
 
 
+################ TEST CODE ################
 
 
+if __name__ == '__main__':
 
+    # Create a grid to test the class
 
+    test_grid_1 = [
+    [1, 0, 0, 2],
+    [0, 0, 1, 0],
+    [0, 1, 0, 4],
+    [0, 0, 0, 1]]
 
+    grid8 = [
+    [0,0,0,0,0,0,0,0,1],
+    [5,0,0,0,9,0,0,0,6],
+    [0,0,0,4,0,0,3,8,0],
+    [0,0,5,0,0,0,0,0,0],
+    [0,1,0,0,2,0,7,0,0],
+    [2,0,0,0,3,0,0,0,5],
+    [6,9,0,0,0,8,0,0,0],
+    [0,0,0,0,0,0,8,0,0],
+    [0,0,7,0,0,0,0,5,0]]
+
+    grid6 = [
+    [0, 0, 6, 0, 0, 3],
+    [5, 0, 0, 0, 0, 0],
+    [0, 1, 3, 4, 0, 0],
+    [0, 0, 0, 0, 0, 6],
+    [0, 0, 1, 0, 0, 0],
+    [0, 5, 0, 0, 6, 4]]
+
+    # initialise the class
+    test = Sudoku(grid = grid8, n_rows = 3, n_cols= 3, hint_flag = False, hint_number = False, profile_flag = False, explain_flag = False, solve_method = None)
+
+    test.wavefront_solver()
+    # test.solve()
+
+    # print the solved grid
+    print(test.grid)
 
 
 
