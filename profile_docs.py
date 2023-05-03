@@ -4,6 +4,7 @@ from matplotlib import pyplot as plt
 import cProfile as cp
 import pstats
 from pstats import SortKey
+import timeit
 
 
 def profile_methods(grids, plot = True):
@@ -57,9 +58,8 @@ def profile_methods(grids, plot = True):
         solver = Sudoku(grid, n_rows, n_cols, hint_flag = False, hint_number = 0, profile_flag = False, explain_flag = False)
 
         # profile the quick_solve method
-        pr.enable()
         solver.quick_solve()
-        pr.disable()
+        timeit.timeit(solver.quick_solve, number = 1) # this is just an idea not quite sure how to implement it
         stats_quick = pr.getstats()
         quick_time = stats_quick.total_tt
 
