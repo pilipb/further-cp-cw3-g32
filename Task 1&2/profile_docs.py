@@ -47,9 +47,9 @@ def profile_methods(grids, plot = True):
     # loop through the grids and profile each method
     for grid in grids:
         # extract the grid and the dimensions from the object
-        grid = grid.original_grid
-        n_rows = grid.n_rows
-        n_cols = grid.n_cols
+        grid = grid[0]
+        n_rows = grid[1]
+        n_cols = grid[2]
 
         # store the size of the grid
         n = n_rows * n_cols
@@ -153,5 +153,20 @@ def profile_grids(solved_dict):
             plt.ylabel("Time taken to solve (s)")
             plt.title(f"Time taken to solve {dimensions[0]}x{dimensions[1]} grids")
             plt.show()
+
+
+
+
+###### RUN THE CODE ######
+
+
+if __name__ == '__main__':
+
+
+    from grids import grids
+
+    # each grid in list is form (grid, n_rows, n_cols)
+    profile_methods(grids, plot = True)
+
 
 
