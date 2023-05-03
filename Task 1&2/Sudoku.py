@@ -105,6 +105,34 @@ class Sudoku():
         self.hint_grid, self.hints, self.hint_number = make_hint(self.hint_grid, self.filled_in, self.hint_number)
 
 
+    def profile_methods(self, grids, plot = True):
+
+        '''
+        This method will profile the quick_solve, recursion and propagation methods on a set of input grids and visualise the results
+
+        Parameters:
+        ---------------
+        grids: list
+            A list of grids to be profiled (each grid can be a sudoku object that stores the n_rows and n_cols attributes as well as the grid itself)
+
+        Returns:
+        ---------------
+        stats: dict
+            A dictionary containing the statistics for each method
+
+        ** if plot is set to true, the method will also plot the results of the profiling **
+
+        '''
+
+        # import the necessary modules
+        import matplotlib.pyplot as plt
+        import cProfile as cp
+        import pstats
+
+        
+
+
+
 
 
 
