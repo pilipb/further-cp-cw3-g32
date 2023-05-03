@@ -7,6 +7,7 @@ import time
 import numpy as np
 class Sudoku():
     def __init__(self, grid, n_rows, n_cols, hint_flag, hint_number, profile_flag, explain_flag, solve_method = None):
+
         self.grid = grid
         self.n_rows = n_rows
         self.n_cols = n_cols
@@ -106,49 +107,6 @@ class Sudoku():
 
 
 
-
-
-"""
-
-grid9 = [[9,0,0,5,0,4,0,1,0],
-         [4,0,0,0,0,9,6,0,3],
-         [8,1,6,2,7,0,0,0,0],
-         [0,0,5,6,8,0,7,0,0],
-         [1,0,0,0,3,0,4,5,2],
-         [0,9,7,0,0,2,0,0,1],
-         [6,3,0,7,0,0,5,9,0],
-         [0,0,9,1,4,0,3,0,0],
-         [5,2,0,0,0,6,0,8,7]]
-
-
-def main():
-    instance = Sudoku(grid9, 3, 3,hint_flag = True, hint_number = 5)
-    quicksolve,grid = instance.quick_solve()
-    if quicksolve:
-        print("Quick solve worked")
-    else:
-        print("Moving to recursion")
-        grid, iterations = instance.recursion()
-        print("Recursion took {} iterations".format(iterations))
-    print(grid)
-    instance.hint_class()
-    instance.explain_class()
-    print(np.array(instance.hint_grid))
-
-
-
-
-
-
-
-
-
-if __name__ == "__main__":
-    main()
-
-
-
-"""
 
 
 
