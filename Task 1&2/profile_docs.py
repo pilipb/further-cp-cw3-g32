@@ -1,9 +1,9 @@
-from Sudoku import Sudoku, GridClass
-import matplotlib.pyplot as plt
+from Sudoku import Sudoku
+import matplotlib
+from matplotlib import pyplot as plt
 import cProfile as cp
 import pstats
 from pstats import SortKey
-
 
 
 def profile_methods(grids, plot = True):
@@ -90,6 +90,8 @@ def profile_methods(grids, plot = True):
     stats['recursion'] = recursion_times
     stats['propagation'] = propagation_times
     stats['grid_sizes'] = grid_sizes
+
+
 
     # plot the results if plot is set to true
     if plot:
