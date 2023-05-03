@@ -2,9 +2,11 @@ from task3 import SudokuSolver, SudokuGrid
 import matplotlib.pyplot as plt
 import cProfile as cp
 import pstats
+from pstats import SortKey
 
+pr = cProfile.Profile()
 
-def profile_methods(self, grids, plot = True):
+def profile_methods(grids, plot = True):
 
     '''
     This method will profile the quick_solve, recursion and propagation methods on a set of input grids and visualise the results
@@ -51,17 +53,39 @@ def profile_methods(self, grids, plot = True):
         n = n_rows * n_cols
         grid_sizes.append(n)
 
+
         # re-initialise the solver
         solver = SudokuSolver(grid, n_rows, n_cols, hint_flag = False, hint_number = 0, profile_flag = False, explain_flag = False)
 
         # profile the quick_solve method
         quick_solve_stats = cp.runctx('solver.quick_solve()', globals(), locals(), 'quick_solve_stats')
+        
+        pr.enable()
+        solver.quick_solve()
+        pr.disable()
+        stats_quick = pr.getstats()
+        quick_time = stats_quick.total_tt
 
         # profile the recursion method
         recursion_stats = cp.runctx('solver.recursion()', globals(), locals(), 'recursion_stats')
 
+        pr.enable()
+        solver.recursion_solve()
+        pr.disable()
+        stats_rec = pr.getstats()
+        rec_time = stats_rec.total_tt
+
+
+
         # profile the propagation method
         propagation_stats = cp.runctx('solver.propagation()', globals(), locals(), 'propagation_stats')
+
+        pr.enable()
+        solver.propagation_solve()
+        pr.disable()
+        stats_prop = pr.getstats()
+        prop_time = stats_prop.total_tt
+    
 
         # extract the time taken for each method
         quick_solve_time = quick_solve_stats.total_tt   
@@ -93,6 +117,12 @@ def profile_methods(self, grids, plot = True):
 
     # return the stats dictionary
     return stats
+
+
+
+
+
+
 
 def profile_grids(solved_dict):
     """
