@@ -46,7 +46,7 @@ class Sudoku():
         if check_solution(self.grid, self.n_rows, self.n_cols):
             self.solved = True
 
-    def recursion(self):
+    def recursion_solve(self):
         """
         This method runs the recursive_solve function from modules.py
         If it manages to solve the grid, it sets the solved flag to True
@@ -57,12 +57,11 @@ class Sudoku():
         self.solved = check_solution(self.grid, self.n_rows, self.n_cols)
 
 
-    def solve(self):
+    def overall_solve(self):
         """
         This method combines the quick_solve and recursion methods to form the solve method
+
         """
-        # Start the timer
-        start = time.time()
         # Attempt to solve the grid using the quick_solve method
         self.quick_solve()
         if self.solved:
@@ -70,7 +69,7 @@ class Sudoku():
             self.filled_in = find_filled(self.original_grid, self.grid)
         # If the grid is not solved, attempt to solve it using the recursion method
         else:
-            self.recursion()
+            self.recursion_solve()
             self.solve_method = "Recursion"
             if self.solved:
                 # If the grid is solved, get the filled in grid instructions
@@ -79,8 +78,7 @@ class Sudoku():
                 raise Exception("No solution exists for this grid: " + str(np.array(self.grid)))
         # At this point, the grid should be solved so we can stop the timer 
         # If it isnt solved, a solution does not exist
-        end = time.time()
-        self.time_taken = end - start
+
 
 
     def explain_class(self):
@@ -109,7 +107,7 @@ class Sudoku():
         self.hint_grid, self.hints, self.hint_number = make_hint(self.hint_grid, self.filled_in, self.hint_number)
 
 
-    def wavefront_solver(self):
+    def wavefront_solve(self):
         '''
         The wavefront solver is a method of solving sudoku puzzles that is based on the wavefront algorithm.
 
@@ -230,7 +228,7 @@ if __name__ == '__main__':
     # initialise the class
     test = Sudoku(grid = grid8, n_rows = 3, n_cols= 3, hint_flag = False, hint_number = False, profile_flag = False, explain_flag = False, solve_method = None)
 
-    test.wavefront_solver()
+    test.wavefront_solve()
     # test.solve()
 
     # print the solved grid
