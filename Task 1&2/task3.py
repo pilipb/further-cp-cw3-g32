@@ -162,7 +162,7 @@ class SudokuGrid():
 			for col in range(self.n):
 				# if any lists in grid have length 0 return None
 				if isinstance(self.work_grid[row][col], list) and len(self.work_grid[row][col]) == 0:
-					return None
+					return False
 				if isinstance(self.work_grid[row][col], list):
 					lists = True
 
@@ -224,12 +224,16 @@ class SudokuGrid():
 			Updates the work_grid
 		
 		'''
-		(r,c) = move[0]
-		value = move[1]
-		try:
+		if move == False:
+			return 'dead end'
+		else:
+			(r,c) = move[0]
+			value = move[1]
+
+			print('removing', value, 'from', (r,c))
+
 			self.work_grid[r][c].remove(value)
-		except:
-			print('Dead end!')
+
 
 
 
@@ -299,7 +303,6 @@ class SudokuSolver():
 		self.n_cols = n_cols
 		self.init_instance = SudokuGrid(grid, n_rows, n_cols)
 		self.init_instance.update_grid()
-		
 		self.first_move = self.init_instance.next_step()
 		
 		self.frontier = [self.init_instance] # will store each grid object at each stage of the solution
@@ -353,22 +356,69 @@ class SudokuSolver():
 
 			# as normal: update the working object with the next move
 			else:
-				
 				working_obj = SudokuGrid(working_obj.original_grid, self.n_rows, self.n_cols, chosen_move=next_move)
 				self.frontier.append(working_obj)
-		
-	def move_up(self):
+				
+				
+
+	def wavefront_solve_2(self):
 		'''
-		We need to keep track of when we head down a dead end and need to backtrack, 
-		If the list that we are working on is empty, we need to remove the last element from the frontier and try again
+		After initialisation, loop through the creating next step, and testing step until either solved or None at which point refer back to frontier
+
+		
+		'''
+		# our working object is the last element in the frontier (its already been updated and the next move has been chosen)
 
 
-		'''
-		# remove the last element from the frontier
-		self.frontier.pop()
-		
-			
-			
+		# while the last grid is not solved
+		while not self.solved:
+
+			working_obj = self.frontier[-1]
+			next_move = working_obj.next_step()
+
+			# if the next move is solved, then we are done
+			if next_move == 'solved':
+				self.solved = True
+				print('solved')
+				return working_obj	
+
+			# catch when there is empty lists
+			elif next_move == False:
+
+				# we need to backtrack until we find a move that is not a dead end
+				instance_number = len(self.frontier)
+
+				# back track until we find a move that is not a dead end
+				for _ in range(instance_number-1):
+					print('\nin the for loop:', len(self.frontier))
+					# look at the next move of the previous working object and remove it from the possible values
+					local_next_move = self.frontier[-1].remove_move(self.frontier[-1].next_step())
+
+					# if the next move is a dead end, remove the working object from the frontier and continue
+					print('Local next move', local_next_move)
+
+					if local_next_move == 'dead end':
+						self.frontier.pop()
+						print('length of frontier', len(self.frontier))
+						print('in the dead end if statement')
+
+					else:
+						# the move has been removed, so we need to update the working object
+						next_working_obj = SudokuGrid(self.frontier[-1].original_grid, self.n_rows, self.n_cols, chosen_move = self.frontier[-1].next_step())
+						next_working_obj.update_grid()
+						next_working_obj.next_step()
+						self.frontier.append(next_working_obj)
+						break
+			else:
+				# as normal: update the working object with the next move and create a new working object
+				next_working_obj = SudokuGrid(working_obj.original_grid, self.n_rows, self.n_cols, chosen_move=working_obj.next_move)
+				next_working_obj.update_grid()
+				next_working_obj.next_step()
+				self.frontier.append(next_working_obj)
+
+
+
+
 
 
 ######## TESTING ########
@@ -401,15 +451,16 @@ if __name__ == '__main__':
 		[0, 5, 0, 0, 6, 4]]
 
 	# firstly make a grid
-	#grid_ex = SudokuGrid(test_grid_1, 2, 3)
+	#grid_ex = SudokuGrid(test_grid_1, 3, 3)
 
 	# import it into the solver class
-	solver = SudokuSolver(grid8, 3, 3)
+	solver = SudokuSolver(grid6, 2, 3)
 
 	# solve using wavefront propagation
-	solved_obj = solver.wavefront_solve()
+	solved_obj = solver.wavefront_solve_2()
 
 	# print the solved grid
+	print('Solved grid: ')
 	solved_obj.pprint()
 
 
