@@ -226,7 +226,12 @@ class SudokuGrid():
 		'''
 		(r,c) = move[0]
 		value = move[1]
-		self.work_grid[r][c].remove(value)
+		try:
+			self.work_grid[r][c].remove(value)
+		except:
+			print('Dead end!')
+
+
 
 		# if len(self.work_grid[r][c]) == 1:
 		# 	self.work_grid[r][c] = int(self.work_grid[r][c][0])
@@ -315,12 +320,14 @@ class SudokuSolver():
 		# while the last grid is not solved
 		while not self.solved:
 				
-			#print('move', move)
 			working_obj = self.frontier[-1]
 			
 			working_obj.update_grid()
-
+			working_obj.pprint()
 			next_move = working_obj.next_step()
+			print('next_move', next_move)
+
+			# if the next move is solved, then we are done
 			if next_move == 'solved':
 				self.solved = True
 				print('solved')
@@ -330,12 +337,14 @@ class SudokuSolver():
 			elif next_move == None:
 				print('in none')
 	
-				self.frontier[-2].remove_move(self.frontier[-2].next_move)
+				if self.frontier[-2].remove_move(self.frontier[-2].next_move) == 'dead end':
+					self.frontier.pop()
+					working_obj = self.frontier[-1]
+					working_obj.remove_move(working_obj.next_move)
+					continue
 				
 				# remove last element from frontier
-				print('pre pop', self.frontier)
 				self.frontier.pop()
-				print('post pop', self.frontier)
 				
 
 				working_obj = SudokuGrid(self.frontier[-1].original_grid, self.n_rows, self.n_cols, chosen_move = self.frontier[-1].next_step())
@@ -395,7 +404,7 @@ if __name__ == '__main__':
 	#grid_ex = SudokuGrid(test_grid_1, 2, 3)
 
 	# import it into the solver class
-	solver = SudokuSolver(grid6, 2, 3)
+	solver = SudokuSolver(grid8, 3, 3)
 
 	# solve using wavefront propagation
 	solved_obj = solver.wavefront_solve()
