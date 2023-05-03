@@ -44,6 +44,7 @@ def main():
     grid_storage = {}
     # Initialise the solve metrics dictionary to store the profiling metrics if profiling is enabled
     solve_metrics = {}
+
     # Iterate through the grids and initialise the Sudoku class for each grid, storing the instance in the grid storage dictionary
     for index, grid in enumerate(grids):
         grid_storage[f'Grid {index + 1}'] = Sudoku(grid = grid[0], 
@@ -56,7 +57,7 @@ def main():
     # Iterate through the grid storage dictionary and:
     for instance in grid_storage:
         # Solve the grid
-        grid_storage[instance].solve()
+        grid_storage[instance].wavefront_solver()
         output_grid = grid_storage[instance].grid
         # If the hint flag is enabled, generate the hint grid and return it
         if flag_dict['-hint'] == True:

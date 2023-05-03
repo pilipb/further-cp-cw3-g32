@@ -5,6 +5,29 @@ from explain import explain
 import copy
 import time
 import numpy as np
+
+class GridClass():
+
+    def __init__(self, grid, n_rows, n_cols):
+        self.grid = grid
+        self.n_rows = n_rows
+        self.n_cols = n_cols
+        self.n = n_rows * n_cols
+
+    def check_solution(self):   
+        """
+        This method checks if the grid is solved
+
+        Returns:
+            True if the grid is solved, False otherwise
+            
+        """
+        # Check if the grid is solved
+        if check_solution(self.grid, self.n_rows, self.n_cols):
+            return True
+        else:
+            return False
+
 class Sudoku():
     def __init__(self, grid, n_rows, n_cols, hint_flag, hint_number, profile_flag, explain_flag, solve_method = None):
 
