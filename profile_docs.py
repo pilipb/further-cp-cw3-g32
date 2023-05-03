@@ -47,14 +47,11 @@ def profile_methods(grids, plot = True):
     # loop through the grids and profile each method
     for grid in grids:
         # extract the grid and the dimensions from the object
-        grid = grid[0]
-        n_rows = grid[1]
-        n_cols = grid[2]
+        grid, n_rows, n_cols = grid
 
         # store the size of the grid
         n = n_rows * n_cols
         grid_sizes.append(n)
-
 
         # re-initialise the solver
         solver = Sudoku(grid, n_rows, n_cols, hint_flag = False, hint_number = 0, profile_flag = False, explain_flag = False)
