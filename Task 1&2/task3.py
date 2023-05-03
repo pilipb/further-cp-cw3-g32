@@ -269,6 +269,8 @@ class SudokuSolver():
 	# manage instances from the SudokuGrid class and solve the sudoku puzzle
 	def __init__(self, grid, n_rows, n_cols):
 		'''
+		The solver will take a sudoku puzzle and solve it using the wavefront propagation algorithm
+
 		1. make the possible values grid
 		2. replace any lists of len 1 with the value in the list
 		3. check if its solved and check if any cells have no possible values
@@ -299,19 +301,10 @@ class SudokuSolver():
 		self.solved = False
 		
 
-	'''
-	Methods are:
-
-	1. on initialisation, we define the initial grid, and a frontier containing the intial instance of the SudokuGrid class
-	2. The solver method, this is basically a while loop that is continually adding and removing instances from the frontier until one of the instances reports self.solved = True
-
-
-	
-	'''
 	def wavefront_solve(self):
 		'''
 		After initialisation, loop through the creating next step, and testing step until either solved or None at which point refer back to frontier
-		
+
 		
 		'''
 		move = self.first_move
@@ -354,6 +347,16 @@ class SudokuSolver():
 				
 				working_obj = SudokuGrid(working_obj.original_grid, self.n_rows, self.n_cols, chosen_move=next_move)
 				self.frontier.append(working_obj)
+		
+	def move_up(self):
+		'''
+		We need to keep track of when we head down a dead end and need to backtrack, 
+		If the list that we are working on is empty, we need to remove the last element from the frontier and try again
+
+
+		'''
+		# remove the last element from the frontier
+		self.frontier.pop()
 		
 			
 			
