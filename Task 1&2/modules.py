@@ -336,3 +336,4 @@ def solve(grid, n_rows, n_cols):
 	filled_in = find_filled(original_grid, grid)
 
 	return grid, filled_in, iterations
+

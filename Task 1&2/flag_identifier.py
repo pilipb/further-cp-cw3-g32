@@ -93,3 +93,20 @@ def read_flags(user_input):
 #if __name__ == "__main__":
 #    print(input_checker(sys.argv[1:]))
 #    print(read_flags(sys.argv[1:]))
+
+def input_collection(input):
+    try:
+        input_checker(input)
+    except ValueError as e:
+        print("Error: ",e)
+        sys.exit()
+    else:
+        # Read the flags and values and return them as a dictionary 
+        try:
+            flag_dict, flag_value = read_flags(input)
+        except ValueError or FileNotFoundError as e:
+            print("Error: ",e)
+            sys.exit()
+    return flag_dict, flag_value
+
+            

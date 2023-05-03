@@ -5,28 +5,10 @@ from explain import explain
 import copy
 import time
 import numpy as np
+from modules import check_solution
+from grids import grids
+import time
 
-class GridClass():
-
-    def __init__(self, grid, n_rows, n_cols):
-        self.grid = grid
-        self.n_rows = n_rows
-        self.n_cols = n_cols
-        self.n = n_rows * n_cols
-
-    def check_solution(self):   
-        """
-        This method checks if the grid is solved
-
-        Returns:
-            True if the grid is solved, False otherwise
-            
-        """
-        # Check if the grid is solved
-        if check_solution(self.grid, self.n_rows, self.n_cols):
-            return True
-        else:
-            return False
 
 class Sudoku():
     def __init__(self, grid, n_rows, n_cols, hint_flag, hint_number, profile_flag, explain_flag, solve_method = None):
@@ -127,6 +109,9 @@ class Sudoku():
         It will only be run anyways if the -hint flag is set to True
         """
         # Call the hint function from hint.py to create the hint grid and hit instructions
+        print(self.hint_grid)
+        print(self.filled_in)
+        print(self.hint_number)
         self.hint_grid, self.hints, self.hint_number = make_hint(self.hint_grid, self.filled_in, self.hint_number)
 
 
@@ -153,7 +138,7 @@ class Sudoku():
         
         
         '''
-
+        start = time.time()
         work_grid = self.work_grid
         frontier = []
     
@@ -211,8 +196,10 @@ class Sudoku():
                 # set self.grid to the solved grid
                 self.grid = work_grid
                 self.solved = True
+                self.filled_in = find_filled(self.original_grid, self.grid)
                 break
-
+        end = time.time()
+        self.time_taken = end - start
 
 
 
@@ -249,14 +236,26 @@ if __name__ == '__main__':
     [0, 5, 0, 0, 6, 4]]
 
     # initialise the class
-    test = Sudoku(grid = grid8, n_rows = 3, n_cols= 3, hint_flag = False, hint_number = False, profile_flag = False, explain_flag = False, solve_method = None)
-
-    test.wavefront_solve()
+    for grid in grids:
+        test_wf = Sudoku(grid = grid[0], n_rows = grid[1], n_cols= grid[2], hint_flag = False, hint_number = False, profile_flag = False, explain_flag = False, solve_method = None)
+        print('------------------')
+        print('Wavefront Solver')
+        start = time.time()
+        test_wf.wavefront_solve()
+        end = time.time()
+        print('Correct Solution:', check_solution(test_wf.grid, test_wf.n_rows, test_wf.n_cols))
+        print('Time Taken:', end - start)
+        print('Recursive Solver:')
+        test_r = Sudoku(grid = grid[0], n_rows = grid[1], n_cols= grid[2], hint_flag = False, hint_number = False, profile_flag = False, explain_flag = False, solve_method = 'recursive')
+        start = time.time()
+        test_r.recursion_solve()
+        end = time.time()
+        print('Correct Solution:', check_solution(test_r.grid, test_r.n_rows, test_r.n_cols))
+        print('Time Taken:', end - start)
     # test.solve()
 
     # print the solved grid
-    print(test.grid)
-
+        
 
 
 
