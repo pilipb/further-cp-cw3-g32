@@ -4,7 +4,7 @@ from flag_identifier import input_checker, read_flags
 from file_input import file_input_main
 import sys
 import numpy as np
-from profile import profile_grids
+from profile_docs import profile_grids
 """
 grid_storage = {}
 for index, grid in enumerate(grids):
