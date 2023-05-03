@@ -1,10 +1,11 @@
 from Sudoku import Sudoku
 from grids import grids
-from flag_identifier import input_checker, read_flags
+from flag_identifier import input_collection
 from file_input import file_input_main
 import sys
 import numpy as np
 from profile_docs import profile_grids
+
 """
 grid_storage = {}
 for index, grid in enumerate(grids):
@@ -23,18 +24,11 @@ for instance in grid_stroage:
 def main():
     # Check if the input is valid - only contains valid flags and arguments
     try:
-        input_checker(sys.argv[1:])
+        flag_dict, flag_value = input_collection(sys.argv[1:])
     except ValueError as e:
         print("Error: ",e)
         sys.exit()
-    else:
-        # Read the flags and values and return them as a dictionary 
-        try:
-            flag_dict, flag_value = read_flags(sys.argv[1:])
-        except ValueError or FileNotFoundError as e:
-            print("Error: ",e)
-            sys.exit()
-    
+    print(flag_dict, flag_value)
     if flag_dict['-file'] == True:
         # Run seperate file input function and exit
         file_input_main(flag_value['-file'][0], flag_value['-file'][1],  flag_dict['-hint'], flag_value['-hint'],flag_dict['-explain'], flag_dict['-profile'])
@@ -57,7 +51,7 @@ def main():
     # Iterate through the grid storage dictionary and:
     for instance in grid_storage:
         # Solve the grid
-        grid_storage[instance].wavefront_solver()
+        grid_storage[instance].wavefront_solve()
         output_grid = grid_storage[instance].grid
         # If the hint flag is enabled, generate the hint grid and return it
         if flag_dict['-hint'] == True:
