@@ -56,6 +56,7 @@ class Sudoku():
         # Check if the grid is solved, if it is, set the solved flag to True
         self.solved = check_solution(self.grid, self.n_rows, self.n_cols)
 
+
     def solve(self):
         """
         This method combines the quick_solve and recursion methods to form the solve method
@@ -81,6 +82,7 @@ class Sudoku():
         end = time.time()
         self.time_taken = end - start
 
+
     def explain_class(self):
         """
         This runs the explain function from explain.py, but only if the grid has been solved.
@@ -95,7 +97,8 @@ class Sudoku():
         else:
             # If the hints are not being used, just use the filled in grid
             explain(self.filled_in, self.hint_flag, self.profile_flag, self.time_taken, self.solve_method, self.iterations)
-            
+
+
     def hint_class(self):
         """
         This runs the hint function from hint.py, but only if the grid has been solved.
@@ -114,14 +117,24 @@ class Sudoku():
         If the wavefront solver cannot solve the puzzle by filling in the cells with only one possible value, it will then attempt to 
         fill in the cells with the least possible values.
 
-        
+        Parameters
+        -------------
+        self : object
+            The object that the method is being called from
+
+
+        Returns
+        -------------
+        None
+
+        Updates document
         
         
         
         '''
 
         work_grid = self.work_grid
-        visited = []
+        frontier = []
     
         while not self.solved:
 
@@ -137,25 +150,39 @@ class Sudoku():
             # sort the list of cells with only one possible value by the number of possible values
             lists.sort(key=lambda x: len(x[2]))
 
-            # if the possible values list is > 0, put in the first value and add it to the visited list
+            # if the possible values list is > 0, put in the first value and add it to the frontier list
             if len(lists[0][2]) > 0:
+
+                # extract the row and column of the cell that is being filled in
                 row = lists[0][0]
                 col = lists[0][1]
+
+                # fill in the cell
                 work_grid[row][col] = lists[0][2][0]
-                visited.append(lists[0])
 
-            # if the possible values list is 0, backtrack
+                # add the cell to the frontier list
+                frontier.append(lists[0])
+
+            # if there are no possible values, backtrack
             else: 
-                while len(visited[-1][2]) == 1:
-                    row = visited[-1][0]
-                    col = visited[-1][1]
-                    work_grid[row][col] = 0
-                    del visited[-1]
 
-                del visited[-1][2][0]
-                row = visited[-1][0]
-                col = visited[-1][1]
-                work_grid[row][col] = visited[-1][2][0]
+                # backtrack until the last cell has more than one possible value
+                while len(frontier[-1][2]) == 1:
+
+                    row = frontier[-1][0]
+                    col = frontier[-1][1]
+
+                    # replace the last changed cell with 0 and remove it from the frontier list
+                    work_grid[row][col] = 0
+                    frontier.pop()
+
+                # remove the last possible value from the last cell in the frontier list
+                del frontier[-1][2][0]
+
+                # add the last cell in the frontier list to the grid
+                row = frontier[-1][0]
+                col = frontier[-1][1]
+                work_grid[row][col] = frontier[-1][2][0]
 
 
 
