@@ -40,7 +40,7 @@ class Sudoku():
         self.zero_counter = sum([row.count(0) for row in self.grid])
 
     
-    def solve_sudoku(self, solve_method = None):
+    def solve_sudoku(self):
 
         '''
         This method will automatically solve the sudoku puzzle using the chosen method
@@ -57,13 +57,13 @@ class Sudoku():
 
         '''
 
-        if solve_method == 'quick':
+        if self.solve_method == 'quick':
             self.quick_solve()
-        elif solve_method == 'recursion':
+        elif self.solve_method == 'recursion':
             self.recursion_solve()
-        elif solve_method == 'wavefront':
+        elif self.solve_method == 'wavefront':
             self.wavefront_solve()
-        elif solve_method == 'overall':
+        elif self.solve_method == 'overall':
             self.overall_solve()
         else:
             raise ValueError('Please enter a valid solve method on initialisation of class')
@@ -86,7 +86,7 @@ class Sudoku():
         if check_solution(self.grid, self.n_rows, self.n_cols):
             self.solved = True
 
-            self.time_taken_quick = time.time() - timein
+        self.time_taken_quick = time.time() - timein
 
     def recursion_solve(self):
         """
@@ -96,9 +96,15 @@ class Sudoku():
         # Call the recursive_solve function from modules.py to solve the grid
         timein = time.time()
         self.recursive_grid, self.iterations = recursive_solve(self.recursive_grid, self.n_rows, self.n_cols, self.iterations)
-        self.time_taken_recursion = time.time() - timein
+        
         # Check if the grid is solved, if it is, set the solved flag to True
         self.solved = check_solution(self.recursive_grid, self.n_rows, self.n_cols)
+
+        if self.solved:
+            # set recursive grid to grid
+            self.grid = self.recursive_grid
+
+        self.time_taken_recursion = time.time() - timein
 
 
     def overall_solve(self):
@@ -237,66 +243,87 @@ class Sudoku():
                 self.solved = True
                 self.filled_in = find_filled(self.original_grid, self.grid)
                 break
+
         end = time.time()
         self.time_taken_wavefront = end - start
 
 
-        def profile(self):
-            ''' 
-            This method is used to profile the code. It will run the solve method 100 times and then print the average time taken to solve the grid.
-            This method is only called if the -profile flag is set to True.
+    def profile(self):
+        ''' 
+        This method is used to profile the code. It will run the solve method 100 times and then print the average time taken to solve the grid.
+        This method is only called if the -profile flag is set to True.
 
-            Each time each method is run, its self.time_taken_method variable is updated. Storing this value after each run can help find the average run time
-            of each method.
+        Each time each method is run, its self.time_taken_method variable is updated. Storing this value after each run can help find the average run time
+        of each method.
 
-            The method will be tested for all the grids in grids.py with each method and grid combination being tested 100 times. The average time taken for each
-            method will be stored in a dictionary. This dictionary will then be used to create a pandas dataframe which will be printed to the console.
-
-
-            Parameters
-            -------------
-            self : object
-                The object that the method is being called from
+        The method will be tested for all the grids in grids.py with each method and grid combination being tested 100 times. The average time taken for each
+        method will be stored in a dictionary. This dictionary will then be used to create a pandas dataframe which will be printed to the console.
 
 
-            Returns
-            -------------
-            None
+        Parameters
+        -------------
+        self : object
+            The object that the method is being called from
 
-            Updates document
 
-            '''
-            import pandas as pd
+        Returns
+        -------------
+        None
 
-            # Create a dict to store the methods that are being profiled
-            methods = { 'quick': self.time_taken_quick, 'recursion': self.time_taken_recursion, 'wavefront': self.time_taken_wavefront, 'overall': self.time_taken_overall}
+        Updates document
 
-            # Create a dict to store the average time taken for each method
-            average_times = {}
+        '''
+        import pandas as pd
+        from grids import grids
 
-            # loop through the methods dict keys
-            for method in methods.keys():
+        # Create a dict to store the methods that are being profiled
+        methods = { 'quick': self.time_taken_quick, 'recursion': self.time_taken_recursion, 'wavefront': self.time_taken_wavefront, 'overall': self.time_taken_overall}
 
-                # Create a list to store the times taken for each method
-                times = []
+        # Create a dict to store the average time taken for each method
+        average_times = {}
 
-                # loop through the grids in grids.py
-                for grid in grids:
+        # loop through the methods dict keys
+        for method in methods.keys():
 
-                    # loop through the method 100 times
-                    for i in range(100):
+            # Create a list to store the times taken for each method
+            times = []
+            zeros = []
 
-                        # run the method
-                        self.solve_method = method
-                        self.grid = grid
-                        self.solved = False
-                        self.solve()
+            # loop through the grids in grids.py
+            for grid in grids:
 
-                        # append the time taken to the times list
+
+                # loop through the method 100 times
+                for i in range(100):
+
+                    # initialise the grid
+                    self.__init__(grid[0], grid[1], grid[2], 0,0,0,0, solve_method=method)
+
+                    # store the number of zeros in the grid
+                    zeros.append(self.zero_counter)
+
+                    # run the method
+                    self.solve_sudoku()
+
+                    # append the time taken to the times list
+                    val = methods[method]
+
+                    if val is not None:
                         times.append(methods[method])
+                    else:
+                        times.append(0)
 
-                # calculate the average time taken for each method
-                average_times[method] = sum(times)/len(times)
+            # calculate the average time taken for each method
+            average_times[method] = sum(times)/len(times)
+
+            # store the number of zeros in each grid
+            average_times[method + '_zeros'] = sum(zeros)/len(zeros)
+
+        # Create a pandas dataframe from the average_times dict
+        df = pd.DataFrame.from_dict(average_times, orient='index', columns=['Average Time Taken'])
+
+        # print the dataframe to the console
+        print(df)
 
 
             
@@ -341,28 +368,15 @@ if __name__ == '__main__':
     [0, 0, 1, 0, 0, 0],
     [0, 5, 0, 0, 6, 4]]
 
+    # test profiler
+
     # initialise the class
-    for grid in grids:
-        test_wf = Sudoku(grid = grid[0], n_rows = grid[1], n_cols= grid[2], hint_flag = False, hint_number = False, profile_flag = False, explain_flag = False, solve_method = None)
-        print('------------------')
-        print('Wavefront Solver')
-        start = time.time()
-        test_wf.wavefront_solve()
-        end = time.time()
-        print('Correct Solution:', check_solution(test_wf.grid, test_wf.n_rows, test_wf.n_cols))
-        print('Time Taken:', end - start)
-        print('Recursive Solver:')
-        test_r = Sudoku(grid = grid[0], n_rows = grid[1], n_cols= grid[2], hint_flag = False, hint_number = False, profile_flag = False, explain_flag = False, solve_method = 'recursive')
-        start = time.time()
-        test_r.recursion_solve()
-        end = time.time()
-        print('Correct Solution:', check_solution(test_r.grid, test_r.n_rows, test_r.n_cols))
-        print('Time Taken:', end - start)
-    # test.solve()
+    test = Sudoku(test_grid_1, 2, 2, False, 0, False, False, solve_method='overall')
 
-    # print the solved grid
-        
-
+    # run the profiler
+    test.profile()
+    
+   
 
 
 
