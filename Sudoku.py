@@ -73,6 +73,9 @@ class Sudoku():
         # Just assigning it to grid will make it a reference to the original grid
         # This means that if we change the grid, we will also change the original_grid
         self.original_grid = copy.deepcopy(grid)
+
+        self.calc_zeros()
+        
         self.recursive_grid = copy.deepcopy(grid)
         self.wavefront_grid = copy.deepcopy(grid)
         self.hint_grid = copy.deepcopy(grid)
@@ -89,10 +92,13 @@ class Sudoku():
         self.time_taken_overall = None
         self.iterations = 0
         self.hints = None
-        self.zero_counter = sum([row.count(0) for row in self.grid])
+
+    def calc_zeros(self):
+        zero_counter  = sum([row.count(0) for row in self.original_grid])
+        self.zero_counter = zero_counter
 
     
-    def solve_sudoku(self):
+    def solve_sudoku(self, solve_method):
 
         '''
         This method will automatically solve the sudoku puzzle using the chosen method
@@ -109,13 +115,13 @@ class Sudoku():
 
         '''
 
-        if self.solve_method == 'quick':
+        if solve_method == 'quick':
             self.quick_solve()
-        elif self.solve_method == 'recursion':
+        elif solve_method == 'recursion':
             self.recursion_solve()
-        elif self.solve_method == 'wavefront':
+        elif solve_method == 'wavefront':
             self.wavefront_solve()
-        elif self.solve_method == 'overall':
+        elif solve_method == 'overall':
             self.overall_solve()
         else:
             raise ValueError('Please enter a valid solve method on initialisation of class')
@@ -181,10 +187,6 @@ class Sudoku():
                 raise Exception("No solution exists for this grid: " + str(np.array(self.grid)))
             
         self.time_taken_overall = time.time() - timein
-        # At this point, the grid should be solved so we can stop the timer 
-        # If it isnt solved, a solution does not exist
-
-
 
     def explain_class(self):
         """
@@ -327,85 +329,46 @@ class Sudoku():
         '''
         import pandas as pd
         import matplotlib.pyplot as plt
-        from grids import grids
 
         # Create a dict to store the methods that are being profiled
-        methods = ['quick', 'recursion', 'wavefront', 'overall']
+        methods = [ 'recursion', 'wavefront', 'overall']
 
-        # Create a dict to store the average time taken for each method
-        quick_times = []
-        recursion_times = []
-        wavefront_times = []
-        overall_times = []
-        zeros = []
-        
-        # loop through the grids in grids.py
-        for grid in grids:
+        # loop through the methods
+        for method in methods:
 
-            # loop through the methods
-            for method in methods:
+            # Create a list to store the times taken for each method
+            times = []
 
-                # make a copy of the grid
-                work_grid = copy.deepcopy(grid)
+            # loop through the method 25 times
+            for _ in range(25):
 
-                # Create a list to store the times taken for each method
-                times = []
+                # run the method
+                self.solve_sudoku(method)
 
-                # loop through the method 100 times
-                for i in range(20):
+                # extract the time taken from the self.time_taken_'method' variable
+                val = getattr(self, 'time_taken_' + method)
 
-                    # initialise the grid
-                    self.__init__(work_grid[0], work_grid[1], work_grid[2], 0,0,0,0, solve_method=method)
+                # append the time taken to the times list
+                if val is None or val == 0:
+                    times.append(0)
+                else:
+                    times.append(val)
 
-                    # run the method
-                    self.solve_sudoku()
-                    # extract the time taken from the self.time_taken_'method' variable
-                    val = getattr(self, 'time_taken_' + method)
-    
-                    # append the time taken to the times list
-                    if val is None or val == 0:
-                        times.append(0)
-                    else:
-                        times.append(val)
+            # average the times for each method for that grid
+            average_time = sum(times)/len(times)
+            # append the average time to the average times list
+            if method == 'recursion':
+                recursion_times = average_time
+            elif method == 'wavefront':
+                wavefront_times = average_time
+            elif method == 'overall':
+                overall_times = average_time
+            
+        # store as avg_time attributes
+        self.avg_time_recursion = recursion_times
+        self.avg_time_wavefront = wavefront_times
+        self.avg_time_overall = overall_times
 
-                # average the times for each method for that grid
-                average_time = sum(times)/len(times)
-                # append the average time to the average times list
-                if method == 'quick':
-                    quick_times.append(average_time)
-                elif method == 'recursion':
-                    recursion_times.append(average_time)
-                elif method == 'wavefront':
-                    wavefront_times.append(average_time)
-                elif method == 'overall':
-                    overall_times.append(average_time)
-                
-
-            # extract the number of zeros for that grid
-            zeros.append(self.zero_counter)
-
-        # store the average times in a dictionary
-        self.profile_stats = {'zeros': zeros, 'quick': quick_times, 'recursion': recursion_times, 'wavefront': wavefront_times, 'overall': overall_times}
-
-        # plot zeros on the x axis and average time taken on the y axis for each method 
-        # plt.scatter(zeros, quick_times, label='quick solve', color='red')
-        plt.scatter(zeros, recursion_times, label='recursion solve', color='blue')
-        plt.scatter(zeros, wavefront_times, label='wavefront solve', color='green')
-        plt.scatter(zeros, overall_times, label='overall solve - recursion + quick solve', color='black')
-
-        plt.title('Average time taken to solve a sudoku grid using different methods')
-        plt.legend()
-
-        # add lines of best fit for each method
-        # plt.plot(np.unique(zeros), np.poly1d(np.polyfit(zeros, quick_times, 1))(np.unique(zeros)), label='quick solve line of best fit', linestyle = '--', color='red')
-        plt.plot(np.unique(zeros), np.poly1d(np.polyfit(zeros, recursion_times, 1))(np.unique(zeros)), label='recursion solve line of best fit', linestyle = '--', color='blue')
-        plt.plot(np.unique(zeros), np.poly1d(np.polyfit(zeros, wavefront_times, 1))(np.unique(zeros)), label='wavefront solve line of best fit', linestyle = '--', color='green')
-        plt.plot(np.unique(zeros), np.poly1d(np.polyfit(zeros, overall_times, 1))(np.unique(zeros)), label='overall solve line of best fit', linestyle = '--', color='black')
-
-        plt.xlabel('Number of zeros')
-        plt.ylabel('Average time taken (s)')
-        
-        plt.show()
 
 
 
@@ -448,7 +411,7 @@ if __name__ == '__main__':
     test = Sudoku(grid8, 3, 3, False, 0, False, False, solve_method='wavefront')
 
     # run the profiler
-    test.profile()
+    test.profile(grid8)
     
    
 

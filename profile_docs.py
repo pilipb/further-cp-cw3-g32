@@ -4,44 +4,60 @@ from matplotlib import pyplot as plt
 
 
 def profile_grids(solved_dict):
-    """
-    This function takes a dictionary of solved grids metrics and plots them. 
-    [INSERT MORE PLOTTING DETAIL HERE]
-    ----------
+    '''
+    This function takes in the dictionary of metrics from the profiling method in the class and plots the metrics
+    
     Parameters
     ----------
-    solved_dict: dict
-        A dictionary of solved grids metrics
-    ----------
+    solved_dict : dict
+        A dictionary containing the metrics for each grid
+        in the form:
+            {grid_name: [(grid_size), (avg_time_recursion, avg_time_wavefront, avg_time_overall), zero_counter, iterations]}
+    
     Returns
-    ----------
-    None
-    """
-    for dimensions in [(2,2), (3,2), (3,3)]: # Loop through the dimensions of the grids
-        timings = []
-        empty_cells = []
-        iterations = []
-        for key in solved_dict:
-            if solved_dict[key][0] == dimensions:
-                timings.append(solved_dict[key][1])
-                empty_cells.append(solved_dict[key][2])
-                if dimensions == (3,3):
-                    iterations.append(solved_dict[key][3])
-        # Plot the time against the number of empty cells for the 3x3 grids
-        # Make it a scatter plot with the empty cells on the x-axis and the time on the y-axis
-        plt.scatter(empty_cells, timings)
-        plt.xlabel("Number of empty cells")
-        plt.ylabel("Time taken to solve (s)")
-        plt.title(f"Time taken to solve {dimensions[0]}x{dimensions[1]} grids")
-        plt.show()
-        # Plot the time against the number of recursive iterations for the 3x3 grids
-        # Make it a scatter plot with the number of recursive iterations on the x-axis and the time on the y-axis
-        if dimensions == (3,3):
-            plt.scatter(iterations, timings)
-            plt.xlabel("Number of recursive iterations")
-            plt.ylabel("Time taken to solve (s)")
-            plt.title(f"Time taken to solve {dimensions[0]}x{dimensions[1]} grids")
-            plt.show()
+    ---------
+    None (plots the metrics)
+
+    
+    '''
+    import numpy as np
+
+    # Initialise the figure and plot the times for different methods on the same plot
+    
+    num_zeros = []
+    recur_times = []
+    wave_times = []
+    overall_times = []
+
+    
+    plt.figure()
+    # loop through the dictionary and plot the metrics for each method in a single colour
+    for grid in solved_dict:
+        # extract the metrics
+        num_zeros.append(solved_dict[grid][2])
+        recur_times.append(solved_dict[grid][1][0])
+        wave_times.append(solved_dict[grid][1][1])
+        overall_times.append(solved_dict[grid][1][2])
+
+    # Add the labels
+    plt.plot(num_zeros,recur_times, 'o', label = 'Recursion', color = 'blue')
+    plt.plot(num_zeros, wave_times, 'o', label = 'Wavefront', color = 'orange')
+    plt.plot(num_zeros, overall_times, 'o', label = 'Overall', color = 'green')
+
+    # plot lines of best fit
+    plt.plot(np.unique(num_zeros), np.poly1d(np.polyfit(num_zeros, recur_times, 1))(np.unique(num_zeros)), label = 'Recursion Line of Best Fit', color = 'blue')
+    plt.plot(np.unique(num_zeros), np.poly1d(np.polyfit(num_zeros, wave_times, 1))(np.unique(num_zeros)), label = 'Wavefront Line of Best Fit', color = 'orange')
+    plt.plot(np.unique(num_zeros), np.poly1d(np.polyfit(num_zeros, overall_times, 1))(np.unique(num_zeros)), label = 'Overall Line of Best Fit', color = 'green')
+
+    plt.xlabel('Number of Zeros in Grid')
+    plt.ylabel('Average Time (s)')
+    plt.title('Average Time to Solve Grids')
+    plt.legend()
+    # show
+    plt.show()
+
+
+
 
 
 

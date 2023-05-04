@@ -88,8 +88,12 @@ def main():
 
         # If the profile flag is enabled, store the profiling metrics in the solve metrics dictionary
         if flag_dict['-profile'] == True:
+            print('\nRunning profiling simulations...\n')
+            grid_storage[instance].profile()
+            
+            # extract the metrics
             solve_metrics[instance] = [(grid_storage[instance].n_rows, grid_storage[instance].n_cols), 
-                                       (grid_storage[instance].time_taken_recursion, grid_storage[instance].time_taken_wavefront), 
+                                       (grid_storage[instance].avg_time_recursion, grid_storage[instance].avg_time_wavefront, grid_storage[instance].avg_time_overall), 
                                        grid_storage[instance].zero_counter, 
                                        grid_storage[instance].iterations,
                                        ]
