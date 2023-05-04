@@ -384,6 +384,9 @@ class Sudoku():
             # extract the number of zeros for that grid
             zeros.append(self.zero_counter)
 
+        # store the average times in a dictionary
+        self.profile_stats = {'zeros': zeros, 'quick': quick_times, 'recursion': recursion_times, 'wavefront': wavefront_times, 'overall': overall_times}
+
         # plot zeros on the x axis and average time taken on the y axis for each method 
         # plt.scatter(zeros, quick_times, label='quick solve', color='red')
         plt.scatter(zeros, recursion_times, label='recursion solve', color='blue')
