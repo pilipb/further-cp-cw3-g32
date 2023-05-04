@@ -281,7 +281,10 @@ class Sudoku():
         methods = ['quick', 'recursion', 'wavefront', 'overall']
 
         # Create a dict to store the average time taken for each method
-        average_times = {}
+        quick_times = []
+        recursion_times = []
+        wavefront_times = []
+        overall_times = []
         zeros = []
         
         # loop through the grids in grids.py
@@ -290,50 +293,64 @@ class Sudoku():
             # loop through the methods
             for method in methods:
 
+                # make a copy of the grid
+                work_grid = copy.deepcopy(grid)
+
                 # Create a list to store the times taken for each method
                 times = []
 
                 # loop through the method 100 times
-                for i in range(10):
+                for i in range(20):
 
                     # initialise the grid
-                    self.__init__(grid[0], grid[1], grid[2], 0,0,0,0, solve_method=method)
+                    self.__init__(work_grid[0], work_grid[1], work_grid[2], 0,0,0,0, solve_method=method)
 
                     # run the method
                     self.solve_sudoku()
                     # extract the time taken from the self.time_taken_'method' variable
                     val = getattr(self, 'time_taken_' + method)
-
+    
                     # append the time taken to the times list
-                    if val is None:
+                    if val is None or val == 0:
                         times.append(0)
                     else:
                         times.append(val)
 
-                # average the times for each method
-                average_times[method] = sum(times)/len(times)
-                print(f'Average time taken for {method} method is {average_times[method]} seconds')
+                # average the times for each method for that grid
+                average_time = sum(times)/len(times)
+                # append the average time to the average times list
+                if method == 'quick':
+                    quick_times.append(average_time)
+                elif method == 'recursion':
+                    recursion_times.append(average_time)
+                elif method == 'wavefront':
+                    wavefront_times.append(average_time)
+                elif method == 'overall':
+                    overall_times.append(average_time)
+                
 
             # extract the number of zeros for that grid
             zeros.append(self.zero_counter)
 
-        # plot zeros on the x axis and average time taken on the y axis for each method
-        plt.plot(zeros, average_times['quick'], label='quick')
-        plt.plot(zeros, average_times['recursion'], label='recursion')
-        plt.plot(zeros, average_times['wavefront'], label='wavefront')
-        plt.plot(zeros, average_times['overall'], label='overall')
-        plt.xlabel('Number of Zeros')
-        plt.ylabel('Average Time Taken')
+        # plot zeros on the x axis and average time taken on the y axis for each method 
+        # plt.scatter(zeros, quick_times, label='quick solve', color='red')
+        plt.scatter(zeros, recursion_times, label='recursion solve', color='blue')
+        plt.scatter(zeros, wavefront_times, label='wavefront solve', color='green')
+        plt.scatter(zeros, overall_times, label='overall solve - recursion + quick solve', color='black')
+
+        plt.title('Average time taken to solve a sudoku grid using different methods')
         plt.legend()
+
+        # add lines of best fit for each method
+        # plt.plot(np.unique(zeros), np.poly1d(np.polyfit(zeros, quick_times, 1))(np.unique(zeros)), label='quick solve line of best fit', linestyle = '--', color='red')
+        plt.plot(np.unique(zeros), np.poly1d(np.polyfit(zeros, recursion_times, 1))(np.unique(zeros)), label='recursion solve line of best fit', linestyle = '--', color='blue')
+        plt.plot(np.unique(zeros), np.poly1d(np.polyfit(zeros, wavefront_times, 1))(np.unique(zeros)), label='wavefront solve line of best fit', linestyle = '--', color='green')
+        plt.plot(np.unique(zeros), np.poly1d(np.polyfit(zeros, overall_times, 1))(np.unique(zeros)), label='overall solve line of best fit', linestyle = '--', color='black')
+
+        plt.xlabel('Number of zeros')
+        plt.ylabel('Average time taken (s)')
+        
         plt.show()
-
-
-            
-
-
-
-            
-
 
 
 
@@ -376,8 +393,7 @@ if __name__ == '__main__':
     test = Sudoku(grid8, 3, 3, False, 0, False, False, solve_method='wavefront')
 
     # run the profiler
-    test.solve_sudoku()
-    print(test.grid)
+    test.profile()
     
    
 
