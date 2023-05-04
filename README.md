@@ -1,16 +1,16 @@
 # Further Computer Programming - Group 32 - Sudoku Solver
 
+This repo comprises a set of code used to solve sudoku puzzles. There are multiple implementations of the solver. The options are:
+- running main file without flags to solve a pre loaded set of grids
+- running main file with INPUT to solve that grid
+- running the class directly using class implementation
+
+For all these see ** USAGE **
+
 ## Structure
 The project is structured in the following way:
 
-The main file is `main.py`. This file contains the main run of the sudoku solver.
-
-This can be run by running the following command in the terminal:
-
-```
-python main.py FLAGS
-
-```
+The main file is `main.py`. This file contains the main run of the sudoku solver for running either preloaded grids or an INPUT flag grid file.
 
 The main file uses the `sudoku.py` which stores the class for the solver. Each class method calls the various methods defined in the module functions:
 - `explain.py`
@@ -27,6 +27,7 @@ The `requirements.txt` file contains the required packages to run the program.
 
 
 #### Flags
+
 The FLAGS are optional and can be used to change the behaviour of the program. The following flags are available:
 
 `-explain`
@@ -57,7 +58,8 @@ pip install -r requirements.txt
 
 ## Usage
 
-To run the program, run the following command in the terminal:
+
+1. To run the program on a pre loaded set of grids, run the following command in the terminal:
 ```
 python main.py FLAGS
 ```
@@ -66,6 +68,18 @@ You may need to specify the python version:
 ```
 python3 main.py FLAGS
 ```
+
+2. To run the program on an input file with a grid, run the following command in the terminal: (INPUT.csv)
+
+```
+python main.py INPUT
+
+```
+
+3. To run the class directly, open a script and follow the example in the class:
+
+
+
 
 
 
