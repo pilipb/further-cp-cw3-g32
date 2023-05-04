@@ -1,9 +1,6 @@
 import numpy as np 
 import copy
-import time 
-from hint import make_hint
 from possible_values import possible_values_combined
-from modules import solve
 from Sudoku import Sudoku
 
 

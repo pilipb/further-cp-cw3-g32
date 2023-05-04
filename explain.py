@@ -1,4 +1,4 @@
-import numpy as np
+
 def explain(filled_in,hint,profile,avg_time_recursion,avg_time_wavefront,avg_time_overall):
     """
     This function takes in a solved grid and returns a series of strings explaining how the grid was solved.

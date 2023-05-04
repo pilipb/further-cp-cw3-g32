@@ -1,10 +1,3 @@
-'''
-These functions are used to provide a hint to the user, if the -flag hint is set to True,
-the number of hints the user has requested will be provided.
-
-'''
-# imports
-import copy
 import random
 
 

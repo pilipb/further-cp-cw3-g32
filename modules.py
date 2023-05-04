@@ -5,9 +5,7 @@ and the functions required to solve a sudoku board using recursion and random so
 '''
 
 # imports
-import random
 import copy
-import time
 from possible_values import possible_values_combined
 from hint import find_filled
 

@@ -1,5 +1,3 @@
-from Sudoku import Sudoku
-import matplotlib
 from matplotlib import pyplot as plt
 
 
