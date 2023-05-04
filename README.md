@@ -7,6 +7,8 @@ This repo comprises a set of code used to solve sudoku puzzles. There are multip
 
 For all these see ** USAGE **
 
+#### NOTE: the profile method will show different results on different CPU's, and may show values of 0.0 time for some solving methods, this is likely due to float errors
+
 ## Structure
 The project is structured in the following way:
 
