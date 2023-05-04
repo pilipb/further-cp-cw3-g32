@@ -59,8 +59,8 @@ class Sudoku():
         >>> profile_flag = False
         >>> explain_flag = False
         >>> solve_method = 'overall'
-        >>> sudoku = Sudoku(grid, n_rows, n_cols, hint_flag, hint_number, profile_flag, explain_flag, solve_method)
-        >>> sudoku.solve_sudoku()
+        >>> sudoku = Sudoku(grid, n_rows, n_cols, hint_flag, hint_number, profile_flag, explain_flag)
+        >>> sudoku.solve_sudoku(solve_method)
         >>> print(sudoku.grid)
         
         '''
@@ -408,11 +408,14 @@ if __name__ == '__main__':
     # test profiler
 
     # initialise the class
-    test = Sudoku(grid8, 3, 3, False, 0, False, False, solve_method='wavefront')
+    test = Sudoku(grid=grid8, n_rows=3, n_cols=3, hint_flag=False, hint_number=0, profile_flag=False, explain_flag=False)
 
     # run the profiler
-    test.profile(grid8)
-    
+    test.solve_sudoku('wavefront')
+    test.profile()
+
+    # print the results
+    print(test.avg_time_wavefront)
    
 
 
