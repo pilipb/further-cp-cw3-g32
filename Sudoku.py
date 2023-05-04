@@ -39,6 +39,36 @@ class Sudoku():
         self.hints = None
         self.zero_counter = sum([row.count(0) for row in self.grid])
 
+    
+    def solve_sudoku(self, solve_method = None):
+
+        '''
+        This method will automatically solve the sudoku puzzle using the chosen method
+
+        Parameters
+        -------------
+        self: object
+            The object that the method is being called from
+
+
+        Returns
+        -------------
+        None
+
+        '''
+
+        if solve_method == 'quick':
+            self.quick_solve()
+        elif solve_method == 'recursion':
+            self.recursion_solve()
+        elif solve_method == 'wavefront':
+            self.wavefront_solve()
+        elif solve_method == 'overall':
+            self.overall_solve()
+        else:
+            raise ValueError('Please enter a valid solve method on initialisation of class')
+        
+
     def quick_solve(self):
         """
         This methtod runs the quick_solve function from modules.py
@@ -214,7 +244,14 @@ class Sudoku():
         def profile(self):
             ''' 
             This method is used to profile the code. It will run the solve method 100 times and then print the average time taken to solve the grid.
-            This method is only called if the -profile flag is set to True
+            This method is only called if the -profile flag is set to True.
+
+            Each time each method is run, its self.time_taken_method variable is updated. Storing this value after each run can help find the average run time
+            of each method.
+
+            The method will be tested for all the grids in grids.py with each method and grid combination being tested 100 times. The average time taken for each
+            method will be stored in a dictionary. This dictionary will then be used to create a pandas dataframe which will be printed to the console.
+
 
             Parameters
             -------------
@@ -229,10 +266,46 @@ class Sudoku():
             Updates document
 
             '''
-            # Create a list to store the times taken
-            times = []
+            import pandas as pd
+
+            # Create a dict to store the methods that are being profiled
+            methods = { 'quick': self.time_taken_quick, 'recursion': self.time_taken_recursion, 'wavefront': self.time_taken_wavefront, 'overall': self.time_taken_overall}
+
+            # Create a dict to store the average time taken for each method
+            average_times = {}
+
+            # loop through the methods dict keys
+            for method in methods.keys():
+
+                # Create a list to store the times taken for each method
+                times = []
+
+                # loop through the grids in grids.py
+                for grid in grids:
+
+                    # loop through the method 100 times
+                    for i in range(100):
+
+                        # run the method
+                        self.solve_method = method
+                        self.grid = grid
+                        self.solved = False
+                        self.solve()
+
+                        # append the time taken to the times list
+                        times.append(methods[method])
+
+                # calculate the average time taken for each method
+                average_times[method] = sum(times)/len(times)
+
 
             
+
+
+
+            
+
+
 
 
 
