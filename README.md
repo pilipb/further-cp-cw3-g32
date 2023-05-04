@@ -43,7 +43,7 @@ The FLAGS are optional and can be used to change the behaviour of the program. T
 - the program will give an integer number of hints to the next step to solve the sudoku
 `-profile`
 - the program will profile the time it takes to solve the sudoku using available methods
-`-file INPUT OUPUT`
+`-file INPUT OUTPUT` both files must be .csv
 - can be used to specify the input and output file. If no input file is specified, the program will ask for input in the terminal. If no output file is specified, the program will print the output in the terminal.
 
 
