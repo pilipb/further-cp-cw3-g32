@@ -80,9 +80,7 @@ class Sudoku():
         # Calculate the number of zeros in the grid using the calc_zeros method
         self.calc_zeros()
         
-
-
-        
+        # flag attributes
         self.hint_flag = hint_flag
         self.hint_number = hint_number
         self.profile_flag = profile_flag
@@ -147,7 +145,7 @@ class Sudoku():
         If it manages to solve the grid, it sets the solved flag to True
         """
         # Keep filling in the grid until it stops changing
-        timein = time.time()
+        timein = time.perf_counter()
         while True:
             self.old_grid = self.grid
             self.grid = quick_fill(self.grid, self.n_rows, self.n_cols)
@@ -157,7 +155,7 @@ class Sudoku():
         if check_solution(self.grid, self.n_rows, self.n_cols):
             self.solved = True
 
-        self.time_taken_quick = time.time() - timein
+        self.time_taken_quick = time.perf_counter() - timein
 
     def recursion_solve(self):
         """
@@ -165,7 +163,7 @@ class Sudoku():
         If it manages to solve the grid, it sets the solved flag to True
         """ 
         # Call the recursive_solve function from modules.py to solve the grid
-        timein = time.time()
+        timein = time.perf_counter()
         self.recursive_grid, self.iterations = recursive_solve(self.recursive_grid, self.n_rows, self.n_cols, self.iterations)
         
         # Check if the grid is solved, if it is, set the solved flag to True
@@ -175,7 +173,7 @@ class Sudoku():
             # set recursive grid to grid
             self.grid = self.recursive_grid
 
-        self.time_taken_recursion = time.time() - timein
+        self.time_taken_recursion = time.perf_counter() - timein
 
 
     def overall_solve(self):
@@ -184,7 +182,7 @@ class Sudoku():
 
         """
         # Attempt to solve the grid using the quick_solve method
-        timein = time.time()
+        timein = time.perf_counter()
         self.quick_solve()
         if self.solved:
             self.filled_in = find_filled(self.original_grid, self.grid)
@@ -197,7 +195,7 @@ class Sudoku():
             else:
                 raise Exception("No solution exists for this grid: " + str(np.array(self.grid)))
             
-        self.time_taken_overall = time.time() - timein
+        self.time_taken_overall = time.perf_counter() - timein
 
     def explain_class(self):
         """
@@ -246,7 +244,7 @@ class Sudoku():
         
         
         '''
-        start = time.time()
+        start = time.perf_counter()
         work_grid = self.wavefront_grid
         frontier = []
     
@@ -308,7 +306,7 @@ class Sudoku():
                 self.filled_in = find_filled(self.original_grid, self.grid)
                 break
 
-        end = time.time()
+        end = time.perf_counter()
         self.time_taken_wavefront = end - start
 
 
@@ -345,27 +343,20 @@ class Sudoku():
 
         # loop through the methods
         for method in methods:
-
-            # Create a list to store the times taken for each method
-            times = []
+            
+            num_repeats = 100
 
             # loop through the method 25 times
-            for _ in range(25):
+            start = time.perf_counter()
+            for _ in range(num_repeats):
 
                 # run the method
                 self.solve_sudoku(method)
 
-                # extract the time taken from the self.time_taken_'method' variable
-                val = getattr(self, 'time_taken_' + method)
-
-                # append the time taken to the times list
-                if val is None or val == 0:
-                    times.append(0)
-                else:
-                    times.append(val)
-
             # average the times for each method for that grid
-            average_time = sum(times)/len(times)
+            end =time.perf_counter()
+            average_time = ((end - start)/num_repeats)
+            
             # append the average time to the average times list
             if method == 'recursion':
                 recursion_times = average_time

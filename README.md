@@ -7,8 +7,6 @@ This repo comprises a set of code used to solve sudoku puzzles. There are multip
 
 For all these see ** USAGE **
 
-#### NOTE: the profile method will show different results on different CPU's, and may show values of 0.0 time for some solving methods, this is likely due to float errors
-
 ## Structure
 The project is structured in the following way:
 
@@ -27,8 +25,15 @@ The main file uses the `sudoku.py` which stores the class for the solver. Each c
 The `requirements.txt` file contains the required packages to run the program.
 
 
+#### NOTE - profile
+
+The standard `time.time()` function provides sub-second precision, though that precision varies by platform. For Linux and Mac precision is +- 1 microsecond or 0.001 milliseconds. Python on Windows uses +- 16 milliseconds precision due to clock implementation problems due to process interrupts. 
+
+As a result we have now used `time.perf_counter()` for all profilling uses.
 
 #### Flags
+
+All flags can be used together in any combination and order
 
 The FLAGS are optional and can be used to change the behaviour of the program. The following flags are available:
 

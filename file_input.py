@@ -187,7 +187,7 @@ def file_input_main(input_file, output_file, hint_flag, hint_value, explain_flag
         file.write(f"\n\nThis grid was solved using the wavefront algorithm.")
         if profile_flag:
             # If profiling is requested, print the time taken by each algorithm to solve the grid
-            file.write(f"\n\nThe following are the times taken by each algorithm to solve the grid (note if 0.0 it is likely due to the small scale and bit errors):")
+            file.write(f"\n\nThe following are the times taken by each algorithm to solve the grid:")
             file.write(f"\nWavefront: {grid_instance.time_taken_wavefront}")
             file.write(f"\nRecursion: {grid_instance.time_taken_recursion}")
             file.write(f"\nCombination (recursion + quickfill): {grid_instance.time_taken_overall}")
