@@ -13,6 +13,58 @@ import time
 class Sudoku():
     def __init__(self, grid, n_rows, n_cols, hint_flag, hint_number, profile_flag, explain_flag, solve_method = None):
 
+        '''
+        The sudoku class is used to solve a sudoku puzzle using the chosen method
+
+        Parameters
+        -------------
+        grid: list
+            The grid to be solved
+        n_rows: int
+            The number of rows in the grid
+        n_cols: int
+            The number of columns in the grid
+        hint_flag: bool
+            Whether or not to use hints
+        hint_number: int
+            The number of hints to use
+        profile_flag: bool
+            Whether or not to use profiling
+        explain_flag: bool
+            Whether or not to use the explain function
+        solve_method: str
+            The method to use to solve the puzzle
+            'quick' - quick_solve
+            'recursion' - recursion_solve
+            'wavefront' - wavefront_solve
+            'overall' - overall_solve
+
+
+        Returns
+        -------------
+        None
+
+        
+        Examples
+        -------------
+        # create a solvable 4x4 grid
+        >>> grid =  [[1, 0, 0, 2],
+                    [0, 0, 1, 0],
+                    [0, 1, 0, 4],
+                    [0, 0, 0, 1]]
+        >>> n_rows = 2
+        >>> n_cols = 2
+        >>> hint_flag = False
+        >>> hint_number = 1
+        >>> profile_flag = False
+        >>> explain_flag = False
+        >>> solve_method = 'overall'
+        >>> sudoku = Sudoku(grid, n_rows, n_cols, hint_flag, hint_number, profile_flag, explain_flag, solve_method)
+        >>> sudoku.solve_sudoku()
+        >>> print(sudoku.grid)
+        
+        '''
+
         self.grid = grid
         self.n_rows = n_rows
         self.n_cols = n_cols
