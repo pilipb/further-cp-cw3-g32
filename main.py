@@ -82,9 +82,7 @@ def main():
         print(instance)
         print(np.array(output_grid))
 
-        # If the explain flag is enabled, print the explanation of the solution (either hints or full solution)
-        if flag_dict['-explain'] == True:
-            grid_storage[instance].explain_class()
+
 
         # If the profile flag is enabled, store the profiling metrics in the solve metrics dictionary
         if flag_dict['-profile'] == True:
@@ -97,6 +95,10 @@ def main():
                                        grid_storage[instance].zero_counter, 
                                        grid_storage[instance].iterations,
                                        ]
+            
+        # If the explain flag is enabled, print the explanation of the solution (either hints or full solution)
+        if flag_dict['-explain'] == True:
+            grid_storage[instance].explain_class()
             
     # If the profile flag is enabled, print the profiling metrics
     if flag_dict['-profile'] == True:
