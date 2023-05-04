@@ -6,98 +6,7 @@ from possible_values import possible_values_combined
 from modules import solve
 from Sudoku import Sudoku
 
-def file_input(input_file, output_file, explain, hint, hint_number, profile):
-    """
-    This function takes a string and returns the contents of the file as a string
-    ----------
-    Parameters
-    ----------
-    input_file: str
-        A string representing the name of the file to be read
-    output_file: str
-        A string representing the name of the file to be written to
-    explain: bool
-        A boolean value indicating whether the user requested an explanation or not
-    hint: bool
-        A boolean value indicating whether the user requested a hint or not
-    hint_number: int
-        An integer representing the number of hints the user requested
-    profile: bool
-        A boolean value indicating whether the user requested a profile or not
-    ----------
-    Returns
-    ----------
-    file_contents: str
-        A string representing the contents of the file
-    """
 
-    # open the file
-    # read the file
-    # return the file contents
-    with open(input_file, "r", encoding='utf-8-sig') as file:
-        file_contents = file.read()
-
-    # Convert the file to a list of lists of integers, where each list is a row in the csv
-    file_contents = file_contents.split("\n")
-
-    # remove the last element in the list, as it is an empty string
-    file_contents = file_contents[:-1]
-    file_contents = [i.split(",") for i in file_contents]
-
-    # Convert the list of lists to a list of lists of integers
-    for i in range(len(file_contents)):
-        for j in range(len(file_contents[i])):
-            try:
-                file_contents[i][j] = int(file_contents[i][j])
-            except ValueError:
-                print("Input file must only contain integers between 0 and 9")
-
-    # Read in grid dimensions to get n_row and n_col
-    try:
-        n_row,n_col = grid_dimensions(file_contents)
-    except ValueError as e:
-        print(e)
-        return None
-    try :
-        file_input_check(file_contents, n_row, n_col)
-    except ValueError as e:
-        print(e)
-        return None
-    
-    # Solve the sudoku grid
-    original = copy.deepcopy(file_contents)
-    start = time.time()
-    solved_grid, filled_in, iterations = solve(file_contents, n_row, n_col)
-    end = time.time()
-    if hint:
-        solved_grid, filled_in, hint_number = make_hint(original, filled_in, hint_number)
-
-    # Convert solved_grid to a numpy array
-    solved_grid = np.array(solved_grid)
-
-    # Export the solved grid to a csv
-    np.savetxt(output_file, solved_grid, delimiter=",", fmt="%d")
-    with open(output_file, "a") as file:
-        if profile:
-            file.write(f"\n\nThis grid was solved in {end-start} seconds, using {iterations} recursive iterations")
-
-        # If explain is True, print the steps taken to solve the grid into the output file as a list to the side of the grid
-        if explain:
-            # We cannot call explain() here as it is writing to a file instead of printing to the console
-            if hint:
-                file.write(f"\nAbove is a partially completed grid (it contains {hint_number} hints).")
-                file.write(f"\nThe following is a list of where the hints were inserted.")
-            else:
-                file.write(f"\nThe following is a list of where the numbers were inserted to complete the grid.")
-            for insertion in filled_in:
-                if insertion[0] == 8:
-                    file.write("\n")
-                    file.write(f"Insert an {insertion[0]} in the cell in row {insertion[1]+1} and column {insertion[2]+1}")
-                else:
-                    file.write("\n")
-                    file.write(f"Insert a {insertion[0]} in the cell in row {insertion[1]+1} and column {insertion[2]+1}")
-
-        
 
 def file_input_check(file_contents, n_row, n_col):
     """
@@ -276,7 +185,7 @@ def file_input_main(input_file, output_file, hint_flag, hint_value, explain_flag
     with open(output_file, "a") as file:
 
         # say that the grid has been solved using wavefront
-        file.write(f"\n\nThe solution grid is taken from the wavefront algorithm.")
+        file.write(f"\n\nThis grid was solved using the wavefront algorithm.")
         if profile_flag:
             # print the times taken by each algorithm to the output file
             file.write(f"\n\nThe following are the times taken by each algorithm to solve the grid (note if 0.0 it is likely due to the small scale and bit errors):")
