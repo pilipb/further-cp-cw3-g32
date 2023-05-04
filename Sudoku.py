@@ -73,13 +73,14 @@ class Sudoku():
         # Just assigning it to grid will make it a reference to the original grid
         # This means that if we change the grid, we will also change the original_grid
         self.original_grid = copy.deepcopy(grid)
-
-        self.calc_zeros()
-        
         self.recursive_grid = copy.deepcopy(grid)
         self.wavefront_grid = copy.deepcopy(grid)
         self.overall_grid = copy.deepcopy(grid)
         self.hint_grid = copy.deepcopy(grid)
+        # Calculate the number of zeros in the grid using the calc_zeros method
+        self.calc_zeros()
+        
+
 
         
         self.hint_flag = hint_flag

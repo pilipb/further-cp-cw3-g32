@@ -227,69 +227,6 @@ def recursive_solve(grid, n_rows, n_cols, iterations):
 	#If we get here, we've tried all possible values. Return none to indicate the previous value is incorrect.
 	return None, iterations
 
-def random_solve(grid, n_rows, n_cols, max_tries=50000):
-	'''
-	This function uses random trial and error to solve a Sudoku grid
-
-	Parameters:
-	--------------
-	grid: list
-        A list of lists representing a sudoku board
-	n_rows: int
-        The number of rows in each square
-    n_cols: int
-        The number of columns in each square
-	max_tries: int
-        The maximum number of random trials to try before giving up
-	
-	Returns:
-	--------------
-	grid: list
-        A solved grid (as a nested list)
-	
-	'''
-
-	for i in range(max_tries):
-		possible_solution = fill_board_randomly(grid, n_rows, n_cols)
-		if check_solution(possible_solution, n_rows, n_cols):
-			return possible_solution
-
-	return grid
-
-def fill_board_randomly(grid, n_rows, n_cols):
-	'''
-	This function will fill an unsolved Sudoku grid with random numbers
-
-	Parameters:
-	--------------
-	grid: list
-        A list of lists representing a sudoku board
-	n_rows: int
-        The number of rows in each square
-    n_cols: int
-        The number of columns in each square
-	
-	Returns:
-	--------------
-	filled_grid: list
-        A grid with random numbers filled in
-	
-
-	'''
-	n = n_rows*n_cols
-	#Make a copy of the original grid
-	filled_grid = copy.deepcopy(grid)
-
-	#Loop through the rows
-	for i in range(len(grid)):
-		#Loop through the columns
-		for j in range(len(grid[0])):
-			#If we find a zero, fill it in with a random integer
-			if grid[i][j] == 0:
-				filled_grid[i][j] = random.randint(1, n)
-
-	return filled_grid 
-
 def solve(grid, n_rows, n_cols):
 
 	'''
