@@ -23,7 +23,7 @@ def profile_grids(solved_dict):
     import numpy as np
 
     # Initialise the figure and plot the times for different methods on the same plot
-    
+    # Initialise lists for the average rnu times of each method and the number of zeros in each grid
     num_zeros = []
     recur_times = []
     wave_times = []
@@ -33,7 +33,7 @@ def profile_grids(solved_dict):
     plt.figure()
     # loop through the dictionary and plot the metrics for each method in a single colour
     for grid in solved_dict:
-        # extract the metrics
+        # extract the metrics into separate lists
         num_zeros.append(solved_dict[grid][2])
         recur_times.append(solved_dict[grid][1][0])
         wave_times.append(solved_dict[grid][1][1])
