@@ -274,56 +274,58 @@ class Sudoku():
 
         '''
         import pandas as pd
+        import matplotlib.pyplot as plt
         from grids import grids
 
         # Create a dict to store the methods that are being profiled
-        methods = { 'quick': self.time_taken_quick, 'recursion': self.time_taken_recursion, 'wavefront': self.time_taken_wavefront, 'overall': self.time_taken_overall}
+        methods = ['quick', 'recursion', 'wavefront', 'overall']
 
         # Create a dict to store the average time taken for each method
         average_times = {}
+        zeros = []
+        
+        # loop through the grids in grids.py
+        for grid in grids:
 
-        # loop through the methods dict keys
-        for method in methods.keys():
+            # loop through the methods
+            for method in methods:
 
-            # Create a list to store the times taken for each method
-            times = []
-            zeros = []
-
-            # loop through the grids in grids.py
-            for grid in grids:
-
+                # Create a list to store the times taken for each method
+                times = []
 
                 # loop through the method 100 times
-                for i in range(100):
+                for i in range(10):
 
                     # initialise the grid
                     self.__init__(grid[0], grid[1], grid[2], 0,0,0,0, solve_method=method)
 
-                    # store the number of zeros in the grid
-                    zeros.append(self.zero_counter)
-
                     # run the method
                     self.solve_sudoku()
+                    # extract the time taken from the self.time_taken_'method' variable
+                    val = getattr(self, 'time_taken_' + method)
 
                     # append the time taken to the times list
-                    val = methods[method]
-
-                    if val is not None:
-                        times.append(methods[method])
-                    else:
+                    if val is None:
                         times.append(0)
+                    else:
+                        times.append(val)
 
-            # calculate the average time taken for each method
-            average_times[method] = sum(times)/len(times)
+                # average the times for each method
+                average_times[method] = sum(times)/len(times)
+                print(f'Average time taken for {method} method is {average_times[method]} seconds')
 
-            # store the number of zeros in each grid
-            average_times[method + '_zeros'] = sum(zeros)/len(zeros)
+            # extract the number of zeros for that grid
+            zeros.append(self.zero_counter)
 
-        # Create a pandas dataframe from the average_times dict
-        df = pd.DataFrame.from_dict(average_times, orient='index', columns=['Average Time Taken'])
-
-        # print the dataframe to the console
-        print(df)
+        # plot zeros on the x axis and average time taken on the y axis for each method
+        plt.plot(zeros, average_times['quick'], label='quick')
+        plt.plot(zeros, average_times['recursion'], label='recursion')
+        plt.plot(zeros, average_times['wavefront'], label='wavefront')
+        plt.plot(zeros, average_times['overall'], label='overall')
+        plt.xlabel('Number of Zeros')
+        plt.ylabel('Average Time Taken')
+        plt.legend()
+        plt.show()
 
 
             
@@ -371,10 +373,11 @@ if __name__ == '__main__':
     # test profiler
 
     # initialise the class
-    test = Sudoku(test_grid_1, 2, 2, False, 0, False, False, solve_method='overall')
+    test = Sudoku(grid8, 3, 3, False, 0, False, False, solve_method='wavefront')
 
     # run the profiler
-    test.profile()
+    test.solve_sudoku()
+    print(test.grid)
     
    
 
