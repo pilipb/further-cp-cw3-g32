@@ -61,6 +61,11 @@ To run the program, run the following command in the terminal:
 ```
 python main.py FLAGS
 ```
+You may need to specify the python version:
+
+```
+python3 main.py FLAGS
+```
 
 
 
