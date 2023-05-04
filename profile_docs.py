@@ -49,8 +49,12 @@ def profile_grids(solved_dict):
     plt.plot(np.unique(num_zeros), np.poly1d(np.polyfit(num_zeros, wave_times, 1))(np.unique(num_zeros)), label = 'Wavefront Line of Best Fit', color = 'orange')
     plt.plot(np.unique(num_zeros), np.poly1d(np.polyfit(num_zeros, overall_times, 1))(np.unique(num_zeros)), label = 'Overall Line of Best Fit', color = 'green')
 
-    plt.xlabel('Number of Zeros in Grid')
-    plt.ylabel('Average Time (s)')
+    plt.xlabel('Number of Empty Spaces in Grid')
+    plt.ylabel('Average Time (s) (log scale))')
+
+    # make the y axis log scale
+    plt.yscale('log')
+
     plt.title('Average Time to Solve Grids')
     plt.legend()
     # show

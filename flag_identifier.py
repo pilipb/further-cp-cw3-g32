@@ -1,6 +1,7 @@
 # This script will read the input from the command line (flags and values) and pass them on to the appropriate function 
 import sys
 import copy
+
 def input_checker(user_input):
     """
     This function performs a simple check, to see if the command line input consists of valid flags and values only
@@ -50,14 +51,15 @@ def read_flags(user_input):
         A string representing the flag, or None
     """
     # create a list of valid flags
+
     # if there is an input not in the list of valid flags, return None
-    print(user_input)
     flag_dict = {"-explain": False, "-file": False, "-hint": False, "-profile": False}
     flag_value = {"-file": None, "-hint": None}
     # if flag is in input, set flag dict value to True
     for flag in flag_dict:
         if flag in user_input:
             flag_dict[flag] = True
+
 
     # if file is in input, set flag value to a list of next two values (input and output)
     if "-file" in user_input:
@@ -91,9 +93,6 @@ def read_flags(user_input):
     
     return flag_dict, flag_value
 
-#if __name__ == "__main__":
-#    print(input_checker(sys.argv[1:]))
-#    print(read_flags(sys.argv[1:]))
 
 def input_collection(input):
     

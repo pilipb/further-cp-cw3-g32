@@ -86,10 +86,18 @@ class Sudoku():
         self.solve_method = solve_method
         self.solved = False
         self.filled_in = None
+
+        # Profiling variables
         self.time_taken_recursion = None
         self.time_taken_wavefront = None
         self.time_taken_quick = None
         self.time_taken_overall = None
+
+        self.avg_time_recursion = None
+        self.avg_time_wavefront = None
+        self.avg_time_quick = None
+        self.avg_time_overall = None
+
         self.iterations = 0
         self.hints = None
 
@@ -114,6 +122,8 @@ class Sudoku():
         None
 
         '''
+        # set the solve method attribute
+        self.solve_method = solve_method
 
         if solve_method == 'quick':
             self.quick_solve()
@@ -195,13 +205,11 @@ class Sudoku():
         It will only be run anyways if the -explain flag is set to True 
         """
         # Get the hints if they have not already been made (So the explain function knows what instructions to use)
-        if self.hint_flag:
-            if self.hints == None:
-                self.hint_class()
-            explain(self.hints, self.hint_flag, self.profile_flag, self.time_taken, self.solve_method, self.iterations)
+        if self.hint_flag:    
+            explain(self.hints, self.hint_flag, self.profile_flag, self.avg_time_recursion, self.avg_time_wavefront, self.avg_time_overall)
         else:
             # If the hints are not being used, just use the filled in grid
-            explain(self.filled_in, self.hint_flag, self.profile_flag, self.time_taken, self.solve_method, self.iterations)
+            explain(self.filled_in, self.hint_flag, self.profile_flag, self.avg_time_recursion, self.avg_time_wavefront, self.avg_time_overall)
 
 
     def hint_class(self):
