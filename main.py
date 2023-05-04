@@ -6,22 +6,6 @@ import sys
 import numpy as np
 from profile_docs import profile_grids
 
-
-"""
-grid_storage = {}
-for index, grid in enumerate(grids):
-    grid_stroage[f'Grid {index + 1}'] = Sudoku(grid[0], grid[1], grid[2], hint_flag = True, hint_number = 3)
-
-for instance in grid_stroage:
-    grid_stroage[instance].recursion()
-    grid_stroage[instance].hint_class()
-    print('Grid',grid_stroage[instance].grid)
-    print('Hint Grid',grid_stroage[instance].hint_grid)
-
-"""
-
-
-
 def main():
 
     # Check if the input is valid - only contains valid flags and arguments
@@ -45,7 +29,8 @@ def main():
     # Initialise the grid storage dictionary to store the Sudoku class instances
     grid_storage = {}
     # Initialise the solve metrics dictionary to store the profiling metrics if profiling is enabled
-    solve_metrics = {}
+    if flag_dict['-profile'] == True:
+        solve_metrics = {}
 
     # Iterate through the grids and initialise the Sudoku class for each grid, storing the instance in the grid storage dictionary
     for index, grid in enumerate(grids):
@@ -71,6 +56,7 @@ def main():
         # If the hint flag is enabled, generate the hint grid and return it
         if flag_dict['-hint'] == True:
             grid_storage[instance].hint_class()
+            # output grid (grid to be printed) is reasigned to the hint grid
             output_grid = grid_storage[instance].hint_grid
             # This is just a little printed message outside of the explain method so
             # There is a little explanation of what the hint grid is
@@ -84,12 +70,11 @@ def main():
 
 
 
-        # If the profile flag is enabled, store the profiling metrics in the solve metrics dictionary
+        # If the profile flag is enabled, run the profiling method, storing the metrics in the solve metrics dictionary
         if flag_dict['-profile'] == True:
             print('\nRunning profiling simulations...\n')
             grid_storage[instance].profile()
-            
-            # extract the metrics
+
             solve_metrics[instance] = [(grid_storage[instance].n_rows, grid_storage[instance].n_cols), 
                                        (grid_storage[instance].avg_time_recursion, grid_storage[instance].avg_time_wavefront, grid_storage[instance].avg_time_overall), 
                                        grid_storage[instance].zero_counter]
@@ -98,9 +83,8 @@ def main():
         if flag_dict['-explain'] == True:
             grid_storage[instance].explain_class()
             
-    # If the profile flag is enabled, print the profiling metrics
+    # If the profile flag is enabled, print the profiling metrics (plots)
     if flag_dict['-profile'] == True:
-        # Print the profiling metrics
         profile_grids(solve_metrics)   
 
 

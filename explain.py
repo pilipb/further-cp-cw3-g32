@@ -28,17 +28,20 @@ def explain(filled_in,hint,profile,avg_time_recursion,avg_time_wavefront,avg_tim
 
 
     if profile:
-        # print the average times for each method
+        # print the average times for each method if profiling is requested
         print(f"Average time taken to solve grid using recursion: {avg_time_recursion} seconds")
         print(f"Average time taken to solve grid using wavefront: {avg_time_wavefront} seconds")
         print(f"Average time taken to solve grid using quickfill and recursion: {avg_time_overall} seconds")
     if hint:
+        # if a hint is requested, introduce a partial solution
         print("Partial solution above is the result of the hints you requested.")
         print("This is where values were inserted:")
     else:
+        # if no hint is requested, introduce the full solution
         print("This is the recursive solution to the grid.")
         print("This can be done with the following steps:")
     for instruction in filled_in:
+        # print the inputted instructions
         if instruction[0] == 8:
             print(f"Insert an {instruction[0]} in the cell in row {instruction[1]+1} and column {instruction[2]+1}")
         else:

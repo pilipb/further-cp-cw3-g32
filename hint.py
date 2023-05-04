@@ -37,13 +37,14 @@ def make_hint(grid, filled_in, hint_number):
         hint_number = len(filled_in)
         print(f"\nYou have requested more hints than there are squares filled in, so you will be given all the hints available ({hint_number})")
         
-    # Randomly arrange the list of filled in squares so hints don't fill in from left to right
+    # Randomly arrange the list of filled in squares so hints don't fill in sequentially
     random.shuffle(filled_in)
     hints = []
     # fill in the appropriate number of squares with the corresponding values
     for n in range(hint_number):
-        
+        # Add the hint to the grid
         grid[filled_in[n][1]][filled_in[n][2]] = filled_in[n][0]
+        # Add the hint to the list of hints
         hints.append([filled_in[n][0], filled_in[n][1], filled_in[n][2]])
     return grid, hints, hint_number
 
