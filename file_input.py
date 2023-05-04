@@ -94,9 +94,7 @@ def file_input_extraction(input_file):
     file_contents: str
         A string representing the contents of the file
     """
-    # open the file
-    # read the file
-    # return the file contents
+    # Read in the file
     with open(input_file, "r", encoding='utf-8-sig') as file:
         file_contents = file.read()
 
@@ -107,7 +105,7 @@ def file_input_extraction(input_file):
     file_contents = file_contents[:-1]
     file_contents = [i.split(",") for i in file_contents]
 
-    # Convert the list of lists to a list of lists of integers
+    # Convert the list of lists of strings to a list of lists of integers
     for i in range(len(file_contents)):
         for j in range(len(file_contents[i])):
             try:
@@ -115,18 +113,19 @@ def file_input_extraction(input_file):
             except ValueError:
                 print("Input file must only contain integers between 0 and 9")
 
-    # Read in grid dimensions to get n_row and n_col
+    # Obtian the dimensions of the grid using grid_dimensions
     try:
         n_row,n_col = grid_dimensions(file_contents)
     except ValueError as e:
         print(e)
         return None
+    # Check if the file is a valid sudoku grid
     try :
         file_input_check(file_contents, n_row, n_col)
     except ValueError as e:
         print(e)
         return None
-    # Solve the sudoku grid
+    # Create an independent copy of the grid to be solved and return it.
     grid = copy.deepcopy(file_contents)
     return grid, n_row, n_col
 
@@ -156,10 +155,10 @@ def file_input_main(input_file, output_file, hint_flag, hint_value, explain_flag
     
     
     '''
-
+    # Read in the file contents as an array along with its dimensions
     input_grid, n_row, n_col =  file_input_extraction(input_file)
 
-    # initialise the sudoku grid
+    # initialise the sudoku grid instance
     grid_instance = Sudoku(grid=input_grid, 
                            n_rows = n_row, 
                            n_cols = n_col, 
@@ -168,11 +167,11 @@ def file_input_main(input_file, output_file, hint_flag, hint_value, explain_flag
                            profile_flag = profile_flag, 
                            explain_flag = explain_flag)
     
-    # Solve the sudoku grid
+    # Solve the sudoku grid via the different methods
     grid_instance.solve_sudoku('recursion')
     grid_instance.solve_sudoku('overall')
     grid_instance.solve_sudoku('wavefront')
-    
+    # If the user has requested a hint, then use the hint class to generate the hints along with the hint grid - this is the new output grid
     if hint_flag:
         grid_instance.hint_class()
         output_grid = grid_instance.hint_grid
@@ -180,14 +179,14 @@ def file_input_main(input_file, output_file, hint_flag, hint_value, explain_flag
         output_grid = grid_instance.grid
 
 
-    # write the output to a file
+    # Write all requested information to the output file, starting with the chosen output grid (hint or solved)
     np.savetxt(output_file, output_grid, delimiter=",", fmt="%d")
     with open(output_file, "a") as file:
 
-        # say that the grid has been solved using wavefront
+        # As the last solve method called was wavefront, we can state this method generates the solution
         file.write(f"\n\nThis grid was solved using the wavefront algorithm.")
         if profile_flag:
-            # print the times taken by each algorithm to the output file
+            # If profiling is requested, print the time taken by each algorithm to solve the grid
             file.write(f"\n\nThe following are the times taken by each algorithm to solve the grid (note if 0.0 it is likely due to the small scale and bit errors):")
             file.write(f"\nWavefront: {grid_instance.time_taken_wavefront}")
             file.write(f"\nRecursion: {grid_instance.time_taken_recursion}")
@@ -197,6 +196,7 @@ def file_input_main(input_file, output_file, hint_flag, hint_value, explain_flag
         if explain_flag:
             # We cannot call explain() here as it is writing to a file instead of printing to the console
             if hint_flag:
+                # If hints are requested, only print a limited number of steps to the output file
                 file.write(f"\n\nAbove is a partially completed grid (it contains {hint_value} hints).")
                 file.write(f"\nThe following is a list of where the hints that were inserted.")
                 for insertion in grid_instance.hints:
@@ -206,7 +206,7 @@ def file_input_main(input_file, output_file, hint_flag, hint_value, explain_flag
                     else:
                         file.write("\n")
                         file.write(f"Insert a {insertion[0]} in the cell in row {insertion[1]+1} and column {insertion[2]+1}")
-
+            # If hints are not requested, simply print all steps taken to solve the grid
             else:
                 file.write(f"\n\nThe following is a list of where the numbers were inserted to complete the grid.")
                 for insertion in grid_instance.filled_in:

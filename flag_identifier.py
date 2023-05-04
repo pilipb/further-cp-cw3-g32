@@ -17,20 +17,21 @@ def input_checker(user_input):
     bool
         A boolean representing whether the input is valid or not
     """
-   #Create a copy of the input to work with
+   # Create a copy of the input to work with
     dupe_input = copy.deepcopy(user_input)
+    # Create a list of legal flags
     legal_flags = ["-explain", "-file", "-hint", "-profile"]
-    # if -file is present remove the two values after it from the input
+    # if -file is present remove the two values after it from the input (input and output)
     if "-file" in dupe_input:
        dupe_input = dupe_input[:dupe_input.index("-file")] + dupe_input[dupe_input.index("-file")+3:] 
-    # if -hint is present remove the value after it from the input
+    # if -hint is present remove the value after it from the input (hint number)
     if "-hint" in dupe_input:
         dupe_input = dupe_input[:dupe_input.index("-hint")] + dupe_input[dupe_input.index("-hint")+2:]
     # remove all the flags from the input
     for flag in legal_flags:
         if flag in dupe_input:
             dupe_input.remove(flag)
-    # if there are any values left in the input, return False
+    # if there are any values left in the input, return False as the input is invalid
     if len(dupe_input) > 0:
         raise ValueError("Invalid input")
     else:
@@ -47,8 +48,10 @@ def read_flags(user_input):
     ----------
     Returns
     ----------
-    flag: str
-        A string representing the flag, or None
+    flag_dict: dict
+        A dictionary representing the flags and their values
+    flag_value: dict
+        A dictionary representing the the values of the flags where applicable
     """
     # create a list of valid flags
 
@@ -83,7 +86,7 @@ def read_flags(user_input):
 
     # if hint is in input, set flag value to the integer after the flag
     if "-hint" in user_input:
-        # check if the hint value is an integer
+        # check if the hint value is an integer, if it is not, raise an error, if it is set the flag value to the integer
         try:
             int(user_input[user_input.index("-hint")+1])
         except ValueError:
@@ -95,7 +98,20 @@ def read_flags(user_input):
 
 
 def input_collection(input):
-    
+    """
+    This function takes a string and returns the flag if it is a valid flag, otherwise it returns None
+    ----------
+    Parameters
+    ----------
+    input: str
+        A string representing the input from the command line
+    ----------
+    Returns
+    ----------
+    flag: str
+        A string representing the flag, or None
+    """
+    # Check if the input is valid
     try:
         input_checker(input)
     except ValueError as e:
