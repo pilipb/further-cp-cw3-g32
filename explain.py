@@ -36,6 +36,7 @@ def explain(filled_in,hint,profile,avg_time_recursion,avg_time_wavefront,avg_tim
         print("Partial solution above is the result of the hints you requested.")
         print("This is where values were inserted:")
     else:
+        print("This is the recursive solution to the grid.")
         print("This can be done with the following steps:")
     for instruction in filled_in:
         if instruction[0] == 8:

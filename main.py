@@ -92,9 +92,7 @@ def main():
             # extract the metrics
             solve_metrics[instance] = [(grid_storage[instance].n_rows, grid_storage[instance].n_cols), 
                                        (grid_storage[instance].avg_time_recursion, grid_storage[instance].avg_time_wavefront, grid_storage[instance].avg_time_overall), 
-                                       grid_storage[instance].zero_counter, 
-                                       grid_storage[instance].iterations,
-                                       ]
+                                       grid_storage[instance].zero_counter]
             
         # If the explain flag is enabled, print the explanation of the solution (either hints or full solution)
         if flag_dict['-explain'] == True:

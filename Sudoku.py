@@ -78,7 +78,10 @@ class Sudoku():
         
         self.recursive_grid = copy.deepcopy(grid)
         self.wavefront_grid = copy.deepcopy(grid)
+        self.overall_grid = copy.deepcopy(grid)
         self.hint_grid = copy.deepcopy(grid)
+
+        
         self.hint_flag = hint_flag
         self.hint_number = hint_number
         self.profile_flag = profile_flag
@@ -139,9 +142,8 @@ class Sudoku():
 
     def quick_solve(self):
         """
-        This methtod runs the quick_solve function from modules.py
-        If it manages to solve the grid, it sets the solved flag to True (Not sure what this is for yet)
-        Current grid and solved boolean are returned, but this may change
+        This method runs the quick_fill function from modules.py
+        If it manages to solve the grid, it sets the solved flag to True
         """
         # Keep filling in the grid until it stops changing
         timein = time.time()
@@ -184,12 +186,10 @@ class Sudoku():
         timein = time.time()
         self.quick_solve()
         if self.solved:
-            self.solve_method = "Quick Solve"
             self.filled_in = find_filled(self.original_grid, self.grid)
         # If the grid is not solved, attempt to solve it using the recursion method
         else:
             self.recursion_solve()
-            self.solve_method = "Recursion"
             if self.solved:
                 # If the grid is solved, get the filled in grid instructions
                 self.filled_in = find_filled(self.original_grid, self.grid)
@@ -300,8 +300,9 @@ class Sudoku():
 
 
             if check_solution(work_grid, self.n_rows, self.n_cols):
-                # set self.grid to the solved grid
+                # set self.grid to the solved grid, for the purpose of the profile method
                 self.grid = work_grid
+                self.wavefront_grid = work_grid
                 self.solved = True
                 self.filled_in = find_filled(self.original_grid, self.grid)
                 break
